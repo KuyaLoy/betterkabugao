@@ -62,8 +62,10 @@ function assertCommonContract(svg, definition) {
     svg,
     /<(?:image|foreignObject|filter|linearGradient|radialGradient|clipPath|mask|pattern)\b/i,
   );
+  assert.doesNotMatch(svg, /\bfilter\s*=\s*["'][^"']*["']/i);
   assert.doesNotMatch(svg, /\b(?:fill|stroke)\s*=\s*["'][^"']*url\(/i);
   assert.doesNotMatch(svg, /\b(?:fill|stroke)\s*:\s*url\(/i);
+  assert.doesNotMatch(svg, /\b(?:filter|clip-path|mask)\s*:\s*[^;}]+/i);
   assert.doesNotMatch(svg, /(?:href|src)\s*=\s*["'](?:https?:|data:)/i);
   assert.doesNotMatch(svg, /@font-face\b/i);
   assert.doesNotMatch(svg, /@import\s+(?:url\(\s*)?["']?(?:https?:|data:|\/\/)/i);
