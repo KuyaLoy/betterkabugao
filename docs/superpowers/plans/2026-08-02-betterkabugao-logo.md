@@ -43,7 +43,7 @@
 
 ```js
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import test from "node:test";
 
 const definitions = {
@@ -65,7 +65,9 @@ const definitions = {
 };
 
 function loadSvg(relativePath) {
-  return readFileSync(new URL(relativePath, import.meta.url), "utf8");
+  const assetUrl = new URL(relativePath, import.meta.url);
+  assert.ok(existsSync(assetUrl), `Expected SVG asset to exist: ${relativePath}`);
+  return readFileSync(assetUrl, "utf8");
 }
 
 function assertCommonContract(svg, definition) {
@@ -109,7 +111,7 @@ test("favicon follows the compact vector contract", () => {
 
 Run: `node --test tests/brand-assets.test.mjs`
 
-Expected: three failed tests with `ENOENT` because none of the SVG assets exist yet.
+Expected: three failed tests with `AssertionError` messages confirming that none of the SVG assets exist yet.
 
 - [ ] **Step 3: Commit the contract**
 
