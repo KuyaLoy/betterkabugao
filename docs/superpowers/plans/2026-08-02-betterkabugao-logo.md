@@ -134,7 +134,7 @@ git commit -m "test: define BetterKabugao brand asset contract"
 
 Run: `node --test --test-name-pattern="standalone mark" tests/brand-assets.test.mjs`
 
-Expected: FAIL with `ENOENT` for `public/brand/betterkabugao-mark.svg`.
+Expected: FAIL with an `AssertionError` for the missing `public/brand/betterkabugao-mark.svg` asset.
 
 - [ ] **Step 2: Create the minimal standalone SVG**
 
@@ -182,7 +182,7 @@ git commit -m "feat: add BetterKabugao standalone mark"
 
 Run: `node --test --test-name-pattern="horizontal logo" tests/brand-assets.test.mjs`
 
-Expected: FAIL with `ENOENT` for `public/brand/betterkabugao-logo.svg`.
+Expected: FAIL with an `AssertionError` for the missing `public/brand/betterkabugao-logo.svg` asset.
 
 - [ ] **Step 2: Create the horizontal SVG**
 
@@ -235,7 +235,7 @@ git commit -m "feat: add BetterKabugao horizontal logo"
 
 Run: `node --test --test-name-pattern="favicon" tests/brand-assets.test.mjs`
 
-Expected: FAIL with `ENOENT` for `public/favicon.svg`.
+Expected: FAIL with an `AssertionError` for the missing `public/favicon.svg` asset.
 
 - [ ] **Step 2: Create the compact SVG**
 
