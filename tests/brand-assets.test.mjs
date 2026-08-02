@@ -48,7 +48,7 @@ function groupContent(svg, groupId) {
 }
 
 function pathData(groupMarkup) {
-  return [...groupMarkup.matchAll(/<path\\b[^>]*\\bd\\s*=\\s*["']([^"']+)["'][^>]*>/gi)].map(
+  return [...groupMarkup.matchAll(/<path\b[^>]*\bd\s*=\s*["']([^"']+)["'][^>]*>/gi)].map(
     ([, value]) => normalizePathData(value),
   );
 }
