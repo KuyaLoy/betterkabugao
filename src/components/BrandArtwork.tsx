@@ -1,6 +1,33 @@
+import type { PointerEvent } from "react";
+import { getParallaxOffset } from "../lib/parallax";
+
 export function BrandArtwork() {
+  const setOffset = (element: HTMLDivElement, x: number, y: number) => {
+    element.style.setProperty("--parallax-x", `${x}px`);
+    element.style.setProperty("--parallax-y", `${y}px`);
+  };
+
+  const handlePointerMove = (event: PointerEvent<HTMLDivElement>) => {
+    const { x, y } = getParallaxOffset(
+      event.clientX,
+      event.clientY,
+      event.currentTarget.getBoundingClientRect(),
+    );
+    setOffset(event.currentTarget, x, y);
+  };
+
+  const handlePointerLeave = (event: PointerEvent<HTMLDivElement>) => {
+    setOffset(event.currentTarget, 0, 0);
+  };
+
   return (
-    <div className="brand-stage" data-testid="brand-stage" aria-hidden="true">
+    <div
+      className="brand-stage"
+      data-testid="brand-stage"
+      aria-hidden="true"
+      onPointerMove={handlePointerMove}
+      onPointerLeave={handlePointerLeave}
+    >
       <span className="contour contour-one" />
       <span className="contour contour-two" />
       <span className="contour contour-three" />
