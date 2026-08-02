@@ -59,10 +59,32 @@ test("stylesheet carries the approved palette and motion safeguards", () => {
   assert.match(css, /#0032A0/i);
   assert.match(css, /#F2C81D/i);
   assert.match(css, /#111827/i);
+  assert.match(css, /#FFFFFF/i);
+  for (const unapprovedColor of ["#344054", "#4b5565", "#667085"]) {
+    assert.doesNotMatch(css, new RegExp(unapprovedColor, "i"));
+  }
   assert.match(css, /@keyframes\s+mark-reveal/);
   assert.match(css, /@keyframes\s+contour-drift/);
   assert.match(css, /prefers-reduced-motion:\s*reduce/);
   assert.match(css, /pointer:\s*coarse/);
   assert.match(css, /--parallax-x/);
   assert.match(css, /--parallax-y/);
+});
+
+test("stylesheet layers civic and sunrise colors in focus indicators", () => {
+  const css = load("src/styles.css");
+
+  assert.match(
+    css,
+    /:focus-visible[^{}]*\{[^}]*outline:\s*3px solid #F2C81D;[^}]*outline-offset:\s*4px;[^}]*box-shadow:\s*0 0 0 2px #0032A0;/i,
+  );
+});
+
+test("stylesheet composes contour drift with each contour's base rotation", () => {
+  const css = load("src/styles.css");
+
+  assert.match(css, /\.contour\s*\{[^}]*--contour-rotation:\s*0deg;[^}]*transform:\s*rotate\(var\(--contour-rotation\)\);/i);
+  assert.match(css, /\.contour-one\s*\{[^}]*--contour-rotation:\s*18deg;/i);
+  assert.match(css, /rotate\(calc\(var\(--contour-rotation\) \+ 8deg\)\)/i);
+  assert.match(css, /rotate\(calc\(var\(--contour-rotation\) \+ 22deg\)\)/i);
 });
