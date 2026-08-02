@@ -90,6 +90,14 @@ test("stylesheet composes contour drift with each contour's base rotation", () =
   assert.match(css, /rotate\(calc\(var\(--contour-rotation\) \+ 22deg\)\)/i);
 });
 
+test("coarse-pointer devices disable contour animation", () => {
+  const css = load("src/styles.css");
+  const coarsePointerBlock = css.match(/@media\s*\(pointer:\s*coarse\)\s*\{([\s\S]*?)\n\}/i)?.[1];
+
+  assert.ok(coarsePointerBlock, "Expected a coarse-pointer media query");
+  assert.match(coarsePointerBlock, /\.contour\s*\{\s*animation:\s*none;\s*\}/i);
+});
+
 test("stage caption uses safe centered insets above rounded corners", () => {
   const css = load("src/styles.css");
   const caption = css.match(/\.stage-caption\s*\{([^}]*)\}/i)?.[1];
@@ -114,6 +122,17 @@ test("document metadata uses the production identity", () => {
   assert.match(html, /name="twitter:card" content="summary_large_image"/);
   assert.match(html, /rel="icon" href="\/favicon\.svg"/);
   assert.match(html, /<noscript>[\s\S]*Coming soon[\s\S]*independent civic initiative[\s\S]*<\/noscript>/i);
+});
+
+test("noscript fallback explains BetterKabugao's portal purpose", () => {
+  const html = load("index.html");
+  const noscript = html.match(/<noscript>([\s\S]*?)<\/noscript>/i)?.[1];
+
+  assert.ok(noscript, "Expected a noscript fallback");
+  assert.match(
+    noscript,
+    /independent, community-maintained portal for local services, public information, culture, and places in Kabugao, Apayao/i,
+  );
 });
 
 test("crawler and Cloudflare files reference the canonical domain", () => {

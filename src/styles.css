@@ -107,6 +107,7 @@ body::before {
 
 @media (pointer: coarse) {
   .brand-artwork { transform: none; }
+  .contour { animation: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
