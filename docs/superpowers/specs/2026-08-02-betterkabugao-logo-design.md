@@ -1,6 +1,6 @@
 # BetterKabugao Logo Design
 
-- **Status:** Approved direction; awaiting written-spec review
+- **Status:** Approved and implemented
 - **Brand:** BetterKabugao
 - **Primary use:** Website header, favicon, social profiles, and project documentation
 
@@ -62,3 +62,9 @@ The final assets must:
 - match the approved blue and yellow values exactly.
 
 Temporary PNG previews may be generated for visual review, but SVG files are the source of truth.
+
+## Assets
+
+- [`public/brand/betterkabugao-logo.svg`](../../../public/brand/betterkabugao-logo.svg) — horizontal lockup
+- [`public/brand/betterkabugao-mark.svg`](../../../public/brand/betterkabugao-mark.svg) — standalone mark
+- [`public/favicon.svg`](../../../public/favicon.svg) — compact favicon
