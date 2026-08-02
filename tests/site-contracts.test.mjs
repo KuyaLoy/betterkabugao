@@ -1,5 +1,7 @@
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 import test from "node:test";
 
 const root = new URL("../", import.meta.url);
@@ -36,4 +38,16 @@ test("Vite loads React and the Tailwind v4 plugin", () => {
 
 test("the project pins the validated Node release", () => {
   assert.equal(load(".node-version").trim(), "22.14.0");
+});
+
+test("generated dependency and build output paths are ignored", () => {
+  for (const path of ["node_modules/.keep", "dist/.keep"]) {
+    assert.doesNotThrow(() => {
+      execFileSync("git", ["check-ignore", "--quiet", path], {
+        cwd: fileURLToPath(root),
+        env: { ...process.env, GIT_CONFIG_GLOBAL: "NUL" },
+        stdio: "pipe",
+      });
+    });
+  }
 });
