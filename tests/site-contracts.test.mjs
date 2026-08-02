@@ -88,3 +88,37 @@ test("stylesheet composes contour drift with each contour's base rotation", () =
   assert.match(css, /rotate\(calc\(var\(--contour-rotation\) \+ 8deg\)\)/i);
   assert.match(css, /rotate\(calc\(var\(--contour-rotation\) \+ 22deg\)\)/i);
 });
+
+test("document metadata uses the production identity", () => {
+  const html = load("index.html");
+
+  assert.match(html, /<title>BetterKabugao — Kabugao information, made clearer<\/title>/);
+  assert.match(html, /name="description"/);
+  assert.match(html, /rel="canonical" href="https:\/\/betterkabugao\.org\//);
+  assert.match(html, /property="og:title"/);
+  assert.match(html, /property="og:image" content="https:\/\/betterkabugao\.org\/brand\/betterkabugao-social\.png"/);
+  assert.match(html, /property="og:image:width" content="1200"/);
+  assert.match(html, /property="og:image:height" content="630"/);
+  assert.match(html, /name="twitter:card" content="summary_large_image"/);
+  assert.match(html, /rel="icon" href="\/favicon\.svg"/);
+  assert.match(html, /<noscript>[\s\S]*Coming soon[\s\S]*independent civic initiative[\s\S]*<\/noscript>/i);
+});
+
+test("crawler and Cloudflare files reference the canonical domain", () => {
+  assert.match(load("public/robots.txt"), /Sitemap: https:\/\/betterkabugao\.org\/sitemap\.xml/);
+  assert.match(load("public/sitemap.xml"), /<loc>https:\/\/betterkabugao\.org\/<\/loc>/);
+  const headers = load("public/_headers");
+  assert.match(headers, /X-Content-Type-Options: nosniff/);
+  assert.match(headers, /Referrer-Policy: strict-origin-when-cross-origin/);
+  assert.match(headers, /Permissions-Policy: geolocation=\(\), camera=\(\), microphone=\(\)/);
+});
+
+test("social preview is a 1200 by 630 PNG", async () => {
+  const socialCard = new URL("public/brand/betterkabugao-social.png", root);
+  assert.ok(existsSync(socialCard), "Expected generated social preview PNG");
+  const { default: sharp } = await import("sharp");
+  const metadata = await sharp(readFileSync(socialCard)).metadata();
+  assert.equal(metadata.format, "png");
+  assert.equal(metadata.width, 1200);
+  assert.equal(metadata.height, 630);
+});
