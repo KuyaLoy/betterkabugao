@@ -386,7 +386,9 @@ Expected: no existing comment with the exact reply below. If the exact reply alr
 - [ ] **Step 2: Post the approved reply**
 
 ```bash
-gh pr comment 147 --repo jmacj/better-lgu-directory --body "Noted — I’ll use the repository’s PR template for future directory updates and include the full context and checklist."
+gh pr comment 147 --repo jmacj/better-lgu-directory --body "Noted — I’ll use the repository’s PR template for future directory updates and include the full context and checklist.
+
+I recently purchased betterkabugao.org and I’m currently creating a coming-soon page for the BetterKabugao portal. I’ll update this thread once the site is live so the remaining verification can be completed. Thank you!"
 ```
 
 - [ ] **Step 3: Verify the reply**
@@ -397,4 +399,4 @@ Run:
 gh pr view 147 --repo jmacj/better-lgu-directory --json comments --jq '.comments[-1] | {author: .author.login, body: .body, url: .url}'
 ```
 
-Expected: author `KuyaLoy`, the exact approved sentence, and a GitHub comment URL.
+Expected: author `KuyaLoy`, the approved two-paragraph update, and a GitHub comment URL. The `needs-verification` label remains until the domain serves the portal and a maintainer completes verification.
