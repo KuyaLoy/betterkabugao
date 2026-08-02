@@ -1,6 +1,6 @@
 # BetterKabugao Coming-Soon Launch Design
 
-- **Status:** Approved direction; awaiting written-spec review
+- **Status:** Approved
 - **Production domain:** [betterkabugao.org](https://betterkabugao.org)
 - **Repository:** [KuyaLoy/betterkabugao](https://github.com/KuyaLoy/betterkabugao)
 
