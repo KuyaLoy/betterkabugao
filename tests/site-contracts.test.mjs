@@ -51,3 +51,18 @@ test("generated dependency and build output paths are ignored", () => {
     });
   }
 });
+
+test("stylesheet carries the approved palette and motion safeguards", () => {
+  const css = load("src/styles.css");
+
+  assert.match(css, /@import\s+["']tailwindcss["']/);
+  assert.match(css, /#0032A0/i);
+  assert.match(css, /#F2C81D/i);
+  assert.match(css, /#111827/i);
+  assert.match(css, /@keyframes\s+mark-reveal/);
+  assert.match(css, /@keyframes\s+contour-drift/);
+  assert.match(css, /prefers-reduced-motion:\s*reduce/);
+  assert.match(css, /pointer:\s*coarse/);
+  assert.match(css, /--parallax-x/);
+  assert.match(css, /--parallax-y/);
+});
