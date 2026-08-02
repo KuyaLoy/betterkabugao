@@ -90,6 +90,17 @@ test("stylesheet composes contour drift with each contour's base rotation", () =
   assert.match(css, /rotate\(calc\(var\(--contour-rotation\) \+ 22deg\)\)/i);
 });
 
+test("stage caption uses safe centered insets above rounded corners", () => {
+  const css = load("src/styles.css");
+  const caption = css.match(/\.stage-caption\s*\{([^}]*)\}/i)?.[1];
+
+  assert.ok(caption, "Expected a stage caption rule");
+  assert.match(caption, /left:\s*24px;/i);
+  assert.match(caption, /right:\s*24px;/i);
+  assert.match(caption, /bottom:\s*28px;/i);
+  assert.match(caption, /text-align:\s*center;/i);
+});
+
 test("document metadata uses the production identity", () => {
   const html = load("index.html");
 
@@ -143,4 +154,14 @@ test("social-card renderer is font-free and byte-stable", async () => {
     encoding: "utf8",
   });
   assert.match(output, /SOCIAL_CARD_OK 1200x630/);
+});
+
+test("README documents local and Cloudflare build settings", () => {
+  const readme = load("README.md");
+  assert.match(readme, /npm install/);
+  assert.match(readme, /npm run dev/);
+  assert.match(readme, /npm run build/);
+  assert.match(readme, /Production branch:\s*`main`/);
+  assert.match(readme, /Build output directory:\s*`dist`/);
+  assert.match(readme, /independent civic initiative/i);
 });

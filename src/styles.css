@@ -61,7 +61,7 @@ body::before {
 .brand-artwork { width: 66%; transform: translate3d(var(--parallax-x), var(--parallax-y), 0); transition: transform 160ms ease-out; filter: drop-shadow(0 20px 22px rgba(0, 50, 160, 0.14)); }
 .brand-artwork__sunrise { transform-origin: 88px 30px; animation: mark-reveal 760ms 220ms both cubic-bezier(.2,.8,.2,1); }
 .brand-artwork__silhouette { transform-origin: center; animation: mark-reveal 820ms 80ms both cubic-bezier(.2,.8,.2,1); }
-.stage-caption { position: absolute; right: 24px; bottom: 20px; color: #0032A0; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.14em; }
+.stage-caption { position: absolute; right: 24px; bottom: 28px; left: 24px; color: #0032A0; font-size: 0.7rem; font-weight: 800; text-align: center; text-transform: uppercase; letter-spacing: 0.14em; }
 .contour { --contour-rotation: 0deg; position: absolute; border: 1px solid rgba(0, 50, 160, 0.14); border-radius: 50%; transform: rotate(var(--contour-rotation)); animation: contour-drift 15s infinite alternate ease-in-out; }
 .contour-one { --contour-rotation: 18deg; width: 88%; height: 46%; }
 .contour-two { width: 66%; height: 86%; animation-delay: -4s; }

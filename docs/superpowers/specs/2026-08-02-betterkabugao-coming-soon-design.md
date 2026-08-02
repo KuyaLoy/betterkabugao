@@ -1,6 +1,6 @@
 # BetterKabugao Coming-Soon Launch Design
 
-- **Status:** Approved
+- **Status:** Approved and implemented
 - **Production domain:** [betterkabugao.org](https://betterkabugao.org)
 - **Repository:** [KuyaLoy/betterkabugao](https://github.com/KuyaLoy/betterkabugao)
 
@@ -118,3 +118,10 @@ The coming-soon launch is complete when:
 ## Deferred Work
 
 The full information architecture, sourced civic content, site search, language switching, Cloudflare Workers AI assistant, analytics, forms, and any database remain outside this launch. They will be implemented only after the public placeholder and deployment pipeline are stable.
+
+## Implementation
+
+- Application: React, TypeScript, Vite, and Tailwind CSS
+- Build command: `npm run build`
+- Output directory: `dist`
+- Deployment plan: [`docs/superpowers/plans/2026-08-02-betterkabugao-cloudflare-launch.md`](../plans/2026-08-02-betterkabugao-cloudflare-launch.md)
