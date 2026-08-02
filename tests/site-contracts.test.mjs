@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
@@ -121,4 +122,25 @@ test("social preview is a 1200 by 630 PNG", async () => {
   assert.equal(metadata.format, "png");
   assert.equal(metadata.width, 1200);
   assert.equal(metadata.height, 630);
+});
+
+test("social-card renderer is font-free and byte-stable", async () => {
+  const { buildSocialCardSvg, renderSocialCard } = await import("../scripts/render-social-card.mjs");
+  const svg = await buildSocialCardSvg();
+
+  assert.doesNotMatch(svg, /<text\b/i);
+  assert.doesNotMatch(svg, /font-family/i);
+
+  const first = await renderSocialCard();
+  const second = await renderSocialCard();
+  assert.equal(
+    createHash("sha256").update(first).digest("hex"),
+    createHash("sha256").update(second).digest("hex"),
+  );
+
+  const output = execFileSync(process.execPath, ["scripts/render-social-card.mjs"], {
+    cwd: fileURLToPath(root),
+    encoding: "utf8",
+  });
+  assert.match(output, /SOCIAL_CARD_OK 1200x630/);
 });
