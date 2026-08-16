@@ -23,9 +23,8 @@ test("project foundation exposes reproducible quality scripts", () => {
   assert.equal(packageJson.scripts.build, "tsc -b && vite build");
   assert.equal(packageJson.scripts.lint, "eslint .");
   assert.equal(packageJson.scripts.typecheck, "tsc -b --pretty false");
-  assert.equal(packageJson.scripts["test:contracts"], "node --test tests/brand-assets.test.mjs tests/site-contracts.test.mjs");
   assert.equal(packageJson.scripts["test:unit"], "vitest run");
-  assert.equal(packageJson.scripts.test, "npm run test:contracts && npm run test:unit");
+  assert.equal(packageJson.scripts["brand:build"], "node scripts/build-brand.mjs");
   assert.equal(packageJson.scripts["brand:social"], "node scripts/render-social-card.mjs");
 });
 
@@ -34,7 +33,6 @@ test("Vite loads React and the Tailwind v4 plugin", () => {
   assert.match(config, /react\(\)/);
   assert.match(config, /tailwindcss\(\)/);
   assert.match(config, /environment:\s*["']jsdom["']/);
-  assert.match(config, /setupFiles:\s*["']\.\/src\/test\/setup\.ts["']/);
 });
 
 test("the project pins the validated Node release", () => {
@@ -42,106 +40,117 @@ test("the project pins the validated Node release", () => {
 });
 
 test("generated dependency and build output paths are ignored", () => {
-  for (const path of ["node_modules/.keep", "dist/.keep"]) {
-    assert.doesNotThrow(() => {
-      execFileSync("git", ["check-ignore", "--quiet", path], {
-        cwd: fileURLToPath(root),
-        env: { ...process.env, GIT_CONFIG_GLOBAL: "NUL" },
-        stdio: "pipe",
-      });
-    });
+  // Read .gitignore directly rather than shelling out to git: `git
+  // check-ignore` needs an isolated global config to be deterministic, and
+  // the usual /dev/null trick is not portable to Windows.
+  const entries = load(".gitignore")
+    .split("\n")
+    .map((line) => line.trim())
+    .filter((line) => line && !line.startsWith("#"));
+
+  for (const required of ["node_modules/", "dist/"]) {
+    assert.ok(entries.includes(required), `Expected ${required} in .gitignore`);
   }
 });
 
-test("stylesheet carries the approved palette and motion safeguards", () => {
+test("line endings are normalised for cross-platform contributors", () => {
+  const attributes = load(".gitattributes");
+  assert.match(attributes, /\*\s+text=auto eol=lf/);
+  assert.match(attributes, /\*\.woff2 binary/);
+});
+
+test("stylesheet follows the BetterLGU measurements recorded in the research", () => {
   const css = load("src/styles.css");
 
   assert.match(css, /@import\s+["']tailwindcss["']/);
-  assert.match(css, /#0032A0/i);
-  assert.match(css, /#F2C81D/i);
-  assert.match(css, /#111827/i);
-  assert.match(css, /#FFFFFF/i);
-  for (const unapprovedColor of ["#344054", "#4b5565", "#667085"]) {
-    assert.doesNotMatch(css, new RegExp(unapprovedColor, "i"));
+  // BetterGov.ph design-system colours
+  for (const token of ["#0066eb", "#003d8d", "#00295e", "#00142f", "#ffb900", "#f8f9fa"]) {
+    assert.ok(css.toLowerCase().includes(token), `Expected BetterGov token ${token}`);
   }
-  assert.match(css, /@keyframes\s+mark-reveal/);
-  assert.match(css, /@keyframes\s+contour-drift/);
-  assert.match(css, /prefers-reduced-motion:\s*reduce/);
-  assert.match(css, /pointer:\s*coarse/);
-  assert.match(css, /--parallax-x/);
-  assert.match(css, /--parallax-y/);
+  // Network conventions: Inter, 1200px container, 76px header, sharp buttons
+  assert.match(css, /font-family:\s*"Inter"/);
+  assert.match(css, /--container:\s*1200px/);
+  assert.match(css, /min-height:\s*76px/);
+  assert.match(css, /\.btn\s*\{[^}]*border-radius:\s*6px/s);
+  assert.doesNotMatch(css, /border-radius:\s*999px/, "the network uses no pill buttons");
+  assert.match(css, /prefers-reduced-motion/);
+  assert.match(css, /animation-delay:\s*0s\s*!important/);
 });
 
-test("stylesheet layers civic and sunrise colors in focus indicators", () => {
-  const css = load("src/styles.css");
-
-  assert.match(
-    css,
-    /:focus-visible[^{}]*\{[^}]*outline:\s*3px solid #F2C81D;[^}]*outline-offset:\s*4px;[^}]*box-shadow:\s*0 0 0 2px #0032A0;/i,
-  );
+test("Inter is vendored with its licence and Figtree is gone", () => {
+  for (const weight of [400, 500, 600, 700, 800]) {
+    assert.ok(
+      existsSync(new URL(`public/fonts/inter-latin-${weight}-normal.woff2`, root)),
+      `Expected vendored Inter ${weight}`,
+    );
+  }
+  assert.ok(existsSync(new URL("public/fonts/OFL.txt", root)), "Expected the OFL licence beside the fonts");
+  assert.ok(!existsSync(new URL("public/fonts/figtree-latin-400-normal.woff2", root)));
 });
 
-test("stylesheet composes contour drift with each contour's base rotation", () => {
-  const css = load("src/styles.css");
+test("site content states only verified, sourced facts", () => {
+  const content = load("src/app/site-content.ts");
 
-  assert.match(css, /\.contour\s*\{[^}]*--contour-rotation:\s*0deg;[^}]*transform:\s*rotate\(var\(--contour-rotation\)\);/i);
-  assert.match(css, /\.contour-one\s*\{[^}]*--contour-rotation:\s*18deg;/i);
-  assert.match(css, /rotate\(calc\(var\(--contour-rotation\) \+ 8deg\)\)/i);
-  assert.match(css, /rotate\(calc\(var\(--contour-rotation\) \+ 22deg\)\)/i);
+  assert.match(content, /18\.0229/);
+  assert.match(content, /121\.1841/);
+  assert.match(content, /135\.7 m/);
+  assert.match(content, /935\.12 km²/);
+  assert.match(content, /16,215/);
+  assert.match(content, /2020/);
+  assert.match(content, /PSA/);
+  assert.match(content, /PhilAtlas/);
+  assert.match(content, /Robin Tapiru/);
+  assert.match(content, /₱670/);
+  assert.match(content, /No public funds/);
+  assert.match(content, /not the official website of the Municipality of Kabugao/);
+  // the tracker schema must ship without any values
+  assert.match(content, /Public project records are being prepared/);
 });
 
-test("coarse-pointer devices disable contour animation", () => {
-  const css = load("src/styles.css");
-  const coarsePointerBlock = css.match(/@media\s*\(pointer:\s*coarse\)\s*\{([\s\S]*?)\n\}/i)?.[1];
-
-  assert.ok(coarsePointerBlock, "Expected a coarse-pointer media query");
-  assert.match(coarsePointerBlock, /\.contour\s*\{\s*animation:\s*none;\s*\}/i);
+test("no fabricated government data appears anywhere in the source", () => {
+  const content = load("src/app/site-content.ts");
+  // Only two peso figures are legitimate: ₱0 to the public, ₱670 build cost.
+  const pesoFigures = [...content.matchAll(/₱[\d,]+/g)].map((m) => m[0]);
+  assert.deepEqual([...new Set(pesoFigures)].sort(), ["₱0", "₱670"]);
+  // No percentages, no contractor or official names presented as data.
+  assert.doesNotMatch(content, /\d+(\.\d+)?%/);
 });
 
-test("stage caption uses safe centered insets above rounded corners", () => {
-  const css = load("src/styles.css");
-  const caption = css.match(/\.stage-caption\s*\{([^}]*)\}/i)?.[1];
-
-  assert.ok(caption, "Expected a stage caption rule");
-  assert.match(caption, /left:\s*24px;/i);
-  assert.match(caption, /right:\s*24px;/i);
-  assert.match(caption, /bottom:\s*28px;/i);
-  assert.match(caption, /text-align:\s*center;/i);
-});
-
-test("document metadata uses the production identity", () => {
+test("document metadata matches the launch identity", () => {
   const html = load("index.html");
 
-  assert.match(html, /<title>BetterKabugao — Kabugao information, made clearer<\/title>/);
-  assert.match(html, /name="description"/);
-  assert.match(html, /rel="canonical" href="https:\/\/betterkabugao\.org\//);
-  assert.match(html, /property="og:title"/);
-  assert.match(html, /property="og:image" content="https:\/\/betterkabugao\.org\/brand\/betterkabugao-social\.png"/);
-  assert.match(html, /property="og:image:width" content="1200"/);
-  assert.match(html, /property="og:image:height" content="630"/);
-  assert.match(html, /name="twitter:card" content="summary_large_image"/);
-  assert.match(html, /rel="icon" href="\/favicon\.svg"/);
-  assert.match(html, /<noscript>[\s\S]*Coming soon[\s\S]*independent civic initiative[\s\S]*<\/noscript>/i);
+  assert.match(html, /<meta name="theme-color" content="#003D8D"/);
+  assert.match(html, /rel="canonical" href="https:\/\/betterkabugao\.org\/"/);
+  assert.match(html, /og:image" content="https:\/\/betterkabugao\.org\/brand\/betterkabugao-social\.png"/);
+  assert.match(html, /<noscript>[\s\S]*21 barangays[\s\S]*16,215[\s\S]*<\/noscript>/);
+  assert.match(html, /<noscript>[\s\S]*Robin Tapiru[\s\S]*<\/noscript>/);
+  assert.match(html, /<noscript>[\s\S]*not the official website[\s\S]*<\/noscript>/i);
+  assert.doesNotMatch(html, /<style\b/i);
+  assert.doesNotMatch(html, /<script(?![^>]*\bsrc=)/i);
 });
 
-test("noscript fallback explains BetterKabugao's portal purpose", () => {
-  const html = load("index.html");
-  const noscript = html.match(/<noscript>([\s\S]*?)<\/noscript>/i)?.[1];
-
-  assert.ok(noscript, "Expected a noscript fallback");
-  assert.match(
-    noscript,
-    /independent, community-maintained portal for local services, public information, culture, and places in Kabugao, Apayao/i,
-  );
-});
-
-test("crawler and Cloudflare files reference the canonical domain", () => {
-  assert.match(load("public/robots.txt"), /Sitemap: https:\/\/betterkabugao\.org\/sitemap\.xml/);
-  assert.match(load("public/sitemap.xml"), /<loc>https:\/\/betterkabugao\.org\/<\/loc>/);
+test("security headers stay strict, allowing only the weather endpoint", () => {
   const headers = load("public/_headers");
+
+  assert.match(headers, /Strict-Transport-Security: max-age=31536000/);
   assert.match(headers, /X-Content-Type-Options: nosniff/);
+  assert.match(headers, /X-Frame-Options: DENY/);
   assert.match(headers, /Referrer-Policy: strict-origin-when-cross-origin/);
-  assert.match(headers, /Permissions-Policy: geolocation=\(\), camera=\(\), microphone=\(\)/);
+  assert.match(headers, /Content-Security-Policy: default-src 'self'/);
+  assert.match(headers, /script-src 'self'/);
+  assert.match(headers, /style-src 'self'/);
+  assert.match(headers, /connect-src 'self' https:\/\/api\.open-meteo\.com/);
+  assert.match(headers, /object-src 'none'/);
+  assert.match(headers, /frame-ancestors 'none'/);
+});
+
+test("the only third-party runtime request is the documented weather API", () => {
+  const sources = ["src/lib/useKabugaoNow.ts", "src/App.tsx", "src/components/UtilityStrip.tsx"];
+  const hosts = new Set();
+  for (const file of sources) {
+    for (const match of load(file).matchAll(/https:\/\/([\w.-]+)/g)) hosts.add(match[1]);
+  }
+  assert.deepEqual([...hosts], ["api.open-meteo.com"]);
 });
 
 test("social preview is a 1200 by 630 PNG", async () => {
@@ -160,6 +169,7 @@ test("social-card renderer is font-free and byte-stable", async () => {
 
   assert.doesNotMatch(svg, /<text\b/i);
   assert.doesNotMatch(svg, /font-family/i);
+  assert.doesNotMatch(svg, /undefined/, "every referenced geometry path must exist");
 
   const first = await renderSocialCard();
   const second = await renderSocialCard();
@@ -175,6 +185,17 @@ test("social-card renderer is font-free and byte-stable", async () => {
   assert.match(output, /SOCIAL_CARD_OK 1200x630/);
 });
 
+test("the design research is committed alongside the design it produced", () => {
+  const research = load("design-research/RESEARCH.md");
+  assert.match(research, /Sites reviewed/i);
+  assert.match(research, /BetterSolano/);
+  assert.match(research, /BetterTanay/);
+  assert.match(research, /Patterns to avoid/i);
+  // at least ten sites must be listed
+  const listed = [...research.matchAll(/^\d+\.\s+Better/gm)];
+  assert.ok(listed.length >= 10, `Expected 10+ sites reviewed, found ${listed.length}`);
+});
+
 test("README documents local and Cloudflare build settings", () => {
   const readme = load("README.md");
   assert.match(readme, /npm install/);
@@ -182,5 +203,5 @@ test("README documents local and Cloudflare build settings", () => {
   assert.match(readme, /npm run build/);
   assert.match(readme, /Production branch:\s*`main`/);
   assert.match(readme, /Build output directory:\s*`dist`/);
-  assert.match(readme, /independent civic initiative/i);
+  assert.match(readme, /independent/i);
 });

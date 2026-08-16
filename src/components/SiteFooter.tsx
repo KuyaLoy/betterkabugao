@@ -1,10 +1,66 @@
 import { siteContent } from "../app/site-content";
+import { BrandLockup } from "../brand/BrandLockup";
 
 export function SiteFooter() {
+  const { links, costs, developer } = siteContent;
+
   return (
-    <footer className="site-footer">
-      <p>{siteContent.disclaimer}</p>
-      <a href={siteContent.repositoryUrl} target="_blank" rel="noreferrer">View the project on GitHub</a>
+    <footer className="footer">
+      <div className="shell footer__top">
+        <div>
+          <BrandLockup variant="dark" />
+          <p className="footer__about">
+            A volunteer-run civic portal for Kabugao, the capital of Apayao. Independent of the
+            municipal government.
+          </p>
+        </div>
+
+        <div>
+          <h3>Project</h3>
+          <div className="footer__links">
+            <a href={links.repository} target="_blank" rel="noreferrer">GitHub repository</a>
+            <a href="#transparency">Transparency</a>
+            <a href="#explore">Explore Kabugao</a>
+            <a href="#services">Services</a>
+          </div>
+        </div>
+
+        <div>
+          <h3>Resources</h3>
+          <div className="footer__links">
+            <a href={links.openData} target="_blank" rel="noreferrer">Open Data Philippines</a>
+            <a href={links.foi} target="_blank" rel="noreferrer">Freedom of Information</a>
+            <a href={links.dilgFdp} target="_blank" rel="noreferrer">DILG Full Disclosure</a>
+            <a href={links.philGeps} target="_blank" rel="noreferrer">PhilGEPS</a>
+            <a href={links.apayao} target="_blank" rel="noreferrer">Province of Apayao</a>
+          </div>
+        </div>
+
+        <div>
+          <h3>Cost transparency</h3>
+          <div className="footer__chips">
+            <span className="chip chip--zero">
+              {costs.toPeople.label} <b>{costs.toPeople.value}</b>
+            </span>
+            <span className="chip chip--build">
+              {costs.toBuild.label} <b>{costs.toBuild.value}</b>
+            </span>
+          </div>
+          <div className="footer__links footer__cta">
+            <a href={links.betterGov} target="_blank" rel="noreferrer">BetterGov.ph</a>
+            <a href={links.directory} target="_blank" rel="noreferrer">BetterLGU Directory</a>
+          </div>
+        </div>
+      </div>
+
+      <div className="shell footer__bottom">
+        <p className="footer__disclaimer">
+          {siteContent.disclaimer} {siteContent.sourceNote}
+        </p>
+        <p className="footer__built">
+          Built by <b>{developer.name}</b> · {siteContent.license} · v{siteContent.version}
+        </p>
+      </div>
     </footer>
   );
 }

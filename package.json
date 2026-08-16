@@ -1,11 +1,7 @@
 {
   "name": "betterkabugao",
   "version": "0.1.0",
-  "main": "index.js",
-  "directories": {
-    "doc": "docs",
-    "test": "tests"
-  },
+  "description": "Independent, community-maintained civic portal for Kabugao, Apayao — part of the BetterGov.ph volunteer network",
   "scripts": {
     "test": "npm run test:contracts && npm run test:unit",
     "dev": "vite",
@@ -15,19 +11,18 @@
     "typecheck": "tsc -b --pretty false",
     "test:contracts": "node --test tests/brand-assets.test.mjs tests/site-contracts.test.mjs",
     "test:unit": "vitest run",
+    "brand:build": "node scripts/build-brand.mjs",
     "brand:social": "node scripts/render-social-card.mjs"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
   "dependencies": {
     "react": "^19.2.8",
     "react-dom": "^19.2.8"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@fontsource/inter": "^5.2.8",
     "@tailwindcss/vite": "^4.3.3",
     "@testing-library/jest-dom": "^7.0.0",
     "@testing-library/react": "^16.3.2",

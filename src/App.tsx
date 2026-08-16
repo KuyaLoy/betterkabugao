@@ -1,18 +1,32 @@
-import { BuildThemes } from "./components/BuildThemes";
-import { LaunchHero } from "./components/LaunchHero";
+import { ExploreSection } from "./components/ExploreSection";
+import { Hero } from "./components/Hero";
+import { HotlineBar } from "./components/HotlineBar";
+import { IntroSection } from "./components/IntroSection";
+import { MissionSection } from "./components/MissionSection";
+import { ServicesSection } from "./components/ServicesSection";
 import { SiteFooter } from "./components/SiteFooter";
 import { SiteHeader } from "./components/SiteHeader";
+import { TransparencySection } from "./components/TransparencySection";
+import { UtilityStrip } from "./components/UtilityStrip";
 
 export function App() {
   return (
-    <div className="site-shell">
-      <a className="skip-link" href="#main-content">Skip to main content</a>
+    <>
+      <a className="skip-link" href="#main-content">
+        Skip to main content
+      </a>
+      <HotlineBar />
+      <UtilityStrip />
       <SiteHeader />
       <main id="main-content">
-        <LaunchHero />
-        <BuildThemes />
+        <Hero />
+        <IntroSection />
+        <TransparencySection />
+        <ExploreSection />
+        <ServicesSection />
+        <MissionSection />
       </main>
       <SiteFooter />
-    </div>
+    </>
   );
 }
