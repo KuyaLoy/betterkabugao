@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { siteContent } from "../app/site-content";
 import { BrandLockup } from "../brand/BrandLockup";
 
@@ -19,9 +20,12 @@ export function SiteFooter() {
           <h3>Project</h3>
           <div className="footer__links">
             <a href={links.repository} target="_blank" rel="noreferrer">GitHub repository</a>
-            <a href="#transparency">Transparency</a>
-            <a href="#explore">Explore Kabugao</a>
-            <a href="#services">Services</a>
+            <Link to="/government/barangays">The 21 barangays</Link>
+            <Link to="/government/officials">Municipal officials</Link>
+            <Link to="/transparency">Transparency</Link>
+            <Link to="/explore">Explore Kabugao</Link>
+            <Link to="/services">Services</Link>
+            <Link to="/about">About</Link>
           </div>
         </div>
 

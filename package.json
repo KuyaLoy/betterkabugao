@@ -5,21 +5,27 @@
   "scripts": {
     "test": "npm run test:contracts && npm run test:unit",
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "npm run seo:build && tsc -b && npm run build:client && npm run build:ssr && npm run prerender",
     "lint": "eslint .",
     "preview": "vite preview",
     "typecheck": "tsc -b --pretty false",
     "test:contracts": "node --test tests/brand-assets.test.mjs tests/site-contracts.test.mjs",
     "test:unit": "vitest run",
     "brand:build": "node scripts/build-brand.mjs",
-    "brand:social": "node scripts/render-social-card.mjs"
+    "brand:social": "node scripts/render-social-card.mjs",
+    "seo:build": "node scripts/build-seo.mjs",
+    "build:client": "vite build",
+    "build:ssr": "vite build --ssr src/entry-server.tsx --outDir dist-ssr && vite build --ssr src/lib/routes.ts --outDir dist-ssr --emptyOutDir false",
+    "prerender": "node scripts/prerender.mjs"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "leaflet": "^1.9.4",
     "react": "^19.2.8",
-    "react-dom": "^19.2.8"
+    "react-dom": "^19.2.8",
+    "react-router-dom": "^7.18.2"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
@@ -27,6 +33,7 @@
     "@testing-library/jest-dom": "^7.0.0",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.1",
+    "@types/leaflet": "^1.9.22",
     "@types/node": "^26.1.2",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",

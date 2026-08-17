@@ -1,0 +1,208 @@
+{
+  "bettersolano": {
+    "containers": [
+      "1152px(22)",
+      "1200px(14)",
+      "1440px(14)"
+    ],
+    "headerH": 80,
+    "font": "Inter",
+    "h1": {
+      "size": "40px",
+      "weight": "700",
+      "lh": "48px",
+      "align": "start",
+      "text": "Welcome to BetterSolano.org"
+    },
+    "h2": {
+      "size": "16px",
+      "weight": "700",
+      "align": "start"
+    },
+    "btnRadii": [
+      "0px"
+    ],
+    "btnHeights": [
+      42,
+      48
+    ],
+    "cardRadii": [
+      "16px",
+      "12px",
+      "14px",
+      "20px"
+    ],
+    "heroBg": "rgba(0, 0, 0, 0)"
+  },
+  "bettertagaytay": {
+    "containers": [
+      "1440px(15)",
+      "1232px(12)",
+      "1280px(10)"
+    ],
+    "headerH": null,
+    "font": "Inter",
+    "h1": {
+      "size": "60px",
+      "weight": "900",
+      "lh": "75px",
+      "align": "start",
+      "text": "BetterTagaytay.org"
+    },
+    "h2": {
+      "size": "36px",
+      "weight": "700",
+      "align": "start"
+    },
+    "btnRadii": [
+      "8px",
+      "0px"
+    ],
+    "btnHeights": [
+      36,
+      56
+    ],
+    "cardRadii": [
+      "10px",
+      "14px",
+      "3.35544e+07px"
+    ],
+    "heroBg": "rgb(255, 255, 255)"
+  },
+  "betteralaminoscity": {
+    "containers": [
+      "1280px(12)",
+      "1440px(10)",
+      "1248px(5)"
+    ],
+    "headerH": 73,
+    "font": "Inter",
+    "h1": {
+      "size": "48px",
+      "weight": "800",
+      "lh": "60px",
+      "align": "start",
+      "text": "BetterAlaminosCity.org"
+    },
+    "h2": {
+      "size": "18px",
+      "weight": "600",
+      "align": "start"
+    },
+    "btnRadii": [
+      "0px",
+      "6px"
+    ],
+    "btnHeights": [
+      48,
+      54
+    ],
+    "cardRadii": [
+      "8px"
+    ],
+    "heroBg": "rgb(0, 56, 168)"
+  },
+  "bettertanay": {
+    "containers": [
+      "1232px(16)",
+      "1440px(15)",
+      "1280px(11)"
+    ],
+    "headerH": null,
+    "font": "Inter",
+    "h1": {
+      "size": "60px",
+      "weight": "900",
+      "lh": "75px",
+      "align": "start",
+      "text": "BetterTanay.org"
+    },
+    "h2": null,
+    "btnRadii": [
+      "8px",
+      "0px"
+    ],
+    "btnHeights": [
+      36,
+      56
+    ],
+    "cardRadii": [
+      "10px",
+      "14px",
+      "16px",
+      "3.35544e+07px"
+    ],
+    "heroBg": "rgb(255, 255, 255)"
+  },
+  "betteraklan": {
+    "containers": [
+      "1248px(20)",
+      "1440px(13)",
+      "1280px(9)"
+    ],
+    "headerH": null,
+    "font": "Inter",
+    "h1": {
+      "size": "40px",
+      "weight": "700",
+      "lh": "56px",
+      "align": "start",
+      "text": "Welcome to BetterAklan"
+    },
+    "h2": {
+      "size": "32px",
+      "weight": "700",
+      "align": "start"
+    },
+    "btnRadii": [
+      "0px",
+      "10px",
+      "8px"
+    ],
+    "btnHeights": [
+      56,
+      38,
+      48,
+      40
+    ],
+    "cardRadii": [
+      "16px"
+    ],
+    "heroBg": "rgb(255, 255, 255)"
+  },
+  "bettercabanatuan": {
+    "containers": [
+      "1248px(13)",
+      "1440px(13)",
+      "1280px(9)"
+    ],
+    "headerH": null,
+    "font": "\"IBM Plex Sans\"",
+    "h1": {
+      "size": "60px",
+      "weight": "600",
+      "lh": "63px",
+      "align": "start",
+      "text": "Cabanatuan City\nGovernment, made clear."
+    },
+    "h2": {
+      "size": "16px",
+      "weight": "600",
+      "align": "start"
+    },
+    "btnRadii": [
+      "0px"
+    ],
+    "btnHeights": [
+      36,
+      56
+    ],
+    "cardRadii": [
+      "8px",
+      "3.35544e+07px",
+      "16px",
+      "10px"
+    ],
+    "heroBg": "rgba(0, 0, 0, 0)"
+  }
+}

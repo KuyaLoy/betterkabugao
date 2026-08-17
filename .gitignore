@@ -4,3 +4,4 @@ dist/
 
 # Local scratch space for files pending manual deletion — never committed.
 _to_delete/
+dist-ssr/

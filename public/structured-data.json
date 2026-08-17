@@ -1,0 +1,611 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://betterkabugao.org/#website",
+      "url": "https://betterkabugao.org",
+      "name": "BetterKabugao.org",
+      "description": "A volunteer-run civic portal for Kabugao, the capital of Apayao — public spending, public projects, local services and local knowledge in one readable place.",
+      "inLanguage": "en-PH",
+      "publisher": {
+        "@id": "https://betterkabugao.org/#publisher"
+      }
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://betterkabugao.org/#publisher",
+      "name": "BetterKabugao",
+      "url": "https://betterkabugao.org",
+      "logo": "https://betterkabugao.org/brand/betterkabugao-mark.svg",
+      "description": "An independent, volunteer-run civic project. Not the official website of the Municipality of Kabugao. Part of the BetterGov.ph volunteer network.",
+      "founder": {
+        "@type": "Person",
+        "name": "Robin Tapiru"
+      },
+      "areaServed": {
+        "@id": "https://betterkabugao.org/#place"
+      },
+      "isPartOf": {
+        "@type": "Organization",
+        "name": "BetterGov.ph",
+        "url": "https://bettergov.ph/"
+      }
+    },
+    {
+      "@type": [
+        "City",
+        "AdministrativeArea"
+      ],
+      "@id": "https://betterkabugao.org/#place",
+      "name": "Kabugao",
+      "alternateName": "Municipality of Kabugao",
+      "description": "Capital municipality of Apayao province, Cordillera Administrative Region, Philippines. 21 barangays across 935.12 km².",
+      "identifier": [
+        {
+          "@type": "PropertyValue",
+          "propertyID": "PSGC",
+          "value": "1408104000"
+        }
+      ],
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 18.0246,
+        "longitude": 121.1845,
+        "elevation": "132 m"
+      },
+      "containedInPlace": {
+        "@type": "AdministrativeArea",
+        "name": "Apayao",
+        "containedInPlace": {
+          "@type": "Country",
+          "name": "Philippines"
+        }
+      },
+      "additionalProperty": [
+        {
+          "@type": "PropertyValue",
+          "name": "Population (2024 POPCEN)",
+          "value": 16425
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "Barangays",
+          "value": 21
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "Land area",
+          "value": "935.12 km²"
+        },
+        {
+          "@type": "PropertyValue",
+          "name": "Income classification",
+          "value": "1st class"
+        }
+      ],
+      "containsPlace": [
+        {
+          "@type": "AdministrativeArea",
+          "name": "Poblacion",
+          "identifier": [
+            {
+              "@type": "PropertyValue",
+              "propertyID": "PSGC",
+              "value": "1408104020"
+            }
+          ],
+          "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": 18.024501,
+            "longitude": 121.184501
+          },
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "Population (2024 POPCEN)",
+              "value": 2724
+            }
+          ]
+        },
+        {
+          "@type": "AdministrativeArea",
+          "name": "Lenneng",
+          "identifier": [
+            {
+              "@type": "PropertyValue",
+              "propertyID": "PSGC",
+              "value": "1408104011"
+            }
+          ],
+          "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": 17.921689,
+            "longitude": 121.215338
+          },
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "Population (2024 POPCEN)",
+              "value": 2709
+            }
+          ]
+        },
+        {
+          "@type": "AdministrativeArea",
+          "name": "Badduat",
+          "identifier": [
+            {
+              "@type": "PropertyValue",
+              "propertyID": "PSGC",
+              "value": "1408104001"
+            }
+          ],
+          "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": 17.976247,
+            "longitude": 121.20372
+          },
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "Population (2024 POPCEN)",
+              "value": 1087
+            }
+          ]
+        },
+        {
+          "@type": "AdministrativeArea",
+          "name": "Luttuacan",
+          "identifier": [
+            {
+              "@type": "PropertyValue",
+              "propertyID": "PSGC",
+              "value": "1408104013"
+            }
+          ],
+          "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": 17.990769,
+            "longitude": 121.205133
+          },
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "Population (2024 POPCEN)",
+              "value": 1070
+            }
+          ]
+        },
+        {
+          "@type": "AdministrativeArea",
+          "name": "Madatag",
+          "identifier": [
+            {
+              "@type": "PropertyValue",
+              "propertyID": "PSGC",
+              "value": "1408104014"
+            }
+          ],
+          "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": 18.047318,
+            "longitude": 121.116646
+          },
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "Population (2024 POPCEN)",
+              "value": 916
+            }
+          ]
+        },
+        {
+          "@type": "AdministrativeArea",
+          "name": "Musimut",
+          "identifier": [
+            {
+              "@type": "PropertyValue",
+              "propertyID": "PSGC",
+              "value": "1408104018"
+            }
+          ],
+          "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": 18.03135,
+            "longitude": 121.112363
+          },
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "Population (2024 POPCEN)",
+              "value": 846
+            }
+          ]
+        },
+        {
+          "@type": "AdministrativeArea",
+          "name": "Dibagat",
+          "identifier": [
+            {
+              "@type": "PropertyValue",
+              "propertyID": "PSGC",
+              "value": "1408104006"
+            }
+          ],
+          "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": 18.081976,
+            "longitude": 121.093993
+          },
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "Population (2024 POPCEN)",
+              "value": 701
+            }
+          ]
+        },
+        {
+          "@type": "AdministrativeArea",
+          "name": "Lucab",
+          "identifier": [
+            {
+              "@type": "PropertyValue",
+              "propertyID": "PSGC",
+              "value": "1408104012"
+            }
+          ],
+          "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": 18.030193,
+            "longitude": 121.132322
+          },
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "Population (2024 POPCEN)",
+              "value": 652
+            }
+          ]
+        },
+        {
+          "@type": "AdministrativeArea",
+          "name": "Cabetayan",
+          "identifier": [
+            {
+              "@type": "PropertyValue",
+              "propertyID": "PSGC",
+              "value": "1408104007"
+            }
+          ],
+          "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": 17.999545,
+            "longitude": 121.174122
+          },
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "Population (2024 POPCEN)",
+              "value": 622
+            }
+          ]
+        },
+        {
+          "@type": "AdministrativeArea",
+          "name": "Karagawan",
+          "identifier": [
+            {
+              "@type": "PropertyValue",
+              "propertyID": "PSGC",
+              "value": "1408104008"
+            }
+          ],
+          "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": 17.917617,
+            "longitude": 121.15954
+          },
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "Population (2024 POPCEN)",
+              "value": 612
+            }
+          ]
+        },
+        {
+          "@type": "AdministrativeArea",
+          "name": "Madduang",
+          "identifier": [
+            {
+              "@type": "PropertyValue",
+              "propertyID": "PSGC",
+              "value": "1408104015"
+            }
+          ],
+          "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": 18.01396,
+            "longitude": 121.130119
+          },
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "Population (2024 POPCEN)",
+              "value": 603
+            }
+          ]
+        },
+        {
+          "@type": "AdministrativeArea",
+          "name": "Bulu",
+          "identifier": [
+            {
+              "@type": "PropertyValue",
+              "propertyID": "PSGC",
+              "value": "1408104004"
+            }
+          ],
+          "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": 18.043478,
+            "longitude": 121.220774
+          },
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "Population (2024 POPCEN)",
+              "value": 573
+            }
+          ]
+        },
+        {
+          "@type": "AdministrativeArea",
+          "name": "Dagara",
+          "identifier": [
+            {
+              "@type": "PropertyValue",
+              "propertyID": "PSGC",
+              "value": "1408104005"
+            }
+          ],
+          "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": 17.925754,
+            "longitude": 121.089301
+          },
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "Population (2024 POPCEN)",
+              "value": 528
+            }
+          ]
+        },
+        {
+          "@type": "AdministrativeArea",
+          "name": "Kumao",
+          "identifier": [
+            {
+              "@type": "PropertyValue",
+              "propertyID": "PSGC",
+              "value": "1408104009"
+            }
+          ],
+          "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": 18.085355,
+            "longitude": 121.16252
+          },
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "Population (2024 POPCEN)",
+              "value": 513
+            }
+          ]
+        },
+        {
+          "@type": "AdministrativeArea",
+          "name": "Laco",
+          "identifier": [
+            {
+              "@type": "PropertyValue",
+              "propertyID": "PSGC",
+              "value": "1408104010"
+            }
+          ],
+          "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": 18.039553,
+            "longitude": 121.174245
+          },
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "Population (2024 POPCEN)",
+              "value": 487
+            }
+          ]
+        },
+        {
+          "@type": "AdministrativeArea",
+          "name": "Baliwanan",
+          "identifier": [
+            {
+              "@type": "PropertyValue",
+              "propertyID": "PSGC",
+              "value": "1408104002"
+            }
+          ],
+          "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": 18.130155,
+            "longitude": 121.139565
+          },
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "Population (2024 POPCEN)",
+              "value": 439
+            }
+          ]
+        },
+        {
+          "@type": "AdministrativeArea",
+          "name": "Maragat",
+          "identifier": [
+            {
+              "@type": "PropertyValue",
+              "propertyID": "PSGC",
+              "value": "1408104017"
+            }
+          ],
+          "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": 17.911715,
+            "longitude": 121.066221
+          },
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "Population (2024 POPCEN)",
+              "value": 418
+            }
+          ]
+        },
+        {
+          "@type": "AdministrativeArea",
+          "name": "Nagbabalayan",
+          "identifier": [
+            {
+              "@type": "PropertyValue",
+              "propertyID": "PSGC",
+              "value": "1408104019"
+            }
+          ],
+          "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": 18.024718,
+            "longitude": 121.154709
+          },
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "Population (2024 POPCEN)",
+              "value": 374
+            }
+          ]
+        },
+        {
+          "@type": "AdministrativeArea",
+          "name": "Tuyangan",
+          "identifier": [
+            {
+              "@type": "PropertyValue",
+              "propertyID": "PSGC",
+              "value": "1408104021"
+            }
+          ],
+          "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": 18.106803,
+            "longitude": 121.116589
+          },
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "Population (2024 POPCEN)",
+              "value": 205
+            }
+          ]
+        },
+        {
+          "@type": "AdministrativeArea",
+          "name": "Magabta",
+          "identifier": [
+            {
+              "@type": "PropertyValue",
+              "propertyID": "PSGC",
+              "value": "1408104016"
+            }
+          ],
+          "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": 18.027518,
+            "longitude": 121.198783
+          },
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "Population (2024 POPCEN)",
+              "value": 187
+            }
+          ]
+        },
+        {
+          "@type": "AdministrativeArea",
+          "name": "Waga",
+          "identifier": [
+            {
+              "@type": "PropertyValue",
+              "propertyID": "PSGC",
+              "value": "1408104022"
+            }
+          ],
+          "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": 18.065781,
+            "longitude": 121.23166
+          },
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "Population (2024 POPCEN)",
+              "value": 159
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "@type": "GovernmentOrganization",
+      "name": "Municipality of Kabugao",
+      "description": "Referenced for public information only. BetterKabugao is not affiliated with the municipal government.",
+      "location": {
+        "@id": "https://betterkabugao.org/#place"
+      },
+      "employee": [
+        {
+          "@type": "Person",
+          "name": "Bensmar B. Ligwang",
+          "jobTitle": "Municipal Mayor"
+        },
+        {
+          "@type": "Person",
+          "name": "Frederick C. Amid",
+          "jobTitle": "Municipal Vice Mayor"
+        }
+      ]
+    },
+    {
+      "@type": "Dataset",
+      "@id": "https://betterkabugao.org/#barangay-dataset",
+      "name": "Barangays of Kabugao, Apayao",
+      "description": "The 21 barangays of Kabugao with PSGC codes, 2024 POPCEN population and coordinates.",
+      "creator": {
+        "@id": "https://betterkabugao.org/#publisher"
+      },
+      "spatialCoverage": {
+        "@id": "https://betterkabugao.org/#place"
+      },
+      "license": "https://creativecommons.org/licenses/by/4.0/",
+      "isBasedOn": [
+        "https://psa.gov.ph/classification/psgc/barangays/1408104000",
+        "https://www.openstreetmap.org/relation/20429167"
+      ]
+    }
+  ]
+}

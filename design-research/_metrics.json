@@ -1,0 +1,104 @@
+[
+  {
+    "slug": "bettergov",
+    "url": "https://bettergov.ph/",
+    "ok": false,
+    "error": "Error: page.goto: net::ERR_CONNECTION_RESET at https://bettergov.ph/"
+  },
+  {
+    "slug": "betterlgu-directory",
+    "url": "https://lgu.bettergov.ph/",
+    "ok": false,
+    "error": "Error: page.goto: net::ERR_CONNECTION_RESET at https://lgu.bettergov.ph/"
+  },
+  {
+    "slug": "betteriligan",
+    "url": "https://betteriligancity.org/",
+    "ok": false,
+    "error": "Error: page.goto: net::ERR_CONNECTION_RESET at https://betteriligancity.org/"
+  },
+  {
+    "slug": "bettersolano",
+    "url": "https://bettersolano.org/",
+    "ok": false,
+    "error": "Error: page.goto: net::ERR_CONNECTION_RESET at https://bettersolano.org/"
+  },
+  {
+    "slug": "betterbacolod",
+    "url": "https://betterbacolod.org/",
+    "ok": false,
+    "error": "Error: page.goto: net::ERR_CONNECTION_RESET at https://betterbacolod.org/"
+  },
+  {
+    "slug": "bettertagaytay",
+    "url": "https://bettertagaytay.org/",
+    "ok": false,
+    "error": "Error: page.goto: net::ERR_CONNECTION_RESET at https://bettertagaytay.org/"
+  },
+  {
+    "slug": "bettercabanatuan",
+    "url": "https://bettercabanatuan.org/",
+    "ok": false,
+    "error": "Error: page.goto: net::ERR_CONNECTION_RESET at https://bettercabanatuan.org/"
+  },
+  {
+    "slug": "betteralaminos",
+    "url": "https://betteralaminoscity.org/",
+    "ok": false,
+    "error": "Error: page.goto: net::ERR_CONNECTION_RESET at https://betteralaminoscity.org/"
+  },
+  {
+    "slug": "bettermeycauayan",
+    "url": "https://bettermeycauayan.org/",
+    "ok": false,
+    "error": "Error: page.goto: net::ERR_CONNECTION_RESET at https://bettermeycauayan.org/"
+  },
+  {
+    "slug": "bettertanay",
+    "url": "https://bettertanay.org/",
+    "ok": false,
+    "error": "Error: page.goto: net::ERR_CONNECTION_RESET at https://bettertanay.org/"
+  },
+  {
+    "slug": "bettercalapan",
+    "url": "https://bettercalapan.org/",
+    "ok": false,
+    "error": "Error: page.goto: net::ERR_CONNECTION_RESET at https://bettercalapan.org/"
+  },
+  {
+    "slug": "betteraklan",
+    "url": "https://betteraklan.org/",
+    "ok": false,
+    "error": "Error: page.goto: net::ERR_CONNECTION_RESET at https://betteraklan.org/"
+  },
+  {
+    "slug": "betterlaspinas",
+    "url": "https://betterlaspinas.org/",
+    "ok": false,
+    "error": "Error: page.goto: net::ERR_CONNECTION_RESET at https://betterlaspinas.org/"
+  },
+  {
+    "slug": "betterormoc",
+    "url": "https://www.betterormoc.org/",
+    "ok": false,
+    "error": "Error: page.goto: net::ERR_CONNECTION_RESET at https://www.betterormoc.org/"
+  },
+  {
+    "slug": "bettergeneraltrias",
+    "url": "https://www.bettergeneraltrias.org/",
+    "ok": false,
+    "error": "Error: page.goto: net::ERR_CONNECTION_RESET at https://www.bettergeneraltrias.org/"
+  },
+  {
+    "slug": "betteragoo",
+    "url": "https://betteragoo.org/",
+    "ok": false,
+    "error": "Error: page.goto: net::ERR_CONNECTION_RESET at https://betteragoo.org/"
+  },
+  {
+    "slug": "bettercavitecity",
+    "url": "https://bettercavitecity.org/",
+    "ok": false,
+    "error": "Error: page.goto: net::ERR_CONNECTION_RESET at https://bettercavitecity.org/"
+  }
+]

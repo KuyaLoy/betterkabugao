@@ -24,22 +24,26 @@ export function UtilityStrip() {
             </span>
           </span>
         ) : null}
-        <span className="utility__item">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
-            <path d="M7 2v2h10V2h2v2h1a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1V2h2Zm13 8H4v10h16V10Z" />
-          </svg>
-          <span>
-            <span className="utility__value">{now.day}</span>, {now.date}
-          </span>
-        </span>
-        <span className="utility__item">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
-            <path d="M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20Zm1 5h-2v6l5 3 1-1.7-4-2.3V7Z" />
-          </svg>
-          <span>
-            <span className="utility__value">{now.time}</span> PHT
-          </span>
-        </span>
+        {now ? (
+          <>
+            <span className="utility__item">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+                <path d="M7 2v2h10V2h2v2h1a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1V2h2Zm13 8H4v10h16V10Z" />
+              </svg>
+              <span>
+                <span className="utility__value">{now.day}</span>, {now.date}
+              </span>
+            </span>
+            <span className="utility__item">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+                <path d="M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20Zm1 5h-2v6l5 3 1-1.7-4-2.3V7Z" />
+              </svg>
+              <span>
+                <span className="utility__value">{now.time}</span> PHT
+              </span>
+            </span>
+          </>
+        ) : null}
       </div>
     </div>
   );

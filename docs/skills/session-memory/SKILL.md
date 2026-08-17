@@ -11,23 +11,35 @@ is mandatory.
 
 ## At session START (before touching code)
 
-1. Read `docs/CONTEXT.md` — current state, decisions log, next steps.
-2. Read the most recent file in `docs/sessions/` — what happened last time,
+1. Read **`docs/START-HERE.md`** — the single entry point: current state, what
+   is already built, the ordered plan, and the traps that have already cost
+   this project time.
+2. Read `docs/CONTEXT.md` — the snapshot and the dated decision log.
+3. Read the most recent file in `docs/sessions/` — what happened last time and
    what was left unfinished.
-3. Read `CLAUDE.md` — the hard rules.
-4. `git log --oneline -15` — what actually landed recently.
+4. Read `CLAUDE.md` — the hard rules.
+5. `git log --oneline -15` — what actually landed recently. Note that the
+   working tree may hold reviewed-but-unpushed work; check `git status` too.
 
 Do NOT re-derive project decisions from scratch or re-ask the maintainer
 things answered in these files.
 
 ## At session END (before handing off / stopping)
 
-1. **Update `docs/CONTEXT.md`**: current state line, any new decisions in
+1. **Update `docs/START-HERE.md`**: move finished items out of the plan, record
+   any new trap, refresh the state table and the test counts. This file is what
+   the next developer or model reads first — if it is stale, everything
+   downstream is wrong.
+2. **Update `docs/CONTEXT.md`**: current state line, any new decisions in
    the log (with date), revised next steps. Keep it a snapshot, not a diary —
    overwrite stale facts instead of appending forever.
-2. **Write `docs/sessions/YYYY-MM-DD-<topic>.md`** using the template below.
-3. If conventions changed: update `CLAUDE.md` and the matching contract test
-   in the same commit.
+3. **Write `docs/sessions/YYYY-MM-DD-<topic>.md`** using the template below.
+4. If conventions changed: update `CLAUDE.md` and the matching contract test
+   in the same commit. Check `README.md` too — it is public-facing and goes
+   stale silently.
+5. Record deliverables that were sent to the maintainer but **not committed**
+   (exported images, captions, one-off reports). Anything that exists only in a
+   chat window is lost the moment the session ends.
 
 ## Recap template
 

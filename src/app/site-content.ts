@@ -6,14 +6,16 @@
  */
 
 export const KABUGAO = {
-  latitude: 18.0229,
-  longitude: 121.1841,
-  coordinatesLabel: "18.0229° N, 121.1841° E",
-  elevationLabel: "135.7 m",
+  latitude: 18.0246,
+  longitude: 121.1845,
+  coordinatesLabel: "18.0246° N, 121.1845° E",
+  elevationLabel: "132 m",
   areaLabel: "935.12 km²",
   barangays: "21",
-  population: "16,215",
-  populationYear: "2020",
+  population: "16,425",
+  populationYear: "2024",
+  psgc: "1408104000",
+  incomeClass: "1st class",
   timeZone: "Asia/Manila",
 } as const;
 
@@ -47,30 +49,32 @@ export const siteContent = {
     items: [
       { label: "Domain and hosting", state: "done" },
       { label: "Open-source repository", state: "done" },
+      { label: "Barangay directory and maps", state: "done" },
+      { label: "Elected municipal officials", state: "done" },
       { label: "Public project records", state: "progress" },
       { label: "Service guides and contacts", state: "planned" },
       { label: "Budget and procurement data", state: "planned" },
     ],
-    footnote: "Follow the build, or contribute, on GitHub.",
+    footnote: "One feature ships at a time. Follow the build, or contribute, on GitHub.",
   },
 
   intro: {
     kicker: "What this will be",
     title: "Public information about Kabugao, in one readable place.",
     body:
-      "Kabugao is the capital of Apayao — 21 barangays spread across 935.12 km² of the Cordillera, home to 16,215 people. Information about how it is governed exists, but it is scattered across national portals, PDFs and offices. BetterKabugao is being built to gather it, explain it in plain language, and keep it linked to its official source.",
+      "Kabugao is the capital of Apayao — 21 barangays spread across 935.12 km² of the Cordillera, home to 16,425 people. Information about how it is governed exists, but it is scattered across national portals, PDFs and offices. BetterKabugao is being built to gather it, explain it in plain language, and keep it linked to its official source.",
     facts: [
       { value: "Capital", label: "of Apayao province" },
       { value: KABUGAO.barangays, label: "barangays" },
-      { value: KABUGAO.population, label: `residents · ${KABUGAO.populationYear} census` },
+      { value: KABUGAO.population, label: `residents · ${KABUGAO.populationYear} POPCEN` },
       { value: KABUGAO.areaLabel, label: "land area" },
     ],
     factsSource:
-      "Population: 2020 Census of Population and Housing (PSA). Area, elevation and coordinates via PhilAtlas.",
+      "Population: 2024 POPCEN (Philippine Statistics Authority) — the 21 barangay figures sum to this total. PSGC 1408104000. Income class: 1st class, per Department of Finance Order 074.2024. Elevation from Copernicus DEM; coordinates from OpenStreetMap.",
   },
 
   transparency: {
-    number: "01",
+    number: "03",
     kicker: "Transparency and public money",
     title: "Where the money goes, and what gets built.",
     body:
@@ -98,11 +102,11 @@ export const siteContent = {
   },
 
   explore: {
-    number: "02",
+    number: "04",
     kicker: "Explore Kabugao",
     title: "The place itself — and how to visit it responsibly.",
     body:
-      "Kabugao sits at 135.7 metres above sea level where the Cordillera folds into the Apayao river system. The portal will document its barangays, rivers, mountains and heritage, with local history written with the community rather than about it.",
+      "Kabugao sits at 132 metres above sea level where the Cordillera folds into the Apayao river system. The portal will document its barangays, rivers, mountains and heritage, with local history written with the community rather than about it.",
     topics: [
       "Destinations and landmarks",
       "Rivers, mountains and waterfalls",
@@ -119,7 +123,7 @@ export const siteContent = {
   },
 
   services: {
-    number: "03",
+    number: "05",
     kicker: "Services and public information",
     title: "What you need, without the runaround.",
     body:
@@ -156,5 +160,5 @@ export const siteContent = {
     "BetterKabugao is an independent, volunteer-run civic project. It is not the official website of the Municipality of Kabugao.",
   sourceNote: "All public information will be sourced from official government portals.",
   license: "MIT · Content CC BY 4.0",
-  version: "2.0.0",
+  version: "3.0.0",
 } as const;

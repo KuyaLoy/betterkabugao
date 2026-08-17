@@ -3,27 +3,47 @@
 Read this before changing anything. These are hard rules, not suggestions.
 AI assistants (Claude Code, Codex, Copilot) must follow them literally.
 
+> **First read `docs/START-HERE.md`** — it carries the current state, the
+> feature plan, what is already built, and the traps that have already cost
+> this project time. This file is the rulebook; that one is the map.
+
 ## What this project is
 
 An independent, community-maintained civic transparency portal for Kabugao,
-the capital municipality of Apayao (21 barangays, 16,215 residents per the
-2020 PSA census). Part of the BetterGov.ph volunteer network — registered in
-the BetterLGU Directory (https://lgu.bettergov.ph/). Built at ₱0 cost to the
-people. It is NOT the official website of the Municipality of Kabugao, and
-every page must keep that disclaimer.
+the capital municipality of Apayao (21 barangays, **16,425 residents per the
+2024 POPCEN**, 935.12 km², 1st-class income, PSGC 1408104000). Part of the
+BetterGov.ph volunteer network — registered in the BetterLGU Directory
+(https://lgu.bettergov.ph/). Built at ₱0 cost to the people. It is NOT the
+official website of the Municipality of Kabugao, and every page must keep that
+disclaimer.
 
-Current release: the coming-soon launch page. The full portal (service
-guides, transparency data, search, FIL/Isneg language support) comes later.
+Releases: **v2 coming-soon page is live on `main`**; the **v1 multi-page portal
+(31 prerendered routes, barangay directory with a page each, officials, search,
+maps)** is built and awaiting the maintainer's push. Transparency data, service
+guides and FIL/Isneg language support come later — see
+`docs/research/data-tracker.html` for the ordered roadmap.
 
 ## Stack — do not swap or add without maintainer approval
 
 - React 19 + TypeScript (strict) + Vite 8, Node 22.14.0 (pinned in `.node-version`)
 - Tailwind CSS v4 via `@tailwindcss/vite`; design lives in plain CSS classes
   in `src/styles.css` on top of `@theme` tokens
+- `react-router-dom` v7 for routes; **every route is prerendered to static HTML**
+  by `scripts/prerender.mjs`. Import `StaticRouter` from the package root —
+  `react-router-dom/server` does not exist in v7.
+- Leaflet 1.9.4 for maps, dynamically imported so it is code-split
 - Deploy: Cloudflare Pages — branch `main`, build `npm run build`, output `dist`
-- No router, no backend, no database, no analytics, no CSS-in-JS, no jQuery
-- One third-party runtime request only: Open-Meteo, for live Kabugao weather
+- No backend, no database, no analytics, no CSS-in-JS, no jQuery, no UI kit
+- Exactly two third-party runtime hosts (see Security rules)
 - New dependencies require an explicit maintainer OK in the PR description
+
+### Never simplify the build
+
+`npm run build` is `seo:build → tsc -b → build:client → build:ssr → prerender`.
+Reducing it to `vite build` silently ships a client-only SPA, which is the exact
+defect this site exists to avoid: 10 of the 16 portals in the network serve one
+HTML shell for every URL, so every link shared on Facebook previews as their
+homepage. A contract test pins the script string.
 
 ## Design system — BetterGov tokens, BetterLGU layout
 
@@ -39,8 +59,12 @@ hex values inline, and never re-derive the layout from taste.
 - Grays: `#F8F9FA` → `#212529`
 - Type: **Inter** only, vendored in `public/fonts` (OFL licence) — the
   typeface every BetterLGU portal uses. Never load fonts from a CDN.
-- Layout: 1200px container · 76px masthead · left-aligned headings ·
-  6px buttons (never pills) · 12px cards · solid navy hero (no gradients)
+- Layout: **1440px container** (`--container`, measured range across the network
+  is 1152–1440) · 68ch measure for prose · 76px masthead · left-aligned
+  headings · 6px buttons (never pills) · 10–12px cards · solid navy hero
+  (no gradients)
+- Grids get explicit column counts, not `auto-fill`: six cards must read 3 + 3,
+  not 4 + 2 with a hole in it
 
 Brand identity: the project's ORIGINAL mark — the Kabugao silhouette beneath
 a three-ray sunrise — recoloured to BetterGov navy and gold. The geometry in
@@ -82,11 +106,28 @@ Never hand-edit files in `public/brand/`.
   (`default-src 'self'`, no inline script/style), Referrer-Policy, and
   Permissions-Policy. Loosening any directive needs maintainer approval and a
   written reason in the PR.
-- Exactly ONE third-party runtime request is permitted: `api.open-meteo.com`
-  for live Kabugao weather (no API key, no cookies, no tracking), declared in
-  the CSP `connect-src`. Everything else — fonts, scripts, styles, images —
-  is self-hosted. Adding a second host needs maintainer approval, a written
-  reason, and a matching update to `public/_headers` and its contract test.
+- **Exactly TWO third-party runtime hosts are permitted**, and a contract test
+  asserts the list:
+  - `api.open-meteo.com` — live Kabugao weather (`connect-src`); no key, no
+    cookies, no tracking
+  - `tile.openstreetmap.org` — map tiles (`img-src`); ODbL, attribution shown
+
+  Everything else — fonts, scripts, styles, other images — is self-hosted.
+  A third host needs maintainer approval, a written reason, and matching
+  updates to `public/_headers` **and** its contract test.
+- **`frame-src` is deliberately absent**, so it falls back to `default-src
+  'self'` and no iframe embed can load. A Google Maps embed was considered and
+  rejected for this reason (plus the tracker it puts on every page). Do not add
+  `frame-src` without approval.
+- Leaflet is CSP-compatible because it sets styles through CSSOM properties
+  (`el.style.transform = …`), never `setAttribute("style", …)` — which
+  `style-src 'self'` blocks. A contract test asserts this against the installed
+  package; re-audit on upgrade.
+- `leaflet.css` is imported from `src/styles.css`, never dynamically from a
+  component: a runtime CSS import makes Vite inject a `<style>` element, which
+  the policy blocks.
+- `<script type="application/ld+json">` is data, not code — it does not violate
+  `script-src 'self'`. Executable inline script still does.
 - Never commit secrets, tokens, or `.env` files. There are none today; keep
   it that way.
 - Any future form/intake needs bot protection (Cloudflare Turnstile) and
@@ -110,10 +151,16 @@ contract test in the same commit — never delete a contract to make it pass.
 
 - Work in checkpoints: implement one phase, show the result (screenshots for
   UI), get a go-ahead, continue. No unreviewed mega-changes.
-- Session memory: before starting, read `docs/CONTEXT.md`. Before ending,
-  update it and add a recap in `docs/sessions/` (see
-  `docs/skills/session-memory/SKILL.md`). This is how the team avoids
-  re-explaining the project every session.
+- Session memory: before starting, read `docs/START-HERE.md` then
+  `docs/CONTEXT.md`. Before ending, update **both** and add a recap in
+  `docs/sessions/` (see `docs/skills/session-memory/SKILL.md`). This is how the
+  team avoids re-explaining the project every session.
+- **Look at the render.** Three separate map defects passed a fully green test
+  suite and were visible only in a screenshot. Capture UI at 1440 / 1280 / 768 /
+  390 and compare against `design-research/v2-screens/` before calling UI work
+  done. `docs/START-HERE.md` §8 lists the traps in full.
+- Do not run `prettier` — there is no config, and it reformats whole files to 80
+  columns. Match the surrounding style by hand.
 - Skills for AI-assisted contributors are committed in `docs/skills/` — read
   them before UI, security or session work. `docs/skills/README.md` also lists
   the recommended external skill sets.

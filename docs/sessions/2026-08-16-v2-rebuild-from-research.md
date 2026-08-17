@@ -76,4 +76,4 @@ network it was supposed to belong to.
 - Read `design-research/RESEARCH.md` before touching layout — the conventions
   there are measured, not opinions
 - `npm run brand:build && npm run brand:social` after any brand change
-- Copy `docs/skills` to `.claude/skills` to load the project skills
+- Project skills are committed in `docs/skills/`

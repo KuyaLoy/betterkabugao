@@ -1,11 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { KABUGAO } from "../app/site-content";
 
-export type NowState = {
-  day: string;
-  date: string;
-  time: string;
-};
+export type NowState = { day: string; date: string; time: string };
 
 export type WeatherState =
   | { status: "loading" | "unavailable" }
@@ -32,16 +28,47 @@ function readClock(): NowState {
   };
 }
 
+/**
+ * A tiny external store for the clock.
+ *
+ * The clock is genuinely outside React — it changes on a timer, not from a
+ * render — so useSyncExternalStore is the correct primitive. It also gives us
+ * a stable server snapshot (null), which keeps the prerendered HTML and the
+ * client's first paint identical instead of hydrating over a stale build-time
+ * timestamp.
+ */
+const clockListeners = new Set<() => void>();
+let clockSnapshot: NowState | null = null;
+let clockTimer: number | undefined;
+
+function emitClock() {
+  clockSnapshot = readClock();
+  for (const listener of clockListeners) listener();
+}
+
+function subscribeClock(listener: () => void): () => void {
+  if (clockListeners.size === 0) {
+    clockSnapshot = readClock();
+    clockTimer = window.setInterval(emitClock, 30_000);
+  }
+  clockListeners.add(listener);
+
+  return () => {
+    clockListeners.delete(listener);
+    if (clockListeners.size === 0 && clockTimer !== undefined) {
+      window.clearInterval(clockTimer);
+      clockTimer = undefined;
+    }
+  };
+}
+
 /** Live day, date and time in Kabugao (Philippine Standard Time). */
-export function useKabugaoNow(): NowState {
-  const [now, setNow] = useState<NowState>(readClock);
-
-  useEffect(() => {
-    const id = window.setInterval(() => setNow(readClock()), 30_000);
-    return () => window.clearInterval(id);
-  }, []);
-
-  return now;
+export function useKabugaoNow(): NowState | null {
+  return useSyncExternalStore(
+    subscribeClock,
+    () => clockSnapshot,
+    () => null,
+  );
 }
 
 const WEATHER_ENDPOINT =
@@ -50,9 +77,8 @@ const WEATHER_ENDPOINT =
 
 /**
  * Live weather for Kabugao from Open-Meteo (free, no API key, no tracking).
- * Falls back to an honest "unavailable" state rather than showing a
- * placeholder number — the network convention is to never display a figure
- * that isn't real.
+ * Falls back to an honest "unavailable" state rather than a placeholder
+ * number — the network convention is never to display a figure that isn't real.
  */
 export function useKabugaoWeather(): WeatherState {
   const [state, setState] = useState<WeatherState>({ status: "loading" });

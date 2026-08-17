@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>BetterKabugao — data source tracker</title>
+<style>
+  :root {
+    --navy-900:#00142F; --navy-800:#00295E; --navy-700:#003D8D;
+    --blue-500:#0066EB; --blue-300:#66A3F3; --blue-100:#CCE0FB;
+    --gold:#FFB900; --amber:#935200; --alert:#B42525; --green:#006939;
+    --g50:#F8F9FA; --g100:#F1F3F5; --g200:#E9ECEF; --g300:#DEE2E6;
+    --g600:#868E96; --g700:#495057; --g900:#212529;
+    --ok-bg:#E6F7EF; --wip-bg:#FEF3E6; --todo-bg:#F1F3F5; --dead-bg:#FCEAEA;
+  }
+  * { box-sizing:border-box; }
+  body {
+    margin:0; background:var(--g50); color:var(--g900);
+    font:15px/1.55 Inter, -apple-system, "Segoe UI", system-ui, sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .shell { width:min(100% - 40px, 1280px); margin-inline:auto; }
+  header.top { background:var(--navy-700); color:#fff; padding:26px 0 24px; }
+  header.top .eyebrow { font-size:11px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--blue-100); }
+  header.top h1 { margin:8px 0 0; font-size:29px; font-weight:800; letter-spacing:-.025em; }
+  header.top p { margin:8px 0 0; max-width:80ch; color:var(--blue-100); font-size:14px; }
+  .warn { margin-top:16px; padding:11px 14px; border-left:3px solid var(--gold); background:rgba(255,255,255,.1); font-size:13px; color:#fff; }
+
+  .metrics { display:grid; grid-template-columns:repeat(5,1fr); gap:1px; background:var(--g300); border-block:1px solid var(--g300); }
+  .metric { background:#fff; padding:15px 18px; }
+  .metric b { display:block; font-size:23px; font-weight:800; letter-spacing:-.02em; color:var(--navy-800); }
+  .metric span { display:block; margin-top:2px; font-size:11px; font-weight:600; letter-spacing:.07em; text-transform:uppercase; color:var(--g700); }
+  .metric.ok b { color:var(--green); } .metric.dead b { color:var(--alert); }
+
+  .bar { display:flex; flex-wrap:wrap; gap:8px; align-items:center; padding:16px 0; }
+  .bar strong { font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--g700); margin-right:2px; }
+  button.f {
+    font:inherit; font-size:13px; font-weight:600; cursor:pointer;
+    padding:6px 12px; border:1px solid var(--g300); border-radius:5px; background:#fff; color:var(--g700);
+  }
+  button.f:hover { border-color:var(--blue-500); color:var(--navy-700); }
+  button.f[aria-pressed="true"] { background:var(--navy-700); border-color:var(--navy-700); color:#fff; }
+  input.q { font:inherit; font-size:13px; padding:7px 11px; border:1px solid var(--g300); border-radius:5px; min-width:230px; }
+
+  section.dom { margin-bottom:34px; }
+  h2.dom { display:flex; align-items:baseline; gap:10px; margin:0 0 12px; font-size:17px; font-weight:800; letter-spacing:-.015em; color:var(--navy-800); }
+  h2.dom em { font-style:normal; font-size:12px; font-weight:600; color:var(--g600); }
+
+  table { width:100%; border-collapse:collapse; background:#fff; border:1px solid var(--g300); border-radius:8px; overflow:hidden; }
+  th { text-align:left; font-size:11px; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:var(--g700); background:var(--g100); padding:9px 12px; border-bottom:1px solid var(--g300); }
+  td { padding:11px 12px; border-bottom:1px solid var(--g200); vertical-align:top; font-size:13.5px; }
+  tr:last-child td { border-bottom:0; }
+  tr.row:hover { background:#FAFCFF; }
+  td.name { font-weight:600; color:var(--navy-800); }
+  col.c-name { width:17%; } col.c-what { width:37%; } col.c-status { width:9%; }
+  col.c-access { width:12%; } col.c-note { width:25%; }
+  td.name a { color:var(--blue-500); font-weight:500; font-size:12px; display:block; margin-top:3px; text-decoration:none; word-break:break-all; }
+  td.name a:hover { text-decoration:underline; }
+  td.what { color:var(--g700); }
+  td.what .val { display:block; margin-top:5px; padding:5px 8px; background:var(--g50); border-left:2px solid var(--gold); font-size:12.5px; color:var(--g900); }
+  .tag { display:inline-block; padding:2px 7px; border-radius:4px; font-size:10.5px; font-weight:700; letter-spacing:.05em; text-transform:uppercase; white-space:nowrap; }
+  .s-live { background:var(--ok-bg); color:var(--green); }
+  .s-ready { background:#E6F0FD; color:var(--navy-700); }
+  .s-manual { background:var(--wip-bg); color:var(--amber); }
+  .s-dead { background:var(--dead-bg); color:var(--alert); }
+  .s-unknown { background:var(--todo-bg); color:var(--g700); }
+  .d { font-size:11px; font-weight:700; letter-spacing:.05em; }
+  .d-EASY { color:var(--green); } .d-MEDIUM { color:var(--amber); } .d-HARD { color:var(--alert); }
+  td.meta { font-size:11.5px; color:var(--g700); white-space:nowrap; }
+  td.note { font-size:12px; color:var(--g700); }
+  .trap { color:var(--alert); font-weight:600; }
+
+  h2.rel { margin:0 0 14px; font-size:19px; font-weight:800; color:var(--navy-800); letter-spacing:-.02em; }
+  ol.rel { counter-reset:r; list-style:none; padding:0; margin:0; }
+  ol.rel li { counter-increment:r; position:relative; padding:14px 16px 14px 54px; background:#fff; border:1px solid var(--g300); border-radius:8px; margin-bottom:9px; }
+  ol.rel li::before { content:"v" counter(r); position:absolute; left:14px; top:14px; width:28px; height:22px; display:flex; align-items:center; justify-content:center; background:var(--navy-700); color:#fff; border-radius:4px; font-size:10.5px; font-weight:700; }
+  ol.rel li b { display:block; font-size:14.5px; color:var(--navy-800); }
+  ol.rel li p { margin:4px 0 0; font-size:13px; color:var(--g700); }
+  ol.rel li .src { margin-top:6px; font-size:11.5px; color:var(--g600); }
+  footer.foot { margin:36px 0 40px; padding-top:18px; border-top:1px solid var(--g300); font-size:12px; color:var(--g700); }
+  .empty { padding:22px; text-align:center; color:var(--g600); font-size:13px; background:#fff; border:1px dashed var(--g300); border-radius:8px; }
+  @media (max-width:900px) {
+    .metrics { grid-template-columns:repeat(2,1fr); }
+    table, thead, tbody, th, td, tr, colgroup, col { display:block; }
+    thead, colgroup { display:none; }
+    tr.row { border-bottom:1px solid var(--g300); padding:10px 4px; }
+    td { border:0; padding:4px 10px; }
+    td.name { width:auto; }
+  }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="shell">
+    <p class="eyebrow">BetterKabugao · internal</p>
+    <h1>Data source tracker — Kabugao, Apayao</h1>
+    <p>Every dataset we could find for Kabugao: what's inside it, where it comes from, whether it's usable without a backend, and whether it's on the site yet. Research verified 16–17 August 2026.</p>
+    <p class="warn"><strong>Not for publication.</strong> This is a planning tool. It records unverified items and negative findings that must not appear on the public site as fact.</p>
+  </div>
+</header>
+
+<div class="metrics shell" id="metrics"></div>
+
+<div class="shell">
+  <div class="bar">
+    <strong>Status</strong>
+    <button class="f" data-f="status" data-v="all" aria-pressed="true">All</button>
+    <button class="f" data-f="status" data-v="live">On site</button>
+    <button class="f" data-f="status" data-v="ready">Ready to build</button>
+    <button class="f" data-f="status" data-v="manual">Manual only</button>
+    <button class="f" data-f="status" data-v="dead">Dead end</button>
+    <button class="f" data-f="status" data-v="unknown">Untested</button>
+    <input class="q" id="q" type="search" placeholder="Search sources, fields, values…" aria-label="Search" />
+  </div>
+  <div id="out"></div>
+
+  <h2 class="rel">Suggested release order — one feature per push</h2>
+  <ol class="rel" id="roadmap"></ol>
+
+  <footer class="foot">
+    <p><strong>Licences to respect:</strong> BLGF restricts redistribution — email <code>lfdad@blgf.gov.ph</code> before launch. Project NOAH hazard tiles and OpenHalalan are ODbL (attribution required). DPWH ArcGIS items have blank <code>licenseInfo</code> — clear before republishing bulk copies. PSA PSGC is CC BY 4.0. Wikidata is CC0.</p>
+    <p><strong>Never publish:</strong> an unverified official's name, an unverified emergency number, or any figure without its source and date. Where data isn't ready, say so.</p>
+  </footer>
+</div>
+
+<script>
+const S = [
+  // ---- Money ----
+  {dom:"Money & budget", name:"BLGF LGU Fiscal Data (SRE)", url:"https://blgf.gov.ph/lgu-fiscal-data/", status:"ready", diff:"EASY", access:"Bulk XLSX", fmt:"XLSX", freq:"Annual + quarterly", lic:"Restricted — attribution + notify BLGF",
+   what:"Statement of Receipts & Expenditures per LGU. Kabugao is row 271 of 1,732.", val:"FY2025: income ₱380,281,560 · NTA ₱377,579,369 (99.29% of income) · local sources ₱2,702,191 (0.71%) · expenditures ₱217,905,113 · year-end cash ₱328,080,151 (86% of a year's income)",
+   note:"TRAP: header says 'In Php Million' but values are in pesos. Headers merged rows 7–11 + blank column A. Figures are self-reported and marked Preliminary."},
+  {dom:"Money & budget", name:"BLGF LDRRMF by LGU", url:"https://blgf.gov.ph/lgu-fiscal-data/", status:"ready", diff:"EASY", access:"Bulk XLSX", fmt:"XLSX", freq:"Annual", lic:"Restricted — as above",
+   what:"Disaster risk reduction fund appropriation vs actual spend — a mandated FDP document, published here in bulk.", val:"FY2025: 70% fund ₱13,309,575.68 appropriated / ₱10,689,238.06 spent · 30% QRF ₱5,704,103.86 / ₱5,654,857.00 · total ₱19,013,679.54 / ₱16,344,095.06", note:"Spend rate is a strong story: 86% of the total fund was used."},
+  {dom:"Money & budget", name:"BLGF ARI + NTA dependency / SEF / RPAR", url:"https://blgf.gov.ph/lgu-fiscal-data/", status:"ready", diff:"EASY", access:"Bulk XLSX", fmt:"XLSX", freq:"Annual", lic:"Restricted — as above",
+   what:"Annual Regular Income, NTA dependency ratio, Special Education Fund income/expenditure, Real Property Assessment. Plus FY2011–2025 time series.", val:"", note:"Education expenditure in the SRE reads 0 — cross-check against the SEF file before concluding anything."},
+  {dom:"Money & budget", name:"Wikidata Q30053 — COA fiscal series", url:"https://www.wikidata.org/wiki/Special:EntityData/Q30053.json", status:"ready", diff:"EASY", access:"Public API, CORS", fmt:"JSON", freq:"Community", lic:"CC0",
+   what:"Revenue, expenditure and assets 2010→2024, sourced to COA audit reports. Also population 1918→2024, households, voters, poverty.", val:"2024: revenue ₱323,195,522.78 · expenditure ₱255,526,757.09 · assets ₱927,699,788.05", note:"Highest value per unit of effort in the whole inventory. One request, CC0, no auth."},
+  {dom:"Money & budget", name:"COA Annual Audit Report", url:"https://www.coa.gov.ph/reports/annual-audit-reports/aar-local-government-units/", status:"manual", diff:"MEDIUM", access:"Manual download", fmt:"PDF", freq:"Annual, lagging", lic:"Public record",
+   what:"Part II Observations: unliquidated cash advances, 20% Development Fund misuse, LDRRMF/SEF findings, procurement violations, Notices of Suspension/Disallowance. Part III: recommendations the LGU ignored.", val:"URL pattern confirmed: …/annual_audit_report/LGUs/{YEAR}/CAR/Municipalities/Apayao/Kabugao_Apayao_ES{YEAR}.pdf — 2016 file indexed; coverage 2012–2023", note:"Highest editorial value per hour of anything here. Cloudflare blocks automation; download by hand."},
+  {dom:"Money & budget", name:"DILG Full Disclosure Policy Portal", url:"https://fdpp.dilg.gov.ph/", status:"manual", diff:"HARD", access:"Manual browser only", fmt:"PDF", freq:"Annual + quarterly", lic:"None stated",
+   what:"The 14 documents municipalities must post, incl. the 20% Development Fund utilisation, Annual Procurement Plan, bid results, unliquidated cash advances.", val:"Kabugao almost certainly compliant — DILG certified its FDP posting via Good Financial Housekeeping in 2023 and 2025", note:"No API, no bulk download, NO per-LGU URL pattern. Host resets connections to non-browser clients. This is where the 20% Development Fund composition lives — BLGF only gives totals."},
+  {dom:"Money & budget", name:"DBM per-LGU NTA", url:"https://www.dbm.gov.ph/index.php/local-budget-memorandum", status:"dead", diff:"HARD", access:"—", fmt:"PDF (scanned)", freq:"Annual", lic:"None stated",
+   what:"Assumed to publish each LGU's National Tax Allotment.", val:"", note:"DOES NOT EXIST. LBM 94 Annex A is region-level by LGU tier only; 'Kabugao' and 'Apayao' appear nowhere. Use BLGF instead."},
+
+  // ---- Projects ----
+  {dom:"Projects & infrastructure", name:"DPWH ArcGIS — flood control", url:"https://services1.arcgis.com/IwZZTMxZCmAmFYvF/arcgis/rest/services/FloodControl_Data_20250802_v6_corrected_coordinates_for_uploading/FeatureServer/0", status:"ready", diff:"EASY", access:"Public API, CORS *", fmt:"GeoJSON", freq:"Periodic", lic:"Blank licenseInfo — clear first",
+   what:"Project-level flood control with ABC, contract cost, contractor, start/completion, and TRUSTWORTHY coordinates.", val:"Kabugao: 6 projects, ₱219,872,800 · Apayao: 34, ₱1,951,896,262 · national 9,855", note:"TRAP: Municipality is 'KABUGAO (CAPITAL) (APAYAO)' — filtering on 'KABUGAO' returns zero. 7 Apayao rows have NULL municipality (₱319.6M). Supports server-side outStatistics."},
+  {dom:"Projects & infrastructure", name:"api.dpwh.bettergov.ph", url:"https://api.dpwh.bettergov.ph/projects?province=APAYAO", status:"ready", diff:"EASY", access:"Public API, CORS *", fmt:"JSON", freq:"Live", lic:"Undocumented (Parquet mirror is CC0)",
+   what:"The whole DPWH transparency dataset, all sectors 2016–2026 — roads, bridges, buildings, water, flood control. Detail endpoint adds award amount, bidder list with PCAB IDs, funding source. Images endpoint returns project photos.", val:"Kabugao-matched: 301 projects, ₱8,620,685,554 · Apayao: 1,224, ₱23,987,743,776 · Kabugao's 6 flood projects have 315 photos", note:"TRAPS: no municipality param (silently ignored → national totals). search=Kabugao over-matches the Claveria–Calanasan–Kabugao Road. location.province is a DEO name. amountPaid is 0 on every record — never render it."},
+  {dom:"Projects & infrastructure", name:"DPWH Parquet snapshot (CC0)", url:"https://huggingface.co/datasets/bettergovph/dpwh-transparency-data", status:"ready", diff:"EASY", access:"Bulk download", fmt:"Parquet 21.8 MB", freq:"Snapshot 2025-11-29", lic:"CC0 1.0",
+   what:"248,220 rows — a citable, pinned version of the live API. PCAB licence numbers embedded in contractor strings.", val:"Contains all six Kabugao contracts", note:"Staler than the live API (1 × 2026 row vs 27 live). Pin this for anything published as a record."},
+  {dom:"Projects & infrastructure", name:"DPWH ArcGIS — bridge inventory", url:"https://services1.arcgis.com/IwZZTMxZCmAmFYvF/arcgis/rest/services/Detailed_Bridge_Inventory/FeatureServer/3", status:"ready", diff:"EASY", access:"Public API, CORS *", fmt:"GeoJSON", freq:"Periodic", lic:"Blank licenseInfo",
+   what:"Bridge condition, length, type, year built, load limit, lane count — 17 layers.", val:"Kabugao: 17 bridges · Apayao: 78", note:"Independently corroborates flood-control coordinates: 23PB0017 lands 70 m from 'Madduang Br.'"},
+  {dom:"Projects & infrastructure", name:"PCAB contractor licence registry", url:"https://pcab.construction.gov.ph/verify/", status:"manual", diff:"MEDIUM", access:"Build-time fetch (session cookie, no CORS)", fmt:"JSON via phpGrid", freq:"Rolling", lic:"None stated",
+   what:"17,814 current licences, 25 suspended, plus a JV registry carrying project title, location, implementing agency and funding source.", val:"All 7 Kabugao contractors checked. Current: R.S. SEPIAN (20519), CMG JR BUILDERS (41683), PRIME MASTER (43456), E.C.V. CONSTRUCTION (46688, expires 2026-08-27). Lapsed, NOT sanctioned: TAGEL (43554), OMENGAN (5119), PBO CONSTRUCTION (41870). JV-26-19627 active in Kabugao.", note:"The (41870)-style number in DPWH contractor strings IS the PCAB licence number — a clean join key."},
+  {dom:"Projects & infrastructure", name:"PhilGEPS — bids & awards", url:"https://notices.philgeps.gov.ph/", status:"dead", diff:"HARD", access:"—", fmt:"HTML", freq:"Continuous", lic:"None stated",
+   what:"Procurement notices and award abstracts for LGUs.", val:"", note:"'Open Data' is 7 Power BI dashboards, zero files. 'Standard Reports' renders 0 records. data.philgeps.gov.ph returns 522 (offline). Internal ASMX returns 500 unauthenticated. Notice pages are ASP.NET WebForms — automating means replaying __VIEWSTATE. Route: BetterGov's Meilisearch `philgeps` index instead."},
+  {dom:"Projects & infrastructure", name:"Sumbong sa Pangulo", url:"https://sumbongsapangulo.ph/", status:"dead", diff:"HARD", access:"—", fmt:"—", freq:"—", lic:"—",
+   what:"Citizen complaint intake for anomalous flood control projects.", val:"", note:"Cloudflare-blocked, AND its coordinates are wrong — for Kabugao's 23PB0017 the portal coordinate is 27.7 km from the ArcGIS one. Use ArcGIS coordinates."},
+  {dom:"Projects & infrastructure", name:"ICI final report / blacklist registry", url:"https://en.wikipedia.org/wiki/Independent_Commission_for_Infrastructure", status:"dead", diff:"HARD", access:"—", fmt:"—", freq:"—", lic:"—",
+   what:"Independent Commission for Infrastructure findings; DPWH blacklisted contractors.", val:"", note:"ICI ceased 31 Mar 2026; report NOT public (with Ombudsman/DOJ), its FOI page 404s. No public blacklist dataset. None of Kabugao's contractors appear in scandal reporting — state as 'no evidence found', never as 'cleared'."},
+
+  // ---- Geography ----
+  {dom:"Geography & hazards", name:"Project NOAH hazard PMTiles", url:"https://huggingface.co/datasets/bettergovph/project-noah-hazard-maps", status:"ready", diff:"EASY", access:"HTTP range + CORS *", fmt:"PMTiles / shapefile", freq:"2026-04-11", lic:"ODbL — attribution required",
+   what:"Flood 5/25/100-year, landslide, debris flow, storm surge. Vector tiles zoom 0–14, attribute Var ∈ {1,2,3} susceptibility.", val:"Kabugao inside bbox; range requests verified (HTTP 206). Province-clipped: Flood/{5yr,25yr,100yr}/Apayao.zip", note:"MapLibre + pmtiles.js streams it directly — no backend, no 1 GB download. NEW to the whole BetterLGU network: no peer portal has hazard data."},
+  {dom:"Geography & hazards", name:"OpenStreetMap", url:"https://www.openstreetmap.org/relation/20429167", status:"ready", diff:"EASY", access:"Public API", fmt:"XML / GeoJSON", freq:"Continuous", lic:"ODbL",
+   what:"Boundary relation 20429167 (ref=1408104000, postal 3809), roads, rivers, bridges, power grid, schools.", val:"Town-centre sample: 1,197 buildings, 117 power, 60 highway. Schools: Kabugao Central, Binuan ES, Iyapan Primary (ref 220023), Laco ES, Magabta ES", note:"Barangays are place NODES with PSGC refs — no barangay polygons exist. amenity ×6 only; ZERO healthcare features mapped."},
+  {dom:"Geography & hazards", name:"DPWH municipal boundary", url:"https://services1.arcgis.com/IwZZTMxZCmAmFYvF/arcgis/rest/services/City_Municipal_Boundaries/FeatureServer/0", status:"ready", diff:"EASY", access:"Public API, CORS *", fmt:"GeoJSON ~4.2 KB", freq:"Periodic", lic:"Blank licenseInfo",
+   what:"Municipal polygon with PSGC and population.", val:"PSGC 148104000, POP2015 15,537", note:"Small enough to commit as a static file."},
+  {dom:"Geography & hazards", name:"Open-Meteo (weather + climate + elevation)", url:"https://api.open-meteo.com/v1/forecast", status:"live", diff:"EASY", access:"Public API, CORS", fmt:"JSON", freq:"Live", lic:"Free non-commercial",
+   what:"Current weather (already live in the utility strip), ERA5 climate archive, and elevation.", val:"Elevation 132.0 m · 2024: 2,720.5 mm precipitation, 25.87 °C mean", note:"Don't mix ERA5 2024 with Wikipedia's 1,695 mm average — different period and method."},
+  {dom:"Geography & hazards", name:"HazardHunterPH / GeoRiskPH", url:"https://hazardhunter.georisk.gov.ph/", status:"dead", diff:"HARD", access:"—", fmt:"PDF report", freq:"—", lic:"—",
+   what:"Per-point multi-hazard assessment.", val:"", note:"Laravel app, /api 404s, needs session + POST. api.georisk.gov.ph refused connection. Screenshot/manual only — use NOAH instead."},
+  {dom:"Geography & hazards", name:"NAMRIA / Philippine Geoportal", url:"https://www.geoportal.gov.ph/", status:"unknown", diff:"MEDIUM", access:"Untested", fmt:"?", freq:"?", lic:"?",
+   what:"National mapping data; possible OGC/WMS/WFS endpoints.", val:"", note:"Both hosts reachable (200) but no exposed endpoints found in markup. Needs browser network inspection — do NOT treat as absent."},
+
+  // ---- Reference ----
+  {dom:"Statistics & reference", name:"PSA PSGC — Kabugao", url:"https://psa.gov.ph/classification/psgc/barangays/1408104000", status:"ready", diff:"MEDIUM", access:"Scrape at build (Cloudflare blocks curl)", fmt:"HTML", freq:"Quarterly", lic:"CC BY 4.0",
+   what:"Authoritative PSGC codes and 2024 POPCEN population for the municipality and all 21 barangays.", val:"PSGC 1408104000 · population 16,425 (2024 POPCEN, sum of barangays verified) · 21 barangays, codes 1408104001–022", note:"CODE GAP: 1408104003 absent from both PSA and psgc.gitlab.io — 22 slots, 21 barangays. Cause undetermined; do not invent one."},
+  {dom:"Statistics & reference", name:"psgc.gitlab.io (community API)", url:"https://psgc.gitlab.io/api/municipalities/148104000/barangays.json", status:"ready", diff:"EASY", access:"Public API, CORS * verified", fmt:"JSON", freq:"Static (2022-08-27)", lic:"Community",
+   what:"All 21 barangays with codes — matches PSA exactly.", val:"Badduat, Baliwanan, Bulu, Dagara, Dibagat, Cabetayan, Karagawan, Kumao, Laco, Lenneng (old: Liyyeng), Lucab, Luttuacan, Madatag, Madduang, Magabta, Maragat, Musimut, Nagbabalayan, Poblacion, Tuyangan, Waga", note:"Best client-side option, but vintage lacks 2024 POPCEN — pair with PSA for populations."},
+  {dom:"Statistics & reference", name:"Wikidata Q30053 — demographics & poverty", url:"https://www.wikidata.org/wiki/Special:EntityData/Q30053.json", status:"ready", diff:"EASY", access:"Public API, CORS", fmt:"JSON", freq:"Community", lic:"CC0",
+   what:"Population 1918→2024 (15 censuses), households 1960→2020, registered voters 1998→2025, poverty incidence 2000→2021 sourced to PSA SAE.", val:"Poverty: 19.11% (2021) · 35.34% (2018) · 24.88% (2015) · 63.90% (2012). Households 3,506 (2020). Voters 12,081 (2025)", note:"Poverty trend 2012→2021 is a strong, sourced story."},
+  {dom:"Statistics & reference", name:"PSA Small Area Estimates (poverty)", url:"https://psa.gov.ph/statistics/poverty", status:"manual", diff:"MEDIUM", access:"Manual browser download", fmt:"XLSX keyed by PSGC", freq:"Every ~3 yrs", lic:"CC BY 4.0",
+   what:"Municipal-level poverty incidence — PSA does publish this, contrary to common assumption.", val:"2023 SAE posted 06 Feb 2026 — a fresher figure than Wikidata's 2021 almost certainly exists", note:"Cloudflare blocked download during research. Worth one manual browser fetch."},
+  {dom:"Statistics & reference", name:"DOF income classification", url:"https://wageindicator.org/media/documents/DO_074.2024_with_table.pdf", status:"ready", diff:"EASY", access:"PDF", fmt:"PDF", freq:"Periodic", lic:"Public record",
+   what:"Official LGU income class under RA 11964.", val:"CAR / Apayao / Kabugao = 1st class (before AND after reclassification)", note:"Changes which statutory personal-services cap applies: LGC §325(a) sets 45% for 1st–3rd class, not 55%."},
+  {dom:"Statistics & reference", name:"DTI CMCI competitiveness", url:"https://cmci.dti.gov.ph/lgu-profile.php?lgu=Kabugao&year=2024", status:"manual", diff:"MEDIUM", access:"Scrape (data in page JS)", fmt:"HTML", freq:"Annual", lic:"None stated",
+   what:"Five pillars: Economic Dynamism, Government Efficiency, Infrastructure, Resiliency, Innovation.", val:"", note:"CSV button builds the file client-side — no server endpoint. Context only, not budget."},
+  {dom:"Statistics & reference", name:"DILG CAR — GFH / SGLG", url:"https://car.dilg.gov.ph/", status:"ready", diff:"EASY", access:"Scrape / WP REST", fmt:"HTML", freq:"Annual", lic:"None stated",
+   what:"Good Financial Housekeeping and Seal of Good Local Governance passer lists, with criteria and dates.", val:"Kabugao passed GFH 2023 and 2025. CAR 2025: 71 of 83 LGUs passed (85.5%); Apayao 100% in both cycles", note:"Best verifiable DILG-side source — the national DILG hosts block automation."},
+
+  // ---- Civic ----
+  {dom:"Elections & officials", name:"OpenHalalan election results", url:"https://doi.org/10.5281/zenodo.17783099", status:"ready", diff:"MEDIUM", access:"Bulk CSV via Zenodo", fmt:"CSV", freq:"Per election", lic:"ODbL",
+   what:"2001–2025, 1,642 municipalities. Winners (13 MB) + vote counts (42 MB, 2010–2025).", val:"Filter on PSGC 1408104000", note:"An independent academic project, NOT a BetterGov product. Attribution required."},
+  {dom:"Elections & officials", name:"COMELEC 2025 results", url:"https://comelec.gov.ph/", status:"manual", diff:"HARD", access:"Manual (Cloudflare 403)", fmt:"HTML / PDF", freq:"Per election", lic:"Public record",
+   what:"Official canvass. Ballot faces ARE at a predictable path.", val:"2025 (via Rappler / COMELEC Transparency Media Server, 100% precincts): Mayor LIGWANG, Bensmar (NPC) 7,014 / 58.06%. Vice-Mayor AMID, Frederick (IND) 4,991 over TUCJANG (NPC) 4,418. Rep. BULUT-BEGTANG, Eleanor (NPC) 7,462. 12 councillors from 30 candidates.", note:"CRITICAL: BetterGov's directory lists Tucjang as vice-mayor — that appears to be the 2022–2025 term. Verify against official canvass before publishing any name. Ballot PDF: /php-tpls-attachments/2025NLE/2025BallotFace/BFT_CAR/APAYAO/KABUGAO.pdf"},
+  {dom:"Elections & officials", name:"BetterGov LGU directory", url:"https://github.com/bettergovph/bettergov", status:"ready", diff:"EASY", access:"Repo JSON", fmt:"JSON", freq:"Community PRs", lic:"Repo licence",
+   what:"Mayor and vice-mayor for all 7 Apayao municipalities, plus zip codes.", val:"Kabugao: mayor BENSMAR B. LIGWANG, zip 3809", note:"Vice-mayor entry appears stale — see COMELEC row. Consider opening a PR to fix it upstream."},
+
+  // ---- Services ----
+  {dom:"Services & facilities", name:"Kabugao eLGU (DICT)", url:"https://elgu-kabugao-apayao.e.gov.ph/", status:"manual", diff:"MEDIUM", access:"Manual / scrape", fmt:"HTML (React SPA)", freq:"Rolling", lic:"None stated",
+   what:"The LGU's actual service delivery platform — permits, payments. Officials list at elgu-kabugao-apayao-news.e.gov.ph/officials.", val:"", note:"NO finance disclosure. There is no standalone Kabugao municipal website hosting FDP documents."},
+  {dom:"Services & facilities", name:"DOH National Health Facility Registry", url:"https://nhfr.doh.gov.ph/", status:"dead", diff:"HARD", access:"—", fmt:"—", freq:"—", lic:"—",
+   what:"Licensed health facilities per municipality.", val:"Apayao Provincial Hospital, Ducrao St., Poblacion, Kabugao — facility code FCD00012, classified 'Infirmary or Dispensary' (via HealthSpace PH, a third-party aggregator — PROBABLE, needs primary verification)", note:"www host fails TLS entirely; non-www returns 403. No API, no export. OSM has ZERO healthcare features for Kabugao — a real mapping gap."},
+  {dom:"Services & facilities", name:"DepEd EBEIS / school directory", url:"https://ebeis.deped.gov.ph/", status:"dead", diff:"HARD", access:"—", fmt:"—", freq:"—", lic:"—",
+   what:"School masterlist per municipality.", val:"Best available list is OSM's 5 schools (see OpenStreetMap row)", note:"POST-driven form, no municipality filter, masterlist PDF 403s. Login-gated."},
+  {dom:"Services & facilities", name:"PhilHealth accredited facilities", url:"https://www.philhealth.gov.ph/partners/providers/facilities/accredited/", status:"manual", diff:"MEDIUM", access:"Direct PDF (filenames rotate)", fmt:"PDF", freq:"~Monthly", lic:"None stated",
+   what:"Accredited hospitals and DOTS facilities.", val:"", note:"Dated filenames rotate; both curl and WebFetch failed during research. Brittle."},
+
+  // ---- Culture ----
+  {dom:"Culture & tourism", name:"Glottolog — Isnag / Dibagat-Kabugao", url:"https://glottolog.org/resource/languoid/id/diba1241", status:"ready", diff:"EASY", access:"Public", fmt:"HTML / JSON", freq:"Per release", lic:"CC BY",
+   what:"Language and dialect classification.", val:"Isnag = ISO 639-3 'isd', Glottolog isna1241. Glottolog records a dialect literally named 'Dibagat-Kabugao' — glottocode diba1241", note:"A genuinely Kabugao-specific, citable linguistic fact. Ethnologue is paywalled and 403s — use Glottolog."},
+  {dom:"Culture & tourism", name:"UNESCO MAB — yApayaos Biosphere Reserve", url:"https://www.unesco.org/en/mab/yapayaos", status:"ready", diff:"EASY", access:"Public", fmt:"HTML", freq:"—", lic:"UNESCO terms",
+   what:"Biosphere reserve record; documents the Isneg 'Lapat' customary resource-management system.", val:"Designated 2024 (36th MAB-ICC, Agadir, 5 July 2024) · 395,975 ha · population 119,184 · centred 18.085 N / 121.1897 E, adjacent to Kabugao", note:"UNESCO does NOT name constituent municipalities — Kabugao's inclusion is NOT confirmed, do not assert it. Date conflict: unesco.gov.ph says Feb 2026; prefer UNESCO's 2024."},
+  {dom:"Culture & tourism", name:"Apayao provincial tourism", url:"https://apayao.gov.ph/tourism/municipalities/kabugao", status:"manual", diff:"EASY", access:"Manual", fmt:"HTML", freq:"Rolling", lic:"None stated",
+   what:"Official provincial tourism page for Kabugao.", val:"Gololan Falls ('10-storey-high'), Apayao River, Old Provincial Capitol. Describes Kabugao as the province's cultural melting pot of Isnag and Igorot culture", note:"Province's own FDP portal by contrast renders 'No documents found' — existence ≠ content."},
+  {dom:"Culture & tourism", name:"NHCP markers / National Museum / NCIP CADT / DOT accreditation", url:"https://nhcp.gov.ph/", status:"unknown", diff:"HARD", access:"Not found", fmt:"—", freq:"—", lic:"—",
+   what:"Heritage declarations, ancestral domain titles, accredited tourism establishments.", val:"", note:"NONE CONFIRMED for Kabugao. Madarang Shrine appears in OSM but is not confirmed as NHCP-marked. NCIP CADT lists surface only via FOI. Report as unverified — do not invent."},
+
+  // ---- Platform ----
+  {dom:"Platform & search", name:"BetterGov Meilisearch (search2)", url:"https://transparency.bettergov.ph/", status:"manual", diff:"MEDIUM", access:"Bearer token + proxy", fmt:"JSON", freq:"Live", lic:"—",
+   what:"Indexes: bettergov, bettergov_flood_control, contractors, philgeps, philgeps_organizations, dpwh. The practical route to PhilGEPS data.", val:"Need Kabugao's PhilGEPS organization_name — likely 'MUNICIPALITY OF KABUGAO, APAYAO'", note:"Token is in no repo; the ecosystem guide says to take it from transparency.bettergov.ph DevTools. Proxy through a Pages Function (as bettermeycauayan does) — never ship it in a VITE_ var."},
+  {dom:"Platform & search", name:"data.gov.ph", url:"https://data.gov.ph/", status:"dead", diff:"HARD", access:"—", fmt:"HTML", freq:"—", lic:"None stated",
+   what:"The national open data portal.", val:"", note:"Angular SPA with NO public read API — every CKAN endpoint returns the HTML shell. Its JS bundle contains only /api/logout, /api/tag/create, /api/user/create. It's a link directory. No LGU fiscal data."},
+  {dom:"Platform & search", name:"eFOI", url:"https://www.foi.gov.ph/", status:"manual", diff:"MEDIUM", access:"Request form", fmt:"Varies", freq:"—", lic:"—",
+   what:"Freedom of Information requests: 15 working days, +20 extension, appeal within 15.", val:"", note:"CRITICAL: EO 2 s.2016 does NOT bind LGUs — 'encouraged to observe' only. You cannot compel the Municipality of Kabugao. Route requests to COA, BLGF, DBM, DILG instead. Leverage over the LGU is the Full Disclosure Policy, not FOI. Never tell citizens eFOI gives them a right to Kabugao's records."},
+  {dom:"Platform & search", name:"Untested — do not assume absent", url:"", status:"unknown", diff:"MEDIUM", access:"Untested", fmt:"?", freq:"?", lic:"?",
+   what:"Sources not probed at all during this research.", val:"DOH HFEP · NIA irrigation · NEA / electric cooperatives · LWUA · DICT & NTC coverage · UP NOAH portal · PSA OpenSTAT bulk access · NAMRIA/Geoportal OGC endpoints", note:"The biggest remaining gap. Absence of testing is not evidence of absence."}
+];
+
+const ROADMAP = [
+  {t:"Correct the facts already published", d:"Population to 16,425 (2024 POPCEN), add PSGC 1408104000 and 1st-class income status, resolve the elevation discrepancy, and hold the vice-mayor name until COMELEC confirms it.", s:"PSA PSGC · DOF DO 074.2024 · Wikidata"},
+  {t:"Flood control projects — the flagship", d:"The six Kabugao projects with budget, contractor, dates and correct coordinates. Replaces the empty schema table with real records. This is the promise the site was launched on.", s:"DPWH ArcGIS FeatureServer (EASY)"},
+  {t:"Where the money comes from", d:"One chart that says it plainly: NTA ₱377.6M is 99.29% of income; locally raised revenue is ₱2.7M. Add the ₱328M year-end cash balance.", s:"BLGF SRE FY2025 (EASY) — email lfdad@blgf.gov.ph first"},
+  {t:"All public works, not just flood control", d:"301 Kabugao-matched projects 2016–2026 worth ₱8.6B, including DPWH-implemented farm-to-market roads and DepEd school buildings. Filter carefully — see the traps.", s:"api.dpwh.bettergov.ph + CC0 Parquet (EASY)"},
+  {t:"The 21 barangays", d:"Every barangay with its PSGC code and 2024 population. Note the 1408104003 code gap honestly rather than hiding it.", s:"psgc.gitlab.io + PSA (EASY)"},
+  {t:"Flood hazard map", d:"NOAH 100-year floodplain with the six projects and 17 bridges overlaid — the 'was this needed, did it work' view. No peer portal in the network has hazard data.", s:"NOAH PMTiles via MapLibre (EASY–MEDIUM), ODbL"},
+  {t:"Disaster fund", d:"LDRRMF ₱19.0M appropriated vs ₱16.3M spent, with the 70/30 split. Directly relevant in a flood-prone municipality.", s:"BLGF LDRRMF FY2025 (EASY)"},
+  {t:"Who builds our projects", d:"Contractor pages joining DPWH projects to PCAB licence status via the embedded licence number. State lapsed licences as lapsed — never imply sanction.", s:"PCAB registry (MEDIUM)"},
+  {t:"Audit findings", d:"COA Annual Audit Report Part II observations and Part III ignored recommendations. Hand-transcribed, highest editorial value per hour.", s:"COA AAR PDF (MEDIUM, manual)"},
+  {t:"Long-run trends", d:"Population 1918→2024, poverty 63.9% (2012) → 19.11% (2021), COA revenue/expenditure 2010→2024, registered voters.", s:"Wikidata Q30053, CC0 (EASY)"},
+  {t:"Elections", d:"2025 and historical results per office with vote counts.", s:"OpenHalalan, ODbL (MEDIUM)"},
+  {t:"Services and offices", d:"Citizens Charter guides, department contacts, barangay officials. No feed exists — this is genuine hand-curation, and needs the offices' cooperation.", s:"Manual (ongoing)"}
+];
+
+const LABEL = {live:"On site", ready:"Ready to build", manual:"Manual only", dead:"Dead end", unknown:"Untested"};
+let fStatus = "all", fQ = "";
+
+function counts() {
+  const c = {live:0, ready:0, manual:0, dead:0, unknown:0};
+  S.forEach(s => c[s.status]++);
+  document.getElementById("metrics").innerHTML =
+    `<div class="metric"><b>${S.length}</b><span>Sources audited</span></div>` +
+    `<div class="metric ok"><b>${c.ready + c.live}</b><span>Usable now</span></div>` +
+    `<div class="metric"><b>${c.manual}</b><span>Manual only</span></div>` +
+    `<div class="metric dead"><b>${c.dead}</b><span>Dead ends</span></div>` +
+    `<div class="metric"><b>${c.unknown}</b><span>Untested</span></div>`;
+}
+
+function esc(t) { return String(t).replace(/[&<>"]/g, m => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m])); }
+
+function render() {
+  const q = fQ.trim().toLowerCase();
+  const hits = S.filter(s => {
+    if (fStatus !== "all" && s.status !== fStatus) return false;
+    if (!q) return true;
+    return (s.name + s.what + s.val + s.note + s.dom + s.url).toLowerCase().includes(q);
+  });
+  const out = document.getElementById("out");
+  if (!hits.length) { out.innerHTML = '<p class="empty">No sources match that filter.</p>'; return; }
+
+  const doms = [...new Set(hits.map(s => s.dom))];
+  out.innerHTML = doms.map(d => {
+    const rows = hits.filter(s => s.dom === d).map(s => `
+      <tr class="row">
+        <td class="name">${esc(s.name)}${s.url ? `<a href="${esc(s.url)}" target="_blank" rel="noreferrer">${esc(s.url.replace(/^https?:\/\//, "").slice(0, 58))}</a>` : ""}</td>
+        <td class="what">${esc(s.what)}${s.val ? `<span class="val">${esc(s.val)}</span>` : ""}</td>
+        <td><span class="tag s-${s.status}">${LABEL[s.status]}</span></td>
+        <td class="meta">${esc(s.access)}<br /><span class="d d-${s.diff}">${s.diff}</span><br />${esc(s.fmt)}</td>
+        <td class="note">${esc(s.lic)}${s.note ? `<br /><span class="trap">${esc(s.note)}</span>` : ""}</td>
+      </tr>`).join("");
+    return `<section class="dom"><h2 class="dom">${esc(d)} <em>${hits.filter(s => s.dom === d).length} source(s)</em></h2>
+      <table>
+      <colgroup><col class="c-name" /><col class="c-what" /><col class="c-status" /><col class="c-access" /><col class="c-note" /></colgroup>
+      <thead><tr><th>Source</th><th>What's inside · Kabugao values</th><th>Status</th><th>Access</th><th>Licence · cautions</th></tr></thead>
+      <tbody>${rows}</tbody></table></section>`;
+  }).join("");
+}
+
+document.getElementById("roadmap").innerHTML = ROADMAP.map(r =>
+  `<li><b>${esc(r.t)}</b><p>${esc(r.d)}</p><div class="src">${esc(r.s)}</div></li>`).join("");
+
+document.querySelectorAll("button.f").forEach(b => b.addEventListener("click", () => {
+  fStatus = b.dataset.v;
+  document.querySelectorAll("button.f").forEach(o => o.setAttribute("aria-pressed", String(o === b)));
+  render();
+}));
+document.getElementById("q").addEventListener("input", e => { fQ = e.target.value; render(); });
+
+counts();
+render();
+</script>
+</body>
+</html>
