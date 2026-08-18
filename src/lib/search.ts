@@ -5,6 +5,7 @@
  * dozen short entries — smaller than the HTTP request that would fetch it.
  */
 import { BARANGAYS, populationShare } from "../data/barangays";
+import { HOTLINES, formatInternational } from "../data/hotlines";
 import { EXECUTIVE, SANGGUNIAN } from "../data/officials";
 
 export type SearchEntry = {
@@ -21,6 +22,7 @@ const PAGES: SearchEntry[] = [
   { path: "/government", kind: "Page", title: "Government", summary: "Officials, the Sangguniang Bayan and the 21 barangays.", keywords: ["lgu", "municipal"] },
   { path: "/government/barangays", kind: "Page", title: "All 21 barangays", summary: "Population, PSGC codes, coordinates and directions.", keywords: ["barangay", "list", "population", "psgc"] },
   { path: "/government/officials", kind: "Page", title: "Elected officials", summary: "Mayor, vice mayor and Sangguniang Bayan, 2025–2028.", keywords: ["mayor", "vice mayor", "sangguniang bayan", "councilor", "kagawad"] },
+  { path: "/emergency", kind: "Page", title: "Emergency hotlines", summary: "Every published Kabugao emergency number, with +63 dialling from abroad.", keywords: ["emergency", "hotline", "911", "rescue", "police", "fire", "ambulance", "mdrrmo", "bfp", "rhu", "hospital", "tulong", "sunog", "pulis"] },
   { path: "/transparency", kind: "Page", title: "Transparency", summary: "Public money and public projects — in preparation.", keywords: ["budget", "procurement", "flood control", "contractor", "spending"] },
   { path: "/explore", kind: "Page", title: "Explore Kabugao", summary: "Places, rivers, heritage and Isnag culture.", keywords: ["tourism", "isnag", "isneg", "river", "falls", "heritage"] },
   { path: "/services", kind: "Page", title: "Services", summary: "Certificates, permits, offices and contacts — in preparation.", keywords: ["permit", "certificate", "clearance", "office", "tax"] },
@@ -43,7 +45,24 @@ const OFFICIAL_ENTRIES: SearchEntry[] = [...EXECUTIVE, ...SANGGUNIAN].map((o) =>
   keywords: [o.position, "official", "elected"],
 }));
 
-export const SEARCH_INDEX: readonly SearchEntry[] = [...PAGES, ...BARANGAY_ENTRIES, ...OFFICIAL_ENTRIES];
+/**
+ * One entry per hotline office, so a search for "police" or "sunog" surfaces the
+ * number itself rather than only the page that lists it.
+ */
+const HOTLINE_ENTRIES: SearchEntry[] = HOTLINES.map((h) => ({
+  path: "/emergency",
+  kind: "Page",
+  title: `${h.abbreviation} — ${h.name}`,
+  summary: `${h.purpose} ${h.numbers.map(formatInternational).join(", ")}`,
+  keywords: [h.abbreviation, "emergency", "hotline", "number", ...h.numbers],
+}));
+
+export const SEARCH_INDEX: readonly SearchEntry[] = [
+  ...PAGES,
+  ...BARANGAY_ENTRIES,
+  ...OFFICIAL_ENTRIES,
+  ...HOTLINE_ENTRIES,
+];
 
 /**
  * Scores an entry against a query. Every whitespace-separated term must match

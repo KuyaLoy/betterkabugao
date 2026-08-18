@@ -190,6 +190,71 @@ describe("search", () => {
   });
 });
 
+describe("emergency hotlines", () => {
+  it("keeps 911 and the local numbers on every page, all dialable as +63", () => {
+    for (const path of ["/", "/government/barangays", "/about"]) {
+      cleanup();
+      renderAt(path);
+      const bar = screen.getByRole("region", { name: /emergency hotlines/i });
+      expect(within(bar).getByRole("link", { name: "911" })).toHaveAttribute("href", "tel:911");
+      // Every office is in the bar, MDRRMO first, each one tap from any page.
+      const calls = within(bar).getAllByRole("link", { name: /^Call / });
+      expect(calls).toHaveLength(8);
+      expect(calls[0]).toHaveAttribute("href", "tel:+639275919022");
+      for (const call of calls) {
+        expect(call.getAttribute("href")).toMatch(/^tel:\+63\d{10}$/);
+      }
+      expect(within(bar).getByRole("link", { name: /All numbers/i })).toHaveAttribute("href", "/emergency");
+    }
+  });
+
+  it("lists every office once, in the international format", () => {
+    renderAt("/emergency");
+    const main = screen.getByRole("main");
+
+    for (const [office, intl] of [
+      ["MDRRMO", "+63 927 591 9022"],
+      ["KMPS", "+63 967 038 7227"],
+      ["BFP", "+63 915 607 6569"],
+      ["APH", "+63 997 770 6611"],
+      ["RHU", "+63 905 041 7278"],
+      ["MSWDO", "+63 975 655 6026"],
+      ["ICT Office", "+63 915 942 5676"],
+    ] as const) {
+      expect(within(main).getByText(office)).toBeInTheDocument();
+      expect(within(main).getByText(intl)).toBeInTheDocument();
+      // and never the same digits twice in two formats
+      expect(within(main).queryByText(intl.replace("+63 ", "0"))).not.toBeInTheDocument();
+    }
+
+    // RMFB 15 publishes two numbers; both must be listed.
+    expect(within(main).getByText("+63 929 359 3704")).toBeInTheDocument();
+    expect(within(main).getByText("+63 905 206 0446")).toBeInTheDocument();
+
+    // Every call link dials internationally, never with a leading zero.
+    const calls = within(main).getAllByRole("link", { name: /^Call / });
+    expect(calls).toHaveLength(9);
+    for (const call of calls) {
+      expect(call.getAttribute("href")).toMatch(/^tel:\+63\d{10}$/);
+    }
+  });
+
+  it("names its source and does not pretend to run the hotlines", () => {
+    renderAt("/emergency");
+    const main = screen.getByRole("main");
+    expect(within(main).getByRole("link", { name: /Discover Kabugao/i })).toHaveAttribute(
+      "href",
+      expect.stringContaining("facebook.com/discoverkabugao"),
+    );
+    expect(within(main).getAllByText(/15 April 2026/).length).toBeGreaterThan(0);
+    expect(within(main).getByText(/Mobile numbers can change/)).toBeInTheDocument();
+    // the 911 card is one big tap target, so match it by its heading text
+    expect(
+      within(main).getByRole("link", { name: /National emergency hotline/i }),
+    ).toHaveAttribute("href", "tel:911");
+  });
+});
+
 describe("maps", () => {
   // Leaflet needs real layout, which jsdom does not provide, so these assert
   // what a visitor gets before (or without) the map: the same destinations.
@@ -223,7 +288,9 @@ describe("maps", () => {
     for (const path of ["/", "/government/barangays/waga"]) {
       cleanup();
       renderAt(path);
-      expect(screen.getByText(/Map data © OpenStreetMap contributors \(ODbL\)/)).toBeInTheDocument();
+      expect(
+        screen.getByText(/Map data, tiles and barangay coordinates © OpenStreetMap contributors \(ODbL\)/),
+      ).toBeInTheDocument();
     }
   });
 

@@ -25,6 +25,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://betterkabugao.org/emergency</loc>
+    <lastmod>2026-08-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://betterkabugao.org/transparency</loc>
     <lastmod>2026-08-17</lastmod>
     <changefreq>weekly</changefreq>

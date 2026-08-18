@@ -22,6 +22,7 @@ export function SiteFooter() {
             <a href={links.repository} target="_blank" rel="noreferrer">GitHub repository</a>
             <Link to="/government/barangays">The 21 barangays</Link>
             <Link to="/government/officials">Municipal officials</Link>
+            <Link to="/emergency">Emergency hotlines</Link>
             <Link to="/transparency">Transparency</Link>
             <Link to="/explore">Explore Kabugao</Link>
             <Link to="/services">Services</Link>

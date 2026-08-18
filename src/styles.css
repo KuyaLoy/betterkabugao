@@ -806,3 +806,203 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--color-primary-5
      rather than ship a half-visible one. */
   .map-pin__label { display: none; }
 }
+
+/* ---------------- Emergency hotlines ---------------- */
+
+/* In the red bar: labels stay quiet, numbers stay tappable. */
+/* Infinite marquee, CSS only.
+
+   The track is rendered twice and shifted by exactly half the total width, so
+   the second copy lands where the first began and the loop has no seam. Speed is
+   set from a custom property so the duration scales with content length rather
+   than being a magic number. */
+.hotline__marquee {
+  flex: 1 1 240px; min-width: 0;
+  display: flex; gap: 0;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 16px, #000 calc(100% - 16px), transparent);
+  mask-image: linear-gradient(to right, transparent, #000 16px, #000 calc(100% - 16px), transparent);
+}
+.hotline__list {
+  display: flex; gap: 4px 16px; align-items: center;
+  flex: 0 0 auto; width: max-content; padding-right: 16px;
+  animation: hotline-marquee 44s linear infinite;
+  will-change: transform;
+}
+@keyframes hotline-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-100%); }
+}
+
+/* Stop it: pointer over it, focus inside it, finger on it, or Pause pressed. */
+@media (hover: hover) {
+  .hotline__marquee:hover .hotline__list { animation-play-state: paused; }
+}
+.hotline__marquee:focus-within .hotline__list,
+.hotline__marquee:active .hotline__list,
+.hotline__marquee.is-paused .hotline__list { animation-play-state: paused; }
+
+/* Paused by choice, or motion turned off: let the row be swiped instead so every
+   office stays reachable. */
+.hotline__marquee.is-paused {
+  overflow-x: auto; scrollbar-width: none;
+}
+.hotline__marquee.is-paused::-webkit-scrollbar { display: none; }
+
+.hotline__list li { display: inline-flex; align-items: baseline; gap: 6px; white-space: nowrap; }
+.hotline__who { color: rgba(255, 255, 255, 0.78); font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
+.hotline__list a { color: var(--color-white); font-weight: 700; text-decoration: none; font-variant-numeric: tabular-nums; }
+.hotline__list a:hover { text-decoration: underline; }
+
+.hotline__pause,
+.hotline__all {
+  flex: none; white-space: nowrap; padding: 3px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.55); border-radius: 4px;
+  background: none; color: var(--color-white);
+  font: inherit; font-size: 0.75rem; font-weight: 700; text-decoration: none;
+  cursor: pointer;
+}
+.hotline__pause:hover,
+.hotline__all:hover { background: rgba(255, 255, 255, 0.16); border-color: var(--color-white); }
+.hotline__pause { min-width: 58px; }
+
+@media (prefers-reduced-motion: reduce) {
+  /* Never animate. The row becomes a plain swipeable strip. */
+  .hotline__list { animation: none; }
+  .hotline__marquee { overflow-x: auto; scrollbar-width: none; }
+  .hotline__marquee > .hotline__list[aria-hidden="true"] { display: none; }
+  .hotline__pause { display: none; }
+}
+
+
+/* ---------------- Emergency page ---------------- */
+
+/* 911 leads the page: one large tap target, because it is the number that always
+   works and the one to reach for when a local number does not connect. */
+.hotline-card {
+  display: block; padding: 24px 26px; text-decoration: none;
+  border-radius: 12px; border: 1px solid var(--color-alert); background: #fdf2f2;
+}
+.hotline-card:hover { background: #fbe9e9; }
+.hotline-card__kicker { display: block; color: var(--color-alert); font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; }
+.hotline-card__name { display: block; margin-top: 8px; color: var(--color-gray-900); font-size: 1.0625rem; font-weight: 700; }
+.hotline-card__number { display: block; margin-top: 4px; color: var(--color-alert); font-size: 2.5rem; font-weight: 800; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+.hotline-card__note { display: block; margin-top: 8px; max-width: 62ch; color: var(--color-gray-700); font-size: 0.9375rem; line-height: 1.6; }
+
+.hotline-list { margin-top: 14px; border: 1px solid var(--color-gray-300); border-radius: 12px; overflow: hidden; background: var(--color-white); }
+/* Grid, not flex: a long office name wraps inside its own column instead of
+   pushing its call button onto the next line. */
+.hotline-row {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px 24px; align-items: center;
+  padding: 18px 22px; border-bottom: 1px solid var(--color-gray-200);
+}
+.hotline-row:last-child { border-bottom: 0; }
+.hotline-row__who { min-width: 0; }
+.hotline-row__abbr { display: block; color: var(--color-accent-700); font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; }
+.hotline-row__name { display: block; margin-top: 3px; color: var(--color-primary-800); font-size: 1.0625rem; font-weight: 700; letter-spacing: -0.015em; }
+.hotline-row__purpose { display: block; margin-top: 3px; max-width: 58ch; color: var(--color-gray-700); font-size: 0.875rem; line-height: 1.55; }
+.hotline-row__numbers { display: flex; flex-wrap: wrap; gap: 10px; }
+
+/* One tap target per number. Its label IS the number, in the single +63 form —
+   printing the local 0-prefixed variant beside it repeated the same digits. */
+.hotline-row__call {
+  display: flex; align-items: center; justify-content: center;
+  padding: 12px 18px; min-height: 48px; text-decoration: none; white-space: nowrap;
+  border: 1px solid var(--color-primary-700); border-radius: 8px; background: var(--color-primary-700);
+  color: var(--color-white); font-size: 1.0625rem; font-weight: 700; font-variant-numeric: tabular-nums;
+  transition: background-color 150ms ease;
+}
+.hotline-row__call:hover { background: var(--color-primary-600); }
+
+@media (max-width: 768px) {
+  .hotline__all { margin-left: 0; }
+  .hotline__inner { gap: 6px 14px; }
+  .hotline-card__number { font-size: 2rem; }
+  .hotline-row { padding: 16px; grid-template-columns: minmax(0, 1fr); }
+  .hotline-row__numbers { width: 100%; }
+  .hotline-row__call { flex: 1; text-align: center; }
+}
+
+@media (max-width: 860px) {
+  /* Squeezed beside the label, 911, Pause and the button, the marquee collapsed
+     to about 100px — a keyhole. Give it its own full-width row: controls on the
+     first line, the scrolling numbers on the second. */
+  .hotline__divider { display: none; }
+  .hotline__marquee { flex: 1 0 100%; order: 3; }
+  .hotline__pause { order: 2; margin-left: auto; }
+  .hotline__all { order: 2; }
+}
+
+/* ---------------- Hotline popup (native <dialog>) ---------------- */
+
+.hd {
+  /* Tailwind's preflight zeroes margin on every element, which removes the UA
+     stylesheet's `margin: auto` and leaves a modal dialog pinned to the top
+     left. Put it back explicitly. */
+  margin: auto;
+  width: min(100% - 32px, 560px); max-height: min(86vh, 760px);
+  padding: 0; border: 0; border-radius: 14px;
+  background: var(--color-white); color: var(--color-gray-900);
+  box-shadow: 0 24px 64px rgba(0, 20, 47, 0.32);
+}
+.hd::backdrop { background: rgba(0, 20, 47, 0.62); }
+.hd__panel { display: flex; flex-direction: column; max-height: inherit; }
+
+.hd__head {
+  display: flex; gap: 16px; align-items: flex-start; justify-content: space-between;
+  padding: 20px 22px 16px; border-bottom: 1px solid var(--color-gray-200);
+}
+.hd__eyebrow { color: var(--color-alert); font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; }
+.hd__head h2 { margin-top: 4px; color: var(--color-gray-900); font-size: 1.25rem; font-weight: 800; letter-spacing: -0.02em; }
+.hd__close {
+  flex: none; padding: 8px 14px; min-height: 40px;
+  border: 1px solid var(--color-gray-300); border-radius: 6px;
+  background: var(--color-white); color: var(--color-gray-800);
+  font: inherit; font-size: 0.875rem; font-weight: 600; cursor: pointer;
+}
+.hd__close:hover { background: var(--color-gray-50); border-color: var(--color-gray-600); }
+
+.hd__body { overflow-y: auto; padding: 18px 22px 22px; }
+
+.hd__national {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 16px;
+  padding: 14px 18px; text-decoration: none;
+  border: 1px solid var(--color-alert); border-radius: 10px; background: #fdf2f2;
+}
+.hd__national:hover { background: #fbe9e9; }
+.hd__national-label { color: var(--color-gray-700); font-size: 0.8125rem; }
+.hd__national-number { color: var(--color-alert); font-size: 1.75rem; font-weight: 800; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+
+.hd__list { margin-top: 14px; }
+/* Grid, not flex: a long office name should wrap inside its own column, not
+   push its call button onto the next line and over to the left. */
+.hd__list li {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px 16px; align-items: center;
+  padding-block: 12px; border-bottom: 1px solid var(--color-gray-200);
+}
+.hd__list li:last-child { border-bottom: 0; }
+.hd__who { display: block; min-width: 0; }
+.hd__abbr { display: block; color: var(--color-accent-700); font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; }
+.hd__name { display: block; margin-top: 2px; color: var(--color-primary-800); font-size: 0.9375rem; font-weight: 700; }
+.hd__calls { display: flex; flex-wrap: wrap; gap: 8px; }
+
+/* The tap target is the number itself, as asked: its label IS the digits. */
+.hd__call {
+  display: flex; align-items: center; padding: 11px 16px; min-height: 46px; text-decoration: none;
+  border: 1px solid var(--color-primary-700); border-radius: 8px; background: var(--color-primary-700);
+  color: var(--color-white); font-size: 1rem; font-weight: 700;
+  font-variant-numeric: tabular-nums; white-space: nowrap;
+  transition: background-color 150ms ease;
+}
+.hd__call:hover { background: var(--color-primary-600); }
+
+.hd__note { margin-top: 16px; color: var(--color-gray-700); font-size: 0.8125rem; line-height: 1.6; }
+.hd__note a { color: var(--color-primary-700); font-weight: 600; }
+
+@media (max-width: 560px) {
+  /* Slide it to the bottom of the screen, where a thumb reaches. */
+  .hd { width: 100%; max-width: none; max-height: 92vh; margin: auto auto 0; border-radius: 14px 14px 0 0; }
+  .hd__list li { grid-template-columns: minmax(0, 1fr); }
+  .hd__calls { width: 100%; }
+  .hd__call { flex: 1; justify-content: center; }
+}

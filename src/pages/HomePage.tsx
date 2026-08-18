@@ -134,11 +134,10 @@ export function HomePage() {
         <div className="shell">
           <div className="section__head">
             <p className="kicker">Where things are</p>
-            <h2 id="map-title">All {BARANGAYS.length} barangays on the map</h2>
+            <h2 id="map-title">Where they are</h2>
             <p className="section__body">
-              Every barangay at its recorded coordinates. Select a marker for its population and a link
-              to its page. {BARANGAYS.length} barangays across 935.12 km² — the largest municipality in
-              Apayao by land area.
+              Every barangay at its recorded coordinates, spread along the Apayao river valley. Select
+              a marker for its population and a link to its page.
             </p>
           </div>
           <MapView

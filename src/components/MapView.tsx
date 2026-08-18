@@ -189,8 +189,7 @@ export function MapView({ slugs, primarySlug, maxZoom, height, label }: MapViewP
         </div>
       ) : null}
       <p className="map__note">
-        Map data &copy; OpenStreetMap contributors (ODbL). Barangay coordinates from OpenStreetMap
-        place nodes; tiles served by openstreetmap.org.
+        Map data, tiles and barangay coordinates &copy; OpenStreetMap contributors (ODbL).
       </p>
     </div>
   );

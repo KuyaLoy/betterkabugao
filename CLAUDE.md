@@ -84,7 +84,14 @@ Never hand-edit files in `public/brand/`.
   instead. Only two peso figures are permitted on the site: ₱0 (cost to the
   people) and ₱670 (the developer's own domain cost); a contract test enforces
   this.
-- Never publish an unverified emergency phone number.
+- **Emergency numbers**: publish only numbers the municipality itself has
+  published, and always show the source and its date beside them (currently the
+  LGU's Discover Kabugao Facebook post of 15 April 2026). Keep **911** as the
+  first and always-valid option, and say plainly that mobile numbers can change
+  and that 911 should be used if one does not connect. Numbers live in exactly
+  one file, `src/data/hotlines.ts`, never inline in a component — a contract
+  test enforces this, along with the 11-digit format and the `tel:+63` form.
+  Never invent, guess or carry over an emergency number without a fresh source.
 - Semantic HTML first: one `h1` per page, proper landmarks
   (header/main/footer), skip link to `#main-content`
 - Accessibility is a gate, not a nice-to-have: WCAG AA contrast, visible
@@ -161,9 +168,13 @@ contract test in the same commit — never delete a contract to make it pass.
   done. `docs/START-HERE.md` §8 lists the traps in full.
 - Do not run `prettier` — there is no config, and it reformats whole files to 80
   columns. Match the surrounding style by hand.
-- Skills for AI-assisted contributors are committed in `docs/skills/` — read
-  them before UI, security or session work. `docs/skills/README.md` also lists
-  the recommended external skill sets.
+- **Read the relevant skill in `docs/skills/` BEFORE you write or edit, not after.**
+  The maintainer asked for this explicitly. At minimum:
+  `anti-slop/SKILL.md` before any page, component or copy change;
+  `frontend-standards/SKILL.md` before any UI or style change;
+  `security-review/SKILL.md` before touching `public/_headers`, adding a
+  dependency, or handling input; `session-memory/SKILL.md` at the start and end
+  of every session. `docs/skills/README.md` lists the external sets too.
 - Commits: conventional style (`feat:`, `fix:`, `docs:`, `chore:`), present
   tense, one logical change per commit.
 - Design, layout, or visual changes need maintainer approval before merging.

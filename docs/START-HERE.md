@@ -5,7 +5,7 @@ this file completely before you touch anything else.** It tells you what the
 project is, what is already built, what comes next and in what order, and which
 mistakes have already cost us time.
 
-Last updated: **17 August 2026**. Update it at the end of every session — see
+Last updated: **18 August 2026**. Update it at the end of every session — see
 [§11](#11-before-you-finish-a-session).
 
 ## Reading order
@@ -18,7 +18,7 @@ Last updated: **17 August 2026**. Update it at the end of every session — see
 | 4 | `docs/sessions/` (newest first) | what happened, in the maintainer's own words |
 | 5 | `design-research/RESEARCH.md` + `design-research/ARCHITECTURE.md` | why the site looks and routes the way it does |
 | 6 | `docs/research/data-tracker.html` | **the feature roadmap** — open it in a browser |
-| 7 | `docs/skills/` | frontend, security and session-memory playbooks |
+| 7 | `docs/skills/` | anti-slop, frontend, security and session-memory playbooks — **read the relevant one before editing, not after** |
 
 Do not skip 5 and 6. The design and the roadmap are both *measured* and
 *sourced*; re-deriving them from taste is how the first version got rejected.
@@ -55,15 +55,36 @@ the **BetterGov.ph / BetterLGU** volunteer network.
 
 | | |
 |---|---|
-| **Live on `betterkabugao.org`** | the coming-soon page (`main` @ `9608dd6`) |
-| **Built, not yet pushed** | the real multi-page portal — 31 prerendered routes, plus interactive maps |
-| **Where that work lives** | uncommitted in the maintainer's working tree at `C:/laragon/www/betterkabugao` |
-| **Intended branch** | `feat/multipage-v1` → preview URL first, `main` only after review |
-| **Quality gate** | 28 contract tests + 24 unit tests green; lint, typecheck, build clean |
+| **Live on `betterkabugao.org`** | the coming-soon page (`main` @ `9608dd6`) — **unchanged** |
+| **Pushed and deployed for review** | `feat/multipage-v1` — the real multi-page portal, 32 prerendered routes, interactive maps, emergency hotlines |
+| **Preview URL** | https://5ea22c06.betterkabugao.pages.dev (Cloudflare branch deploy, verified in a real browser) |
+| **Awaiting** | the maintainer's review, then a merge to `main` |
+| **Quality gate** | 32 contract tests + 27 unit tests green; lint, typecheck, build clean |
 
-So: the *repository* still describes a coming-soon site, while the *working
-tree* is a full portal. If `git status` shows a large number of changes, that is
-expected — it is the v1 work waiting for the maintainer's push.
+`c69101e` is 85 files changed / +6,128 / −509 against `main`, authored by
+KuyaLoy on 17 Aug 2026. The pushed tree was compared file by file against the
+locally verified build: **117 tracked files, zero mismatches.**
+
+### Verified on the deployed preview, not just locally
+
+| Check | Result |
+|---|---|
+| Security headers actually sent by Cloudflare | all seven, including the exact CSP with only `api.open-meteo.com` and `tile.openstreetmap.org` |
+| Per-page HTML | `/government/barangays/waga/` returns its own `<title>`, its own canonical, `BreadcrumbList` JSON-LD and **9,901 characters** of real body HTML containing Waga's own figures |
+| Directory-index routing | works — nested routes resolve, no SPA shell |
+| OpenStreetMap tiles | render from a real browser on the real domain — the first test outside the sandbox, where headless Chromium has no egress |
+| Live weather | working (`Kabugao 25°C · Overcast`) |
+| Console | no errors, no CSP violations |
+
+Two things worth knowing about previews:
+
+- The canonical on a preview page points at **`betterkabugao.org`**, not the
+  preview host. That is deliberate — it keeps preview deploys out of search
+  results. Do not "fix" it.
+- The Cloudflare dashboard was showing a banner that **GitHub push events to
+  Cloudflare are degraded by a GitHub incident**. This deploy went through
+  anyway, but if a future push does not trigger a build, check that banner
+  before debugging the project settings.
 
 ### Stack
 
@@ -77,7 +98,7 @@ Adding any dependency needs the maintainer's explicit approval.
 
 ## 3. What is already done
 
-### Routes — all 31 prerendered to static HTML
+### Routes — all 32 prerendered to static HTML
 
 | Page | Route | State |
 |---|---|---|
@@ -86,6 +107,7 @@ Adding any dependency needs the maintainer's explicit approval.
 | Elected officials | `/government/officials` | mayor, vice mayor, 8 Sangguniang Bayan |
 | Barangay directory | `/government/barangays` | all 21, live filter, sortable table |
 | **One page per barangay** | `/government/barangays/:slug` | × 21 |
+| **Emergency hotlines** | `/emergency` | 8 municipal offices + 911, both dialling formats |
 | Transparency | `/transparency` | field schema only, **all values empty on purpose** |
 | Explore / Services | `/explore`, `/services` | placeholders marked "Planned" |
 | About | `/about` | funding, who builds it, how to send corrections |
@@ -116,6 +138,16 @@ Maps view/directions links.
 - **Brand.** The original mark, recoloured to BetterGov navy and gold. Geometry
   in `src/brand/geometry.json` is pinned by contract test and **must never be
   redrawn**.
+- **Emergency hotlines.** `src/data/hotlines.ts` holds the eight offices the
+  municipality published, plus 911. Every number is shown in both the local
+  (`0927 591 9022`) and international (`+63 927 591 9022`) form, and every
+  `tel:` link is `+63` so it dials from inside the Philippines *and* from
+  abroad — which is why the page exists. The red bar on every page carries 911
+  plus all eight offices in an auto-scrolling marquee (the maintainer's call,
+  made against advice) that stops on hover, focus, touch, a visible Pause button
+  and `prefers-reduced-motion` — all five pinned by tests. "All numbers" opens
+  the full list as a native `<dialog>` popup, degrading to the `/emergency` page
+  without JavaScript. One number format site-wide: `+63`.
 
 ### Delivered to the maintainer but **not in the repository**
 
@@ -199,7 +231,8 @@ In rough order of value per hour, all of it uncontroversial:
 4. **`public/_headers` review**, and decide whether the multi-page deploy needs
    a `public/_routes.json` (there is none today).
 5. **A PNG export script for the brand assets** — see the table above.
-6. **Barangay officials** — see §5; genuinely unavailable today.
+6. **Test-dial the emergency numbers** or get the LGU to confirm them — see §6.
+7. **Barangay officials** — see §5; genuinely unavailable today.
 
 ### Smaller loose ends
 
@@ -230,11 +263,11 @@ anyway.
 | Blocked on | What is needed | Why it matters |
 |---|---|---|
 | **Robin** | his **Facebook, Instagram and Threads URLs** | required to update the BetterLGU Directory entry in their main repo: add the domain + socials, flip status 🔵 Planned → 🟢 Active. Asked several times; still outstanding. |
-| **Robin** | push `feat/multipage-v1`, review the preview URL | the whole v1 portal is waiting |
+| **Robin** | review the preview, then merge `feat/multipage-v1` → `main` | the branch is pushed and deployed; only the merge is left |
 | **Robin** | delete `_to_delete/` and any `.git/index.lock` by hand | the device bridge cannot delete files |
 | **BLGF** | reply to `lfdad@blgf.gov.ph` | licence clearance before any fiscal data ships |
 | **The municipality** | the barangay officials roster | **no government source publishes it** — not eLGU, COMELEC, DILG or the province. The only complete list online is a stale SEO site. RA 12232 moved the BSKE to 2 Nov 2026, so incumbents hold over. The site says all of this explicitly on the barangay pages. **Do not fill this gap with a guess.** |
-| **Local offices** | verified emergency hotline numbers | until then the hotline bar shows **911 only**. Publishing an unverified emergency number is a safety risk. |
+| **Local offices** | a *confirmation* of the hotline numbers | ✅ the numbers are now published, sourced to the municipality's own post of 15 April 2026 (see below). Still worth having someone in Kabugao test-dial them, and worth asking the LGU to confirm — mobile numbers change. |
 
 ---
 
@@ -259,11 +292,14 @@ set; these are the traps.
    colour, spacing and lockup may change. Never hand-edit `public/brand/`.
 5. **Never delete a contract test to make it pass.** If you change a convention
    deliberately, update the test in the same commit and say why.
-6. **Work in checkpoints.** Implement one phase, show the result with
+6. **Read the relevant `docs/skills/` file before you edit.** The maintainer
+   asked for this explicitly. `anti-slop/SKILL.md` applies to every page,
+   component or copy change.
+7. **Work in checkpoints.** Implement one phase, show the result with
    screenshots, wait for a go-ahead. No unreviewed mega-changes.
-7. **Text colour floor on light surfaces is `--color-gray-700`.** `gray-500`
+8. **Text colour floor on light surfaces is `--color-gray-700`.** `gray-500`
    and `gray-600` fail WCAG AA and must not be used for text.
-8. **Verify before claiming.** Run the commands, read the output, look at the
+9. **Verify before claiming.** Run the commands, read the output, look at the
    screenshots. §8 explains why that last part is not optional.
 
 ---
@@ -323,6 +359,33 @@ render.
   Leaflet icon class; a contract test now forbids it.
 - **A fixed map zoom cropped a barangay** the same page listed as a nearest
   neighbour. Local maps fit their own bounds with a zoom ceiling instead.
+
+**Slop and redundancy**
+
+- **Read `docs/skills/anti-slop/SKILL.md` before writing copy or markup.** It
+  carries the redundancy table (what repeat is a defect, what repeat is
+  required) and an audit script that runs over all 32 built pages.
+- **Editing `src/styles.css` by string-splice deleted a whole block** while the
+  markup kept referencing it. Build green, tests green, buttons rendering as
+  20px of bare text. A contract test now cross-checks every rendered
+  `className` against the stylesheet — but prefer targeted edits over splices.
+- **One number format on the site: `+63`.** Printing the local `0927 …` beside
+  it put the same digits twice on one button.
+
+**Data**
+
+- **A published number is not a verified number.** The emergency hotlines come
+  from the municipality's own Facebook post of 15 April 2026 — the best source
+  that exists, since neither the eLGU platform nor DILG publishes them — but no
+  individual number could be corroborated a second time, and none has been
+  test-dialled. The page states the source and its date, keeps 911 first, and
+  says numbers can change. Do not upgrade that wording to imply certainty we
+  do not have.
+- Adding a route means **four** edits, not one: `src/App.tsx`,
+  `ALL_PATHS` + `STATIC_META` + `SEGMENT_LABELS` in `src/lib/seo.ts`, the
+  `PAGES` list in `src/lib/search.ts`, and `STATIC_SECTIONS` in
+  `scripts/build-seo.mjs`. Miss the last one and the page prerenders but never
+  reaches `sitemap.xml` — which is exactly what happened with `/emergency`.
 
 **Environment**
 

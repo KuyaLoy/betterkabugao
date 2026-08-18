@@ -12,7 +12,7 @@ const root = new URL("../", import.meta.url);
 const SITE = "https://betterkabugao.org";
 const STATIC_SECTIONS = [
   "/", "/government", "/government/officials", "/government/barangays",
-  "/transparency", "/explore", "/services", "/about", "/search",
+  "/emergency", "/transparency", "/explore", "/services", "/about", "/search",
 ];
 
 /**

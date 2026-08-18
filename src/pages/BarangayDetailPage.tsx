@@ -61,8 +61,8 @@ export function BarangayDetailPage() {
         title={barangay.name}
         description={
           barangay.oldName
-            ? `Also recorded under its former name, ${barangay.oldName}.`
-            : `One of the ${BARANGAYS.length} barangays of Kabugao.`
+            ? `${PLACE_LABEL[barangay.place]} of ${barangay.population.toLocaleString("en-PH")} residents, also recorded under its former name, ${barangay.oldName}.`
+            : `${PLACE_LABEL[barangay.place]} of ${barangay.population.toLocaleString("en-PH")} residents in Kabugao, Apayao.`
         }
         breadcrumbs={meta.breadcrumbs}
         badges={
@@ -160,8 +160,8 @@ export function BarangayDetailPage() {
                 </div>
               ) : null}
               <p className="fact-card__note">
-                Population from the Philippine Statistics Authority. PSGC verified against PSA records.
-                Coordinates from OpenStreetMap contributors (ODbL).
+                Population from the Philippine Statistics Authority. PSGC verified against PSA
+                records. Coordinates and the map below: see the credit under the map.
               </p>
             </div>
 

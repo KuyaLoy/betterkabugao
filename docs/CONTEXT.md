@@ -7,21 +7,29 @@ the traps. This file is the dated decision log behind it.
 Living snapshot of BetterKabugao. Update both at the end of every working
 session (see `docs/skills/session-memory/SKILL.md`).
 
-## Current state (2026-08-17)
+## Current state (2026-08-18)
 
 - **Domain:** betterkabugao.org — Cloudflare Pages, deploys from `main`
   (build `npm run build`, output `dist`)
-- **Released to `main`:** v2.0.0 coming-soon page (`9608dd6`).
-- **Built, awaiting Robin's checkpoint:** v3.0.0 — the real multi-page portal.
-  **31 routes prerendered to static HTML**, each with its own title,
+- **Released to `main`:** v2.0.0 coming-soon page (`9608dd6`) — still what
+  betterkabugao.org serves.
+- **Pushed and deployed for review:** `feat/multipage-v1` @ `c69101e` →
+  https://5ea22c06.betterkabugao.pages.dev. 85 files changed (+6,128 / −509);
+  the pushed tree matches the verified build across all 117 tracked files.
+  Production checks on that URL: all seven security headers sent, per-page
+  titles and canonicals, BreadcrumbList JSON-LD, ~9.9 KB of real HTML per
+  barangay page, OSM tiles rendering, live weather, no console or CSP errors.
+- **Content of that branch:** v3.0.0 — the real multi-page portal.
+  **32 routes prerendered to static HTML**, each with its own title,
   description, canonical, OG tags and `BreadcrumbList` JSON-LD. Real homepage
   (no longer coming-soon), `/government` hub, `/government/officials`,
   `/government/barangays` with a live filter, and **one page per barangay** at
   `/government/barangays/:slug` (× 21) carrying population, share, rank, PSGC,
   coordinates, schools, nearest three barangays by distance, and Google Maps
   view + driving directions. Plus `/transparency`, `/explore`, `/services`,
-  `/about`, `/search`, real 404. See
-  `docs/sessions/2026-08-17-multipage-v1.md`.
+  `/about`, `/search`, `/emergency`, real 404. See
+  `docs/sessions/2026-08-17-multipage-v1.md` and
+  `docs/sessions/2026-08-18-emergency-hotlines.md`.
 - **Design source of truth:** `design-research/RESEARCH.md` (visual tokens,
   33 screenshots of 11 live sites, `_measurements.json`) and
   `design-research/ARCHITECTURE.md` (route structure across 15 cloned repos).
@@ -37,7 +45,12 @@ session (see `docs/skills/session-memory/SKILL.md`).
 - **Third-party hosts:** exactly two — `api.open-meteo.com` (`connect-src`) and
   `tile.openstreetmap.org` (`img-src`). `frame-src` is deliberately absent, so
   no iframe can load. A contract test asserts the whole list.
-- **Quality:** 28 contract tests + 24 unit tests green; typecheck, lint,
+- **Emergency hotlines:** `/emergency` publishes the eight offices the
+  municipality listed on 15 April 2026 (MDRRMO, KMPS, BFP, APH, RHU, MSWDO,
+  RMFB 15, ICT), each in local and `+63` form, with `tel:+63` links so overseas
+  family can dial. 911 leads. The red bar on every page carries 911 plus the
+  all eight offices in a marquee, and a popup with the full list.
+- **Quality:** 30 contract tests + 27 unit tests green; typecheck, lint,
   build clean; no horizontal overflow at 320–1560; one `h1`, one `header`, one
   `main` and zero inline styles (outside the Leaflet canvas) on every page at
   every width.
@@ -67,8 +80,9 @@ session (see `docs/skills/session-memory/SKILL.md`).
 - **2026-08-16** Cost transparency follows BetterTanay's model: ₱0 to the
   people, ₱670 to build, paid personally by the developer.
   Developer credited by name: Robin Tapiru.
-- **2026-08-16** Hotlines: only 911 shown, since local Kabugao numbers are
-  unverified. Publishing an unverified emergency number is a safety risk.
+- **2026-08-16** Hotlines: only 911 shown, since local Kabugao numbers were
+  unverified at the time. Publishing an unverified emergency number is a safety
+  risk. **Superseded 2026-08-18** — see below.
 - **2026-08-16** External skills (superpowers, taste-skill, OpenViking)
   documented in `docs/skills/README.md` rather than vendored — together they
   are ~160 MB / 4,000+ files that never ship to a visitor.
@@ -108,6 +122,50 @@ session (see `docs/skills/session-memory/SKILL.md`).
   `docs/skills/frontend-standards/SKILL.md`. Session-memory protocol now
   requires updating START-HERE and recording deliverables that were sent to the
   maintainer without being committed.
+
+- **2026-08-18** Emergency numbers published, reversing the earlier
+  "911 only" position. Source: the municipality's own Discover Kabugao Facebook
+  post of 15 April 2026 — the LGU's eLGU platform publishes officials but not
+  hotlines, and no other government source lists them, so this is the best
+  available. Independent corroboration was not possible for any single number,
+  so the page shows the source and its date, keeps 911 first as the
+  always-valid option, and states that mobile numbers change. `+63` links
+  follow BetterCabanatuan, which displays the local form and dials the
+  international one; 5 of 15 network repos use `+63` somewhere. Numbers live
+  only in `src/data/hotlines.ts` and a contract test forbids hardcoding one in
+  a component. **Open:** have someone in Kabugao test-dial the numbers, and ask
+  the LGU to confirm them.
+- **2026-08-18** The bar **is** an auto-scrolling marquee. The case against was
+  put to Robin — you cannot tap a moving target, WCAG 2.2 SC 2.2.2 needs a pause
+  control, `prefers-reduced-motion` stops it anyway, and taste-skill lists
+  infinite-loop animation as an anti-default — and he chose it regardless. Built
+  with all five stop paths (hover, focus-within, active/touch, a visible Pause
+  button with `aria-pressed`, and reduced-motion which disables it entirely and
+  makes the row swipeable), pure CSS so the browser can pause it, and each path
+  pinned by a contract test. Defensible as *one* element; a second piece of
+  auto-motion would break that defence.
+- **2026-08-18** Full hotline list also opens as a popup on the native
+  `<dialog>`, so the browser supplies the focus trap, Escape and focus
+  restoration. The trigger stays a real link to `/emergency` and only cancels
+  navigation when `showModal` exists — no JavaScript, no lost emergency number.
+- **2026-08-18** One phone-number format on the site: **`+63`**, everywhere.
+  Printing the local `0927 …` beside it repeated the same digits on one button.
+  `formatLocal()` was deleted rather than left unused.
+- **2026-08-18** Added `docs/skills/anti-slop/SKILL.md` — the maintainer asked
+  for an anti-slop skill. `Leonxlnx/taste-skill`, already on this project's
+  external list, is exactly that (MIT), but it scopes itself to "landing pages,
+  portfolios, redesigns — not dashboards, not data tables", which is most of
+  this site. So the repo skill credits and imports the parts that apply and
+  records the two rules we reject (zero em-dashes; "avoid Inter" — Inter here is
+  measured from the network, not a default). It also carries the redundancy
+  table and the audit script.
+- **2026-08-18** Standing instruction from the maintainer: **read the relevant
+  `docs/skills/` file before editing, not after.** Recorded in `CLAUDE.md` and
+  `docs/START-HERE.md`.
+- **2026-08-18** New contract test cross-checks every rendered `className`
+  against `src/styles.css`. A string-splice edit had deleted a whole style block
+  while the markup still referenced it — build green, tests green, buttons
+  rendering as 20px of bare text.
 
 ## Next steps
 

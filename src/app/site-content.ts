@@ -41,7 +41,6 @@ export const siteContent = {
   hotline: {
     label: "Emergency",
     national: "911",
-    note: "Local Kabugao hotlines are being verified before publication.",
   },
 
   buildStatus: {

@@ -1,4 +1,5 @@
 import { Route, Routes } from "react-router-dom";
+import { EmergencyPage } from "./pages/EmergencyPage";
 import { HotlineBar } from "./components/HotlineBar";
 import { SiteFooter } from "./components/SiteFooter";
 import { SiteHeader } from "./components/SiteHeader";
@@ -33,7 +34,8 @@ export function App() {
           <Route path="/government/officials" element={<OfficialsPage />} />
           <Route path="/government/barangays" element={<BarangaysPage />} />
           <Route path="/government/barangays/:slug" element={<BarangayDetailPage />} />
-          <Route path="/transparency" element={<TransparencyPage />} />
+          <Route path="/emergency" element={<EmergencyPage />} />
+        <Route path="/transparency" element={<TransparencyPage />} />
           <Route path="/explore" element={<ExplorePage />} />
           <Route path="/services" element={<ServicesPage />} />
           <Route path="/about" element={<AboutPage />} />

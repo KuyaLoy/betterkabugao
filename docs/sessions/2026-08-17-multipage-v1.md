@@ -120,6 +120,42 @@ three defects the screenshots caught that the assertions had passed.
 - Rewrote `parseBarangays()` to read fields individually, so adding a field
   never silently breaks the SEO build again.
 
+## Deployed to a branch and verified in production
+
+Robin pushed the work himself (the sandbox proxy denies push credentials for
+this repo, and the device bridge has no network, so only he could).
+
+- Branch **`feat/multipage-v1`**, commit **`c69101e`**, authored by KuyaLoy
+  <robintapiru0894@gmail.com>, 17 Aug 2026 20:00 +04:00
+- 85 files changed, +6,128 / −509 against `main`
+- Verified the pushed tree against the locally tested build: **117 tracked
+  files, zero mismatches** (13 files differ only by CRLF on his Windows
+  checkout, which `.gitattributes` normalises)
+- **`main` is still `9608dd6`** — betterkabugao.org continues to serve the
+  coming-soon page
+- Cloudflare branch deploy: **https://5ea22c06.betterkabugao.pages.dev**
+
+What the deployed preview proved that local testing could not:
+
+| Check | Result |
+|---|---|
+| `_headers` honoured by Cloudflare | all seven headers sent, CSP exactly as written, only the two documented hosts |
+| Prerendering under real routing | `/government/barangays/waga/` → own title, own canonical, BreadcrumbList JSON-LD, 9,901 chars of body HTML with Waga's own figures |
+| **OpenStreetMap tiles on a real domain** | render correctly — the sandbox's headless Chromium has no egress, so every earlier tile test was intercepted and fulfilled locally |
+| Live weather | `Kabugao 25°C · Overcast` |
+| Console | no errors, no CSP violations |
+
+Notes for next time:
+
+- Preview pages carry a canonical pointing at `betterkabugao.org`. Intentional
+  — it keeps preview deploys out of search results.
+- The Cloudflare dashboard was warning that **GitHub push events to Cloudflare
+  were degraded by a GitHub incident**. This build still ran. If a future push
+  does not trigger a deploy, check that banner first.
+- The stale `.git/index.lock` (left by an earlier bridge `git status`) was
+  cleared by moving it to `_to_delete/stale-git-locks/`. `mv` works on the
+  mount where `rm` does not — useful trick.
+
 ## Open items
 
 - **Robin's Facebook / Instagram / Threads URLs** — still blocking the

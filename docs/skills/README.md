@@ -11,6 +11,7 @@ skills, and points at the external skill sets we recommend installing.
 | `frontend-standards/SKILL.md` | Writing or reviewing any UI, styles, component or visual change |
 | `security-review/SKILL.md` | Before every commit; touching `public/_headers`; adding a dependency; handling user input |
 | `session-memory/SKILL.md` | At the start and end of every working session |
+| `anti-slop/SKILL.md` | **Before** writing or editing any page, component or copy — and again before calling UI work done |
 
 These encode decisions specific to this repo — the BetterGov design tokens,
 the BetterLGU layout conventions measured in `design-research/RESEARCH.md`,

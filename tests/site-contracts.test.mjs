@@ -232,6 +232,183 @@ test("the map is CSP-safe by construction", async () => {
   }
 });
 
+test("emergency hotlines are sourced, well-formed and never hardcoded", () => {
+  const data = load("src/data/hotlines.ts");
+
+  // The source must be named, linked and dated in the file itself. A number
+  // without a traceable origin must never appear on this site.
+  assert.match(data, /Discover Kabugao/);
+  assert.match(data, /facebook\.com\/discoverkabugao\/posts\//);
+  assert.match(data, /published: "15 April 2026"/);
+  assert.match(data, /Municipality of Kabugao/);
+
+  // Every published number: exactly 11 digits, leading 0, real PH mobile prefix.
+  const numbers = [...data.matchAll(/"(\d{9,13})"/g)].map((m) => m[1]);
+  assert.ok(numbers.length >= 9, `Expected at least 9 hotline numbers, found ${numbers.length}`);
+  const PH_MOBILE = /^09\d{9}$/;
+  for (const number of numbers) {
+    assert.match(number, PH_MOBILE, `${number} is not a valid 11-digit PH mobile number`);
+  }
+  assert.equal(new Set(numbers).size, numbers.length, "the same number must not be listed twice");
+
+  // 911 is the fallback and is never sourced from an LGU post.
+  assert.match(data, /NATIONAL_EMERGENCY = "911"/);
+
+  // tel: links must be international. A leading 0 cannot be dialled from abroad,
+  // which is the entire reason this page exists.
+  assert.match(data, /tel:\+63\$\{digits\.slice\(1\)\}/);
+  assert.doesNotMatch(data, /tel:0/);
+
+  // Numbers live in exactly one file. A number pasted into a component would
+  // escape the contract above and could never be corrected in one place.
+  const sources = ["src/components/HotlineBar.tsx", "src/pages/EmergencyPage.tsx"];
+  for (const file of sources) {
+    const body = load(file).replace(/\/\*[\s\S]*?\*\//g, "").replace(/\/\/.*$/gm, "");
+    assert.doesNotMatch(body, /\b09\d{9}\b/, `${file} must not hardcode a phone number`);
+    assert.doesNotMatch(body, /\+63\d/, `${file} must not hardcode a dialling code`);
+  }
+
+  // The bar DOES auto-scroll — the maintainer chose a marquee after being shown
+  // the trade-off. That makes the pause paths mandatory, not optional, so they
+  // are pinned here: WCAG 2.2 SC 2.2.2 needs a real control, hover does not
+  // serve keyboard users, and reduced-motion must stop it dead.
+  const bar = load("src/components/HotlineBar.tsx");
+  const css = load("src/styles.css");
+
+  assert.match(css, /@keyframes hotline-marquee/, "the marquee animation must exist");
+  assert.match(css, /\.hotline__list[^}]*animation: hotline-marquee/s);
+  // Duplicated track, second copy hidden from assistive tech.
+  assert.match(bar, /aria-hidden="true"/);
+  // Four ways to stop it.
+  assert.match(css, /@media \(hover: hover\)[\s\S]{0,160}animation-play-state: paused/);
+  assert.match(css, /:focus-within[\s\S]{0,140}animation-play-state: paused/);
+  assert.match(css, /:active[\s\S]{0,140}animation-play-state: paused/);
+  assert.match(css, /\.is-paused[\s\S]{0,140}animation-play-state: paused/);
+  // A visible control, with state exposed.
+  assert.match(bar, /className="hotline__pause"/);
+  assert.match(bar, /aria-pressed=\{paused\}/);
+  // Reduced motion: no animation, no pause button needed, row still swipeable.
+  const reduced = css.slice(css.indexOf("@media (prefers-reduced-motion: reduce)", css.indexOf(".hotline__marquee")));
+  assert.match(reduced.slice(0, 600), /\.hotline__list \{ animation: none/);
+  assert.match(reduced.slice(0, 600), /\.hotline__marquee \{ overflow-x: auto/);
+  assert.match(reduced.slice(0, 600), /\.hotline__pause \{ display: none/);
+  // No JavaScript animation loop — the motion is CSS, so the browser can pause it.
+  const barCode = bar.replace(/\/\*[\s\S]*?\*\//g, "").replace(/\/\/.*$/gm, "");
+  assert.doesNotMatch(barCode, /setInterval|requestAnimationFrame/);
+
+  // Every office is named in full, not left as an abbreviation only.
+  for (const abbr of ["MDRRMO", "KMPS", "BFP", "APH", "RHU", "MSWDO", "RMFB 15", "ICT Office"]) {
+    assert.ok(data.includes(`abbreviation: "${abbr}"`), `Expected hotline entry ${abbr}`);
+  }
+  assert.match(data, /Municipal Disaster Risk Reduction and Management Office/);
+  assert.match(data, /Apayao Provincial Hospital/);
+  assert.match(data, /Regional Mobile Force Battalion 15/);
+});
+
+test("the hotline popup degrades to a real page and uses the native dialog", () => {
+  const dialog = load("src/components/HotlineDialog.tsx");
+
+  // Native <dialog>: focus trap, Escape and focus restoration come from the
+  // browser rather than from hand-rolled code that usually gets them wrong.
+  assert.match(dialog, /<dialog/);
+  assert.match(dialog, /showModal\(\)/);
+  assert.doesNotMatch(dialog, /focus-trap|trapFocus|tabindex="-1"/i);
+
+  // Progressive enhancement: the trigger is a real link to the full page, and
+  // the click is only cancelled when showModal genuinely exists. Nobody loses an
+  // emergency number because a script failed.
+  assert.match(dialog, /href="\/emergency"/);
+  assert.match(dialog, /typeof node\.showModal !== "function"/);
+  assert.match(dialog, /event\.preventDefault\(\)/);
+
+  // The dial button's label is the number itself, in ONE format. Printing the
+  // local 0-prefixed variant beside the +63 one repeated the same digits twice
+  // on a single button — the redundancy the maintainer called out.
+  assert.match(dialog, /className="hd__call"/);
+  assert.match(dialog, /formatInternational\(number\)/);
+  assert.match(dialog, /telHref\(number\)/);
+  assert.doesNotMatch(dialog, /formatLocal/);
+  // And it repeats the caveat rather than presenting the list as authoritative.
+  assert.match(dialog, /mobile numbers can change/i);
+
+  // Backdrop styling and centring live in the stylesheet, never inline.
+  const css = load("src/styles.css");
+  assert.match(css, /\.hd::backdrop/);
+  assert.match(css, /\.hd \{[\s\S]*?margin: auto;/, "Tailwind's reset removes the UA margin: auto");
+  assert.doesNotMatch(dialog, /style=\{\{/);
+});
+
+test("the emergency page shows its source, one dialling format and the 911 fallback", () => {
+  const page = load("src/pages/EmergencyPage.tsx");
+
+  assert.match(page, /HOTLINE_SOURCE\.published/);
+  assert.match(page, /HOTLINE_SOURCE\.url/);
+  assert.match(page, /formatInternational/);
+  assert.match(page, /NATIONAL_EMERGENCY/);
+
+  // One format only, and the source date stated at most twice on the page.
+  assert.doesNotMatch(page, /formatLocal/);
+  const dateMentions = [...page.matchAll(/HOTLINE_SOURCE\.published/g)].length;
+  assert.ok(dateMentions <= 2, `source date printed ${dateMentions} times; 2 is the ceiling`);
+
+  // formatLocal was deleted outright rather than left unused.
+  assert.doesNotMatch(load("src/data/hotlines.ts"), /export function formatLocal/);
+  // It must say plainly that numbers can change and what to do then.
+  assert.match(page, /Mobile numbers can change/);
+  assert.match(page, /not the municipal government/);
+  // And it must not imply the site operates the hotlines.
+  assert.doesNotMatch(page, /our hotline|we operate|our rescue/i);
+});
+
+test("every class a component renders has a rule in the stylesheet", () => {
+  // An edit to src/styles.css once deleted a whole block of emergency-page rules
+  // while the markup kept referencing them: the page still built, still passed
+  // every other test, and rendered 20px-tall bare-text "buttons". This closes
+  // that gap in both directions — no unstyled markup, no dead modifier classes.
+  const css = load("src/styles.css");
+  const defined = new Set([...css.matchAll(/\.([a-z][a-z0-9_-]*)/g)].map((m) => m[1]));
+
+  // Utility and layout classes defined once and reused everywhere.
+  const shared = new Set([
+    "sr-only", "stack-top", "notice", "notice__sub", "section", "section__note",
+    "section__body", "section__head", "shell", "pill", "btn", "kicker", "split",
+    "mono", "narrow", "sub-head", "plain-list",
+  ]);
+
+  const components = [
+    "src/pages/EmergencyPage.tsx",
+    "src/components/HotlineBar.tsx",
+    "src/components/HotlineDialog.tsx",
+    "src/components/MapView.tsx",
+    "src/components/PageHeader.tsx",
+    "src/components/SiteSearch.tsx",
+  ];
+
+  const unstyled = [];
+  for (const file of components) {
+    const source = load(file);
+    const names = new Set();
+    for (const m of source.matchAll(/className="([^"{]+)"/g)) {
+      m[1].split(/\s+/).forEach((c) => c && names.add(c));
+    }
+    for (const m of source.matchAll(/className=\{`([^`]+)`\}/g)) {
+      m[1].replace(/\$\{[^}]*\}/g, " ").split(/\s+/).forEach((c) => c && names.add(c));
+    }
+    for (const name of names) {
+      if (shared.has(name) || name.startsWith("leaflet")) continue;
+      // A trailing "-" is the stub of an interpolated modifier such as
+      // `map--${height}`; require that some variant of it is styled.
+      if (name.endsWith("-")) {
+        const hasVariant = [...defined].some((c) => c.startsWith(name) && c.length > name.length);
+        if (!hasVariant) unstyled.push(`${file} renders .${name}<variant> but no variant is styled`);
+        continue;
+      }
+      if (!defined.has(name)) unstyled.push(`${file} renders .${name} but nothing styles it`);
+    }
+  }
+  assert.deepEqual(unstyled, []);
+});
+
 test("social preview is a 1200 by 630 PNG", async () => {
   const socialCard = new URL("public/brand/betterkabugao-social.png", root);
   assert.ok(existsSync(socialCard), "Expected generated social preview PNG");

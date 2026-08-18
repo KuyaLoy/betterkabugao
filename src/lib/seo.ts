@@ -24,6 +24,7 @@ const SEGMENT_LABELS: Record<string, string> = {
   "/government": "Government",
   "/government/barangays": "Barangays",
   "/government/officials": "Elected officials",
+  "/emergency": "Emergency hotlines",
   "/transparency": "Transparency",
   "/explore": "Explore Kabugao",
   "/services": "Services",
@@ -51,6 +52,11 @@ const STATIC_META: Record<string, { title: string; description: string }> = {
     title: "Elected municipal officials of Kabugao",
     description:
       "The mayor, vice mayor and Sangguniang Bayan of Kabugao, Apayao for the 2025–2028 term, sourced from the municipality's own government platform.",
+  },
+  "/emergency": {
+    title: "Emergency hotlines for Kabugao",
+    description:
+      "Emergency numbers published by the Municipality of Kabugao — MDRRMO, police, fire, the Rural Health Unit, MSWDO and the Apayao Provincial Hospital — with +63 international dialling for family abroad.",
   },
   "/transparency": {
     title: "Transparency — public money and public projects",
@@ -130,6 +136,7 @@ export const ALL_PATHS: readonly string[] = [
   "/government/officials",
   "/government/barangays",
   ...BARANGAYS.map((b) => `/government/barangays/${b.slug}`),
+  "/emergency",
   "/transparency",
   "/explore",
   "/services",
