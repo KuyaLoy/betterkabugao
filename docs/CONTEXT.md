@@ -7,19 +7,24 @@ the traps. This file is the dated decision log behind it.
 Living snapshot of BetterKabugao. Update both at the end of every working
 session (see `docs/skills/session-memory/SKILL.md`).
 
-## Current state (2026-08-18)
+## Current state (2026-08-19)
 
 - **Domain:** betterkabugao.org — Cloudflare Pages, deploys from `main`
   (build `npm run build`, output `dist`)
-- **Released to `main`:** v2.0.0 coming-soon page (`9608dd6`) — still what
-  betterkabugao.org serves.
-- **Pushed and deployed for review:** `feat/multipage-v1` @ `c69101e` →
-  https://5ea22c06.betterkabugao.pages.dev. 85 files changed (+6,128 / −509);
-  the pushed tree matches the verified build across all 117 tracked files.
-  Production checks on that URL: all seven security headers sent, per-page
-  titles and canonicals, BreadcrumbList JSON-LD, ~9.9 KB of real HTML per
-  barangay page, OSM tiles rendering, live weather, no console or CSP errors.
-- **Content of that branch:** v3.0.0 — the real multi-page portal.
+- **Released to `main`:** v3.0.0 — the real multi-page portal, merged and
+  live. `main` HEAD is `441b766`. Production checks passed on the deploy: all
+  seven security headers sent, per-page titles and canonicals, BreadcrumbList
+  JSON-LD, ~9.9 KB of real HTML per barangay page, OSM tiles rendering, live
+  weather, no console or CSP errors.
+- **In flight:** `fix/noscript-copy` — the `<noscript>` fallback in `index.html`
+  still read "Coming soon" on all 32 live pages, and its `<main>`/`<h1>` gave
+  every page a second `main` landmark and a second `h1` whenever JavaScript was
+  off. Both fixed and pinned by contract tests.
+- **BetterLGU Directory:** PR #208 open against `jmacj/better-lgu-directory` —
+  Kabugao row updated to 🟢 Active with the domain and the three socials, PR body
+  and checklist completed, and a comment answering the triage bot's four
+  verification points. Nothing left on our side; awaiting `jmacj`.
+- **What is live:** v3.0.0 — the real multi-page portal.
   **32 routes prerendered to static HTML**, each with its own title,
   description, canonical, OG tags and `BreadcrumbList` JSON-LD. Real homepage
   (no longer coming-soon), `/government` hub, `/government/officials`,
@@ -167,12 +172,40 @@ session (see `docs/skills/session-memory/SKILL.md`).
   while the markup still referenced it — build green, tests green, buttons
   rendering as 20px of bare text.
 
+- **2026-08-19** The `<noscript>` fallback in `index.html` was rewritten. It had
+  been carrying "Coming soon — a volunteer-run civic portal for Kabugao" since
+  v2, and because that file is the shell for every prerendered route the line was
+  being served on all 32 live pages, underneath fully rendered content. It now
+  states what JavaScript actually adds (the map, the live weather reading, the
+  search and filter boxes) and keeps the four facts the contract tests pin.
+  `siteContent.status = "Coming soon"` was deleted in the same commit: nothing
+  read it, and dead content that states something false is worse than dead code.
+- **2026-08-19** That block is now `<aside>` + `<h2>`, not `<main>` + `<h1>`.
+  Measured with Playwright at `javaScriptEnabled: false`: every page had **two**
+  `main` landmarks and **two** `h1`s, because the prerendered page and the
+  fallback were both being parsed. `frontend-standards` calls one `h1` and one
+  `main` non-negotiable, so this was a live WCAG defect, not a style preference.
+  Three contract tests now pin it: no "coming soon" in the shell, no "coming
+  soon" in any prerendered page, and no `<main>`/`<h1>` inside `<noscript>`.
+  **Open:** with JavaScript off the block still renders unstyled below the footer
+  and restates the footer's cost chips, disclaimer and credit — a design call for
+  Robin.
+- **2026-08-19** BetterLGU Directory PR #208 completed on the contributor side:
+  PR body filled from their template, all four checklist boxes ticked, and a
+  comment answering the triage bot's four verification points. Recorded because
+  the bot's Facebook/Instagram HTTP 200s are **redirects to login pages** — that
+  is normal platform behaviour for a logged-out crawler and does not mean the
+  URLs are wrong, but it is why only a signed-in human can clear
+  `needs-verification`.
+
 ## Next steps
 
-1. **Robin's checkpoint on v3.0.0** — review `design-research/V1-VISUAL-CHECK.md`,
-   then push the branch (commands were supplied in chat) and check the preview URL
-2. **Blocked on Robin:** his Facebook / Instagram / Threads URLs, needed for the
-   BetterLGU Directory PR (🔵 Planned → 🟢 Active, add the domain)
+1. **Open design decision:** with JavaScript off, the `<noscript>` block now
+   renders below a complete page and unstyled, restating the footer's cost chips,
+   disclaimer and `Built by` credit. Either trim it to the JavaScript
+   explanation alone or give it styles — the facts inside it are pinned by
+   contract tests, so changing them is a deliberate act. Needs Robin's call.
+2. **Awaiting `jmacj`:** BetterLGU Directory PR #208
 3. HTML `/sitemap` page — 8 of 15 network sites have one
 4. `_headers` / `_routes.json` review now that the deploy is multi-page
 5. Collect verified Kabugao emergency hotline numbers, then fill the hotline bar

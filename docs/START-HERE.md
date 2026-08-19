@@ -55,10 +55,10 @@ the **BetterGov.ph / BetterLGU** volunteer network.
 
 | | |
 |---|---|
-| **Live on `betterkabugao.org`** | the coming-soon page (`main` @ `9608dd6`) — **unchanged** |
-| **Pushed and deployed for review** | `feat/multipage-v1` — the real multi-page portal, 32 prerendered routes, interactive maps, emergency hotlines |
-| **Preview URL** | https://5ea22c06.betterkabugao.pages.dev (Cloudflare branch deploy, verified in a real browser) |
-| **Awaiting** | the maintainer's review, then a merge to `main` |
+| **Live on `betterkabugao.org`** | the full multi-page portal — 32 prerendered routes, interactive maps, emergency hotlines. Merged and deployed. |
+| **`main` HEAD** | `441b766` — Kabugao emergency hotlines with `+63` dialling (18 Aug 2026) |
+| **In flight** | `fix/noscript-copy` — the no-JavaScript fallback still said "Coming soon" on all 32 live pages, and added a second `main`/`h1` to every one of them |
+| **BetterLGU Directory** | PR [#208](https://github.com/jmacj/better-lgu-directory/pull/208) is open — Kabugao row updated to 🟢 Active with the domain and socials, awaiting review by `jmacj` |
 | **Quality gate** | 32 contract tests + 27 unit tests green; lint, typecheck, build clean |
 
 `c69101e` is 85 files changed / +6,128 / −509 against `main`, authored by
@@ -262,8 +262,7 @@ anyway.
 
 | Blocked on | What is needed | Why it matters |
 |---|---|---|
-| **Robin** | his **Facebook, Instagram and Threads URLs** | required to update the BetterLGU Directory entry in their main repo: add the domain + socials, flip status 🔵 Planned → 🟢 Active. Asked several times; still outstanding. |
-| **Robin** | review the preview, then merge `feat/multipage-v1` → `main` | the branch is pushed and deployed; only the merge is left |
+| **`jmacj`** | review and merge BetterLGU Directory PR [#208](https://github.com/jmacj/better-lgu-directory/pull/208) | ✅ nothing left on our side: the row, the PR body, the checklist and a comment answering the triage bot's four verification points are all in place. The `needs-verification` label needs a human to open the two socials while signed in — Facebook and Instagram answer 200 to a crawler and then redirect it to a login page. On merge, `sync-to-pages.yml` publishes to `main-pages` → lgu.bettergov.ph. |
 | **Robin** | delete `_to_delete/` and any `.git/index.lock` by hand | the device bridge cannot delete files |
 | **BLGF** | reply to `lfdad@blgf.gov.ph` | licence clearance before any fiscal data ships |
 | **The municipality** | the barangay officials roster | **no government source publishes it** — not eLGU, COMELEC, DILG or the province. The only complete list online is a stale SEO site. RA 12232 moved the BSKE to 2 Nov 2026, so incumbents hold over. The site says all of this explicitly on the barangay pages. **Do not fill this gap with a guess.** |
@@ -418,6 +417,15 @@ render.
   violate `script-src 'self'`. Executable inline script still does.
 - `scripts/build-seo.mjs` reads `src/data/barangays.ts` field by field on
   purpose. A fixed-order regex broke silently when a field was added.
+- **`index.html` is the shell for all 32 prerendered pages, `<noscript>` block
+  included.** Anything written there is served on every page, so a line that was
+  true of a single coming-soon page ("Coming soon — a volunteer-run civic
+  portal") went live as a false claim under 32 fully rendered pages. The block
+  is also *additive*, not a replacement: with JavaScript off a visitor sees the
+  complete prerendered page **and** this block, which is why it now uses
+  `<aside>`/`<h2>` — as `<main>`/`<h1>` it gave every page two `main` landmarks
+  and two `h1`s. Contract tests now pin both. Verify with Playwright's
+  `javaScriptEnabled: false`, not by reading the source.
 
 ---
 
