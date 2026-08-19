@@ -139,6 +139,17 @@ test("document metadata matches the launch identity", () => {
   assert.match(html, /<noscript>[\s\S]*21 barangays[\s\S]*16,425[\s\S]*<\/noscript>/);
   assert.match(html, /<noscript>[\s\S]*Robin Tapiru[\s\S]*<\/noscript>/);
   assert.match(html, /<noscript>[\s\S]*not the official website[\s\S]*<\/noscript>/i);
+  // The portal is live, so the shell must not claim otherwise. This block is
+  // copied into all 32 prerendered pages, where the old "coming soon" line sat
+  // under a fully rendered page and contradicted it.
+  assert.doesNotMatch(html, /coming soon/i);
+  // Every route is prerendered, so this block is served *alongside* a complete
+  // page, not instead of one. With JavaScript disabled it therefore must not
+  // add a second `main` landmark or a second `h1` — measured: it did both, on
+  // all 32 pages, until 2026-08-19.
+  const noscript = html.match(/<noscript>[\s\S]*?<\/noscript>/)[0];
+  assert.doesNotMatch(noscript, /<main\b/);
+  assert.doesNotMatch(noscript, /<h1\b/);
   assert.doesNotMatch(html, /<style\b/i);
   assert.doesNotMatch(html, /<script(?![^>]*\bsrc=)/i);
 });
@@ -570,6 +581,7 @@ test("every route is prerendered to its own static HTML, not a shared SPA shell"
     const body = html.slice(start, html.indexOf("<noscript>", start));
     assert.ok(body.length > 2000, `${path} rendered only ${body.length} chars of HTML`);
     assert.match(body, /<h1[^>]*>/, `${path} has no server-rendered h1`);
+    assert.doesNotMatch(html, /coming soon/i, `${path} still claims the site is coming soon`);
 
     // No inline executable script — JSON-LD is data and is allowed.
     for (const [, attrs] of html.matchAll(/<script([^>]*)>/g)) {

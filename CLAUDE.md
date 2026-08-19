@@ -17,11 +17,15 @@ BetterGov.ph volunteer network — registered in the BetterLGU Directory
 official website of the Municipality of Kabugao, and every page must keep that
 disclaimer.
 
-Releases: **v2 coming-soon page is live on `main`**; the **v1 multi-page portal
-(31 prerendered routes, barangay directory with a page each, officials, search,
-maps)** is built and awaiting the maintainer's push. Transparency data, service
-guides and FIL/Isneg language support come later — see
+Releases: the **multi-page portal is live on `main`** — 32 prerendered routes,
+a page per barangay, officials, search, maps and emergency hotlines. Transparency
+data, service guides and FIL/Isneg language support come later — see
 `docs/research/data-tracker.html` for the ordered roadmap.
+
+`index.html` is the shell for **every** prerendered route, `<noscript>` included.
+A line written there is served on all 32 pages, and the `<noscript>` block is
+*additive* — with JavaScript off a visitor sees the full prerendered page **and**
+that block, so it must not contain a `<main>` or an `<h1>`.
 
 ## Stack — do not swap or add without maintainer approval
 

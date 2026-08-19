@@ -20,7 +20,6 @@ export const KABUGAO = {
 } as const;
 
 export const siteContent = {
-  status: "Coming soon",
   eyebrow: "Kabugao, Apayao",
   headline: "BetterKabugao.org",
   summary:
