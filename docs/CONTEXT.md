@@ -267,23 +267,33 @@ session (see `docs/skills/session-memory/SKILL.md`).
 
 ## Next steps
 
-1. **Codex QA on `improvement/search-404-recovery`** — then merge to `main`
-2. **Open design decision:** with JavaScript off, the `<noscript>` block now
-   renders below a complete page and unstyled, restating the footer's cost chips,
+1. **React hydration error #418 on prerendered pages** — reported by Codex from
+   local browser QA; **open**. Did not reproduce against the built `dist` in the
+   sandbox across four routes with all console output captured. The clock's
+   server snapshot is `null` and `.utility__inner` is empty in the prerendered
+   HTML, so the utility strip is not the obvious cause. Needs Codex's exact
+   conditions — dev or built, which route, which browser, first load or after a
+   client navigation, and whether it survives with `StrictMode` removed —
+   because #418 is minified and names no element.
+2. **Codex QA on `improvement/search-404-recovery`**, then merge to `main`. The
+   one thing the sandbox cannot check is whether `form-action 'self'` actually
+   ships in the Cloudflare response headers.
+3. **Awaiting `jmacj`:** BetterLGU Directory PR #208.
+4. **Open design decision:** with JavaScript off, the `<noscript>` block renders
+   below a complete page and unstyled, restating the footer's cost chips,
    disclaimer and `Built by` credit. Either trim it to the JavaScript
-   explanation alone or give it styles — the facts inside it are pinned by
-   contract tests, so changing them is a deliberate act. Needs Robin's call.
-2. **Awaiting `jmacj`:** BetterLGU Directory PR #208
-3. HTML `/sitemap` page — 8 of 15 network sites have one
-4. `_headers` / `_routes.json` review now that the deploy is multi-page
-5. Collect verified Kabugao emergency hotline numbers, then fill the hotline bar
-6. Source project records from PhilGEPS / DILG FDP / COA / FOI before building
-   any UI for them — and email `lfdad@blgf.gov.ph` about the BLGF licence first
-7. Any future intake form needs Turnstile + rate limiting before launch
-8. Licence decision: `package.json` still says ISC; the network standard is
-   MIT + CC BY 4.0, and the footer already states MIT · CC BY 4.0 — align them
-9. Robin to delete `_to_delete/` and `.git/index.lock` by hand (the bridge
-   cannot remove files)
+   explanation alone or give it styles — the facts inside are pinned by contract
+   tests, so changing them is a deliberate act. Needs Robin's call.
+5. `_headers` / `_routes.json` review now that the deploy is multi-page.
+6. Collect verified Kabugao emergency hotline numbers — someone in Kabugao
+   test-dialling them, or the LGU confirming them.
+7. Source project records from PhilGEPS / DILG FDP / COA / FOI before building
+   any UI for them — and email `lfdad@blgf.gov.ph` about the BLGF licence first.
+8. Any future intake form needs Turnstile + rate limiting before launch.
+9. Licence decision: `package.json` still says ISC; the network standard is
+   MIT + CC BY 4.0, and the footer already states MIT · CC BY 4.0 — align them.
+10. Robin to delete `_to_delete/`, and `src/components/SiteSearch.tsx` if a
+    `git rm` ever leaves it behind (the device bridge cannot remove files).
 
 ## People
 

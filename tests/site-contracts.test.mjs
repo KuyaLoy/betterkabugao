@@ -182,7 +182,7 @@ test("security headers stay strict, allowing only the two documented hosts", () 
   assert.doesNotMatch(policy, /frame-src/);
   assert.doesNotMatch(policy, /unsafe-inline|unsafe-eval/);
 
-  // `form-action 'self'`, relaxed from 'none' on 2026-08-21 with Codex's
+  // `form-action 'self'`, relaxed from 'none' on 2026-08-20 with Codex's
   // written approval. /search, /404 and the search overlay each render a real
   // <form method="get" action="/search">; under 'none' the browser refused the
   // submission outright, so the boxes did nothing with scripting off. 'self'

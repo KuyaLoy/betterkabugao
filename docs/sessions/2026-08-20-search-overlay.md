@@ -67,14 +67,37 @@ Additive revision on top of `4acb8be`, on the same branch
   closed; ArrowDown walks the results and ArrowUp returns to the input.
 - `scrollWidth === clientWidth` at every width, overlay open and closed. One `h1`
   and one `main` on every page with the overlay mounted.
-- **No hydration mismatch:** four routes loaded with every console message
-  captured unfiltered — **zero messages**, hydration-related or otherwise.
+- **Hydration: unresolved, do not read the sandbox result as a clearance.**
+  Four routes were loaded against the built `dist` with every console message
+  captured unfiltered and nothing hydration-related appeared. **Codex's local
+  browser QA does see React error #418 on prerendered pages.** His observation
+  stands; mine only means it did not reproduce here. See Open threads.
 - **JavaScript disabled:** header and hero triggers both still `href="/search"`,
   dialog closed.
 - Screenshots at 1440 and 390, open and closed, and looked at.
 
 ## Open threads
 
+- **React hydration error #418 on prerendered pages**, reported by Codex from
+  local browser QA. Looks pre-existing rather than caused by the overlay, but it
+  is **not cleared**, and the earlier "zero console messages" line in this file
+  overstated what had been shown. What was actually done, so the next person does
+  not repeat it: the production build was served statically and `/`,
+  `/emergency/`, `/sitemap/` and `/government/barangays/lucab/` were each loaded
+  with `console`, `pageerror` and `requestfailed` all captured — the only output
+  was failed requests to `api.open-meteo.com` and `tile.openstreetmap.org`, which
+  is the sandbox having no egress. No #418.
+  Two candidates were checked and neither is obviously it: the clock in
+  `src/lib/useKabugaoNow.ts` returns `null` from its server snapshot and
+  `.utility__inner` is correspondingly **empty** in the prerendered HTML, so the
+  date and weather are not hydrating over stale build-time text; and the
+  overlay's store shares one frozen `CLOSED` object between the server and
+  client snapshots.
+  To pin it down, Codex's exact conditions are needed, because #418 is minified
+  and its message names no element: dev server or built `dist`; which route;
+  which browser; on first load or only after a client-side navigation; and
+  whether it survives with `StrictMode` removed, since StrictMode double-renders
+  and changes what a mismatch looks like.
 - **Not verified on a Cloudflare preview.** The sandbox has no egress. The one
   thing worth checking there is the CSP change actually shipping in the response
   headers, since only the deploy proves that.

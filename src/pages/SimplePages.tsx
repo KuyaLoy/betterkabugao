@@ -285,11 +285,11 @@ export function NotFoundPage() {
       <section className="section">
         <div className="shell">
           <div className="recover">
-            {/* A real GET form, so the markup is right and the field is
-                submittable — but the CSP currently sets `form-action 'none'`,
-                which blocks an actual submission, so the handler navigates
-                instead. Every link below is a plain anchor for exactly that
-                reason: the box can fail and the page still works. */}
+            {/* A real GET form. The CSP now allows `form-action 'self'`, so a
+                submission works even with scripting off; the handler still
+                intercepts it to keep the navigation client-side when it can.
+                Every link below is a plain anchor regardless: the box can fail
+                and the page still works. */}
             <form
               className="recover__form"
               method="get"
