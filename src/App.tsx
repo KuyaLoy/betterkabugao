@@ -8,6 +8,7 @@ import { BarangayDetailPage } from "./pages/BarangayDetailPage";
 import { BarangaysPage } from "./pages/BarangaysPage";
 import { HomePage } from "./pages/HomePage";
 import { OfficialsPage } from "./pages/OfficialsPage";
+import { SearchOverlay } from "./components/SearchOverlay";
 import { SitemapPage } from "./pages/SitemapPage";
 import {
   AboutPage,
@@ -47,6 +48,7 @@ export function App() {
         </Routes>
       </main>
       <SiteFooter />
+      <SearchOverlay />
     </>
   );
 }

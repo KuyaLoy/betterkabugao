@@ -1,4 +1,4 @@
-import { cleanup, render, screen, within } from "@testing-library/react";
+import { cleanup, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -6,6 +6,7 @@ import { App } from "./App";
 import { BARANGAYS } from "./data/barangays";
 import { ALL_PATHS, RECOVERY_LINKS, SITEMAP_EXCLUDED, SITEMAP_GROUPS, auditSitemap } from "./lib/seo";
 import { QUICK_SEARCHES, searchSite } from "./lib/search";
+import { closeSearchOverlay } from "./lib/search-overlay";
 
 function renderAt(path: string) {
   return render(
@@ -21,6 +22,7 @@ beforeEach(() => {
 
 afterEach(() => {
   cleanup();
+  closeSearchOverlay();
   vi.unstubAllGlobals();
 });
 
@@ -451,5 +453,98 @@ describe("sitemap page", () => {
       const footer = within(screen.getByRole("contentinfo"));
       expect(footer.getByRole("link", { name: "Sitemap" })).toHaveAttribute("href", "/sitemap");
     }
+  });
+});
+
+describe("search overlay", () => {
+  function overlay() {
+    return document.querySelector<HTMLDialogElement>("dialog.palette");
+  }
+
+  it("is closed on first render, so a prerendered page shows one h1", () => {
+    renderAt("/");
+    expect(overlay()).not.toBeNull();
+    expect(overlay()?.open).toBe(false);
+    expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
+  });
+
+  it("keeps the header trigger a real link to /search", () => {
+    renderAt("/emergency");
+    const trigger = screen.getByRole("link", { name: "Search" });
+    expect(trigger).toHaveAttribute("href", "/search");
+    expect(trigger).toHaveAttribute("aria-keyshortcuts", "/");
+  });
+
+  it("opens from the header trigger on any page", async () => {
+    const user = userEvent.setup();
+    for (const path of ["/", "/government/officials", "/sitemap"]) {
+      cleanup();
+      closeSearchOverlay();
+      renderAt(path);
+      expect(overlay()?.open).toBe(false);
+      await user.click(screen.getByRole("link", { name: "Search" }));
+      expect(overlay()?.open).toBe(true);
+    }
+  });
+
+  it("opens on / and on Ctrl+K, and returns focus to Search on close", async () => {
+    const user = userEvent.setup();
+    renderAt("/about");
+
+    await user.keyboard("/");
+    expect(overlay()?.open).toBe(true);
+
+    overlay()?.close();
+    expect(overlay()?.open).toBe(false);
+    expect(screen.getByRole("link", { name: "Search" })).toHaveFocus();
+
+    await user.keyboard("{Control>}k{/Control}");
+    expect(overlay()?.open).toBe(true);
+    overlay()?.close();
+  });
+
+  it("leaves / alone while the visitor is typing", async () => {
+    const user = userEvent.setup();
+    renderAt("/government/barangays");
+
+    const filter = screen.getByLabelText("Filter barangays by name or PSGC code");
+    await user.type(filter, "pob/");
+
+    expect(overlay()?.open).toBe(false);
+    expect(filter).toHaveValue("pob/");
+  });
+
+  it("shows live results as real links and clears on close", async () => {
+    const user = userEvent.setup();
+    renderAt("/");
+    await user.click(screen.getByRole("link", { name: "Search" }));
+
+    const input = screen.getByLabelText("Search barangays, officials, hotlines and pages");
+    await user.type(input, "poblacion");
+
+    const result = screen.getByRole("link", { name: /Barangay Poblacion/ });
+    expect(result).toHaveAttribute("href", "/government/barangays/poblacion");
+
+    overlay()?.close();
+    await waitFor(() => expect(input).toHaveValue(""));
+  });
+
+  it("finds a hotline by office, not only the page that lists it", async () => {
+    const user = userEvent.setup();
+    renderAt("/");
+    await user.click(screen.getByRole("link", { name: "Search" }));
+    await user.type(screen.getByLabelText("Search barangays, officials, hotlines and pages"), "mdrrmo");
+
+    expect(screen.getByRole("link", { name: /MDRRMO/ })).toHaveAttribute("href", "/emergency");
+  });
+
+  it("offers a way out when nothing matches", async () => {
+    const user = userEvent.setup();
+    renderAt("/");
+    await user.click(screen.getByRole("link", { name: "Search" }));
+    await user.type(screen.getByLabelText("Search barangays, officials, hotlines and pages"), "zzzzz");
+
+    expect(screen.getByText(/Nothing matches/)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Browse every page" })).toHaveAttribute("href", "/sitemap");
   });
 });

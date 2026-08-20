@@ -42,10 +42,10 @@ function ResultLink({ entry }: { entry: SearchEntry }) {
 /**
  * The /search page.
  *
- * Distinct from `SiteSearch`, which is the compact masthead dropdown: this one
- * owns a URL (`/search?q=…` is shareable), groups its results by kind, and has
- * something to show before anything is typed. Both score through the same
- * `searchSite` index, so there is one search, rendered two ways.
+ * Distinct from `SearchOverlay`, the site-wide palette: this one owns a URL
+ * (`/search?q=…` is shareable), groups its results by kind, works with no
+ * JavaScript, and is what every Search trigger falls back to. Both score
+ * through the same `searchSite` index, so there is one search behind the two.
  */
 export function SearchPanel() {
   const hydrated = useHydrated();

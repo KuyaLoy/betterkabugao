@@ -57,9 +57,9 @@ the **BetterGov.ph / BetterLGU** volunteer network.
 |---|---|
 | **Live on `betterkabugao.org`** | the full multi-page portal — 32 prerendered routes, interactive maps, emergency hotlines. Merged and deployed. |
 | **`main` HEAD** | `21f622b` — the public `/sitemap` page, merged via PR #1 (20 Aug 2026) |
-| **In flight** | `improvement/search-404-recovery` — `/search` and `/404` turned into recovery screens. **Awaiting Codex QA; do not merge to `main` without it.** |
+| **In flight** | `improvement/search-404-recovery` — `/search` and `/404` turned into recovery screens, then the site-wide search overlay (`/` shortcut, native `<dialog>`) on top. **Awaiting Codex QA; do not merge to `main` without it.** |
 | **BetterLGU Directory** | PR [#208](https://github.com/jmacj/better-lgu-directory/pull/208) is open — Kabugao row updated to 🟢 Active with the domain and socials, awaiting review by `jmacj` |
-| **Quality gate** | 34 contract tests + 37 unit tests green; lint, typecheck, build clean |
+| **Quality gate** | 36 contract tests + 45 unit tests green; lint, typecheck, build clean |
 
 `c69101e` is 85 files changed / +6,128 / −509 against `main`, authored by
 KuyaLoy on 17 Aug 2026. The pushed tree was compared file by file against the
@@ -310,7 +310,7 @@ set; these are the traps.
 npm install
 npm run dev            # Vite dev server; prerendering is not active here
 
-npm test               # 28 contract tests + 24 unit tests — must be green
+npm test               # 36 contract tests + 45 unit tests — must be green
 npm run typecheck
 npm run lint
 npm run build          # ends with "PRERENDER_OK 31 pages"
@@ -439,6 +439,22 @@ render.
   a hydration mismatch. `SearchPanel` gates it behind a `useHydrated()`
   `useSyncExternalStore` whose server snapshot is `false` — the same trick the
   clock uses.
+- **A class nothing styles is invisible to every test but the cross-check.**
+  Adding `src/pages/BarangaysPage.tsx` to the className↔stylesheet list on
+  2026-08-20 immediately found `.search--inline`, rendered since the multipage
+  build with no rule anywhere in `styles.css`. The same run caught
+  `.search__empty` being deleted as "dead" while that page still rendered it.
+  Touch a component, add it to that list in the same commit.
+- **The search overlay's open state is module-scope, so it survives an unmount.**
+  Correct for one document and one overlay, but a test that opens it leaks into
+  the next: `src/App.test.tsx` calls `closeSearchOverlay()` in `afterEach`, and
+  again inside any loop that re-renders.
+- **A `/`-shortcut test must wait for hydration.** The key listener is attached
+  on hydration, not on `DOMContentLoaded`. Pressing `/` immediately after
+  `page.goto` does nothing and looks exactly like a broken shortcut.
+- **`waitUntil: "networkidle"` never resolves in the build sandbox.** The
+  Open-Meteo request cannot complete, so Playwright hangs for the full timeout.
+  Use `domcontentloaded` plus a short explicit wait.
 - **`index.html` is the shell for all 32 prerendered pages, `<noscript>` block
   included.** Anything written there is served on every page, so a line that was
   true of a single coming-soon page ("Coming soon — a volunteer-run civic
@@ -476,6 +492,8 @@ src/
     useKabugaoNow.ts          clock + weather
   pages/                      HomePage, BarangaysPage, BarangayDetailPage,
                               OfficialsPage, SitemapPage, SimplePages
+  components/SearchOverlay    site-wide palette on a native <dialog>
+  lib/search-overlay.ts       its open state, kept outside React
                               (SearchPage and NotFoundPage live in SimplePages)
 scripts/
   build-seo.mjs               structured-data.json, sitemap.xml, robots.txt
@@ -483,7 +501,7 @@ scripts/
   build-brand.mjs             regenerates brand SVGs from geometry.json
   render-social-card.mjs      1200×630 share image
 tests/
-  site-contracts.test.mjs     34 convention/security/data contracts
+  site-contracts.test.mjs     36 convention/security/data contracts
   brand-assets.test.mjs       brand geometry + output pinning
 public/
   _headers                    HSTS, CSP, nosniff, frame options

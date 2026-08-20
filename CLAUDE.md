@@ -181,4 +181,11 @@ contract test in the same commit — never delete a contract to make it pass.
   of every session. `docs/skills/README.md` lists the external sets too.
 - Commits: conventional style (`feat:`, `fix:`, `docs:`, `chore:`), present
   tense, one logical change per commit.
+- **Anything addressed to Codex — a handoff, a question, a clarification, a
+  status report — must be delivered as a single copy-pasteable block**, with no
+  commentary above or below it that could be copied by mistake. Robin relays
+  these by hand; a report split across prose is a report that arrives broken.
+  This is mandatory, not a preference.
+- Work reviewed by Codex goes to a review branch and waits. Never push a
+  reviewed task straight to `main`.
 - Design, layout, or visual changes need maintainer approval before merging.

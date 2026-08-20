@@ -182,14 +182,16 @@ test("security headers stay strict, allowing only the two documented hosts", () 
   assert.doesNotMatch(policy, /frame-src/);
   assert.doesNotMatch(policy, /unsafe-inline|unsafe-eval/);
 
-  // /search and /404 both render a real <form> aimed at /search, but this
-  // directive blocks an actual submission, so both intercept submit in
-  // JavaScript and navigate instead — which is why every recovery route on
-  // those pages is also a plain anchor. Relaxing this to `form-action 'self'`
-  // would make the boxes work with scripting off too, and would still block
-  // cross-origin submission (the case the directive exists for). That needs
-  // maintainer approval, so this pins what is deployed, not what we would like.
-  assert.match(policy, /form-action 'none'/);
+  // `form-action 'self'`, relaxed from 'none' on 2026-08-21 with Codex's
+  // written approval. /search, /404 and the search overlay each render a real
+  // <form method="get" action="/search">; under 'none' the browser refused the
+  // submission outright, so the boxes did nothing with scripting off. 'self'
+  // permits exactly that same-origin GET and still blocks the case the
+  // directive exists for: a submission — and any data in it — being sent to
+  // another origin. There is no POST anywhere on this site and no endpoint to
+  // post to. Widening it further, to a host or to '*', is not approved.
+  assert.match(policy, /form-action 'self'/);
+  assert.doesNotMatch(policy, /form-action [^;]*(\*|https?:)/);
 });
 
 test("only two modules reach the network, and only to the documented hosts", () => {
@@ -401,7 +403,9 @@ test("every class a component renders has a rule in the stylesheet", () => {
     "src/components/HotlineDialog.tsx",
     "src/components/MapView.tsx",
     "src/components/PageHeader.tsx",
-    "src/components/SiteSearch.tsx",
+    "src/components/SearchOverlay.tsx",
+    "src/pages/BarangaysPage.tsx",
+    "src/pages/HomePage.tsx",
     "src/pages/SitemapPage.tsx",
     "src/components/SearchPanel.tsx",
   ];
@@ -718,6 +722,78 @@ test("search and 404 are recovery screens, not dead ends", async () => {
   const { body: searchBody } = bodyOf("/search");
   assert.match(searchBody, /href="\/search\?q=/, "/search must suggest real query URLs");
   assert.match(searchBody, /href="\/sitemap"/, "/search must offer the sitemap as a way to browse");
+});
+
+test("the search overlay degrades to the /search page and never eats a slash", () => {
+  const overlay = load("src/components/SearchOverlay.tsx");
+  const store = load("src/lib/search-overlay.ts");
+
+  // Progressive enhancement, same rule as the hotline popup: the trigger is a
+  // real anchor and the click is only cancelled when <dialog> support exists.
+  assert.match(overlay, /href="\/search"/);
+  assert.match(overlay, /showModal !== "function"/);
+  assert.match(overlay, /event\.preventDefault\(\)/);
+
+  // "/" must stay a literal slash while someone is typing. Losing this guard
+  // makes the barangay filter and both search boxes unusable.
+  assert.match(store, /isTypingTarget/);
+  assert.match(store, /isContentEditable/);
+  assert.match(store, /\["INPUT", "TEXTAREA", "SELECT"\]/);
+  // Ctrl+K is a second binding, never the only one.
+  assert.match(store, /event\.key === "\/"/);
+  assert.match(store, /metaKey \|\| event\.ctrlKey/);
+  // Both keys must be named in the UI — an undocumented shortcut is unused.
+  assert.match(overlay, /Ctrl<\/kbd>/);
+  assert.match(overlay, /palette__kbd">\/</);
+
+  // Escape is the browser's; the close handler is what returns focus, and the
+  // shortcut path has no trigger element so it falls back to the masthead.
+  assert.match(overlay, /addEventListener\("close"/);
+  assert.match(overlay, /target\?\.focus\(\)/);
+  assert.match(store, /getElementById\(SEARCH_TRIGGER_ID\)/);
+
+  // Hydration: the server snapshot and the initial client state must be the
+  // same object, or every prerendered page reports a mismatch.
+  assert.match(store, /Object\.freeze/);
+
+  // One overlay, mounted once, or two dialogs would share an input id.
+  const app = load("src/App.tsx");
+  assert.equal([...app.matchAll(/<SearchOverlay \/>/g)].length, 1);
+
+  // The dropdown it replaced must be gone, not left behind unused.
+  assert.ok(
+    !existsSync(new URL("src/components/SiteSearch.tsx", root)),
+    "SiteSearch was replaced by SearchOverlay and should not still exist",
+  );
+
+  // Comments must go first: a note in styles.css explains that .finder__list is
+  // deliberately NOT .search__results, and the raw text would match it. This
+  // suite has been fooled by its own documentation twice.
+  const css = load("src/styles.css").replace(/\/\*[\s\S]*?\*\//g, " ");
+  assert.ok(
+    !css.includes(".search__results"),
+    ".search__results was the SiteSearch dropdown and should have been deleted with it",
+  );
+  // .search__empty is NOT dead — the barangay filter still renders it.
+  assert.ok(css.includes(".search__empty"), ".search__empty is still used by the barangay filter");
+});
+
+test("every prerendered page offers a crawlable route to search", async () => {
+  const distIndex = new URL("dist/index.html", root);
+  if (!existsSync(distIndex)) return;
+
+  for (const path of ["/", "/emergency", "/government/officials", "/sitemap"]) {
+    const file = path === "/" ? distIndex : new URL(`dist${path}/index.html`, root);
+    const html = readFileSync(file, "utf8");
+    const start = html.indexOf('<div id="root">');
+    const body = html.slice(start, html.indexOf("<noscript>", start));
+
+    // The overlay is client-only; the served HTML must still link to /search,
+    // or a visitor without JavaScript has no way in.
+    assert.match(body, /href="\/search"/, `${path} has no crawlable link to /search`);
+    // A closed <dialog> is inert, so it must not contribute a second landmark.
+    assert.equal([...body.matchAll(/<h1[^>]*>/g)].length, 1, `${path} must have exactly one h1`);
+  }
 });
 
 test("document metadata carries geo and structured-data hints", () => {

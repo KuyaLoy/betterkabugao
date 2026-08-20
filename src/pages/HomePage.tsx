@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { MapView } from "../components/MapView";
-import { SiteSearch } from "../components/SiteSearch";
+import { SearchTrigger } from "../components/SearchOverlay";
 import { KABUGAO, siteContent } from "../app/site-content";
 import { BARANGAYS, BARANGAY_POPULATION_TOTAL, BY_POPULATION } from "../data/barangays";
 import { EXECUTIVE, OFFICIALS_TERM } from "../data/officials";
@@ -60,7 +60,13 @@ export function HomePage() {
               spending and public projects. Every figure names its source.
             </p>
             <div className="home-hero__search">
-              <SiteSearch placeholder="Search a barangay, an official, a page…" />
+              <SearchTrigger className="search__field search__trigger" ariaLabel="Search BetterKabugao">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+                  <path d="M10 2a8 8 0 1 1-4.9 14.3l-3.4 3.4-1.4-1.4 3.4-3.4A8 8 0 0 1 10 2Zm0 2a6 6 0 1 0 0 12 6 6 0 0 0 0-12Z" />
+                </svg>
+                <span className="search__placeholder">Search a barangay, an official, a page…</span>
+                <kbd className="search__key">/</kbd>
+              </SearchTrigger>
             </div>
             <p className="home-hero__quick">
               Popular:{" "}
