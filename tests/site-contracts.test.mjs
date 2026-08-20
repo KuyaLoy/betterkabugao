@@ -181,6 +181,15 @@ test("security headers stay strict, allowing only the two documented hosts", () 
   // changing this policy.
   assert.doesNotMatch(policy, /frame-src/);
   assert.doesNotMatch(policy, /unsafe-inline|unsafe-eval/);
+
+  // /search and /404 both render a real <form> aimed at /search, but this
+  // directive blocks an actual submission, so both intercept submit in
+  // JavaScript and navigate instead — which is why every recovery route on
+  // those pages is also a plain anchor. Relaxing this to `form-action 'self'`
+  // would make the boxes work with scripting off too, and would still block
+  // cross-origin submission (the case the directive exists for). That needs
+  // maintainer approval, so this pins what is deployed, not what we would like.
+  assert.match(policy, /form-action 'none'/);
 });
 
 test("only two modules reach the network, and only to the documented hosts", () => {
@@ -394,6 +403,7 @@ test("every class a component renders has a rule in the stylesheet", () => {
     "src/components/PageHeader.tsx",
     "src/components/SiteSearch.tsx",
     "src/pages/SitemapPage.tsx",
+    "src/components/SearchPanel.tsx",
   ];
 
   const unstyled = [];
@@ -663,6 +673,51 @@ test("the HTML sitemap links every public page as a real anchor", async () => {
     [...body.matchAll(/<h2[^>]*>/g)].length >= 6,
     "/sitemap should group its links under headings",
   );
+});
+
+test("search and 404 are recovery screens, not dead ends", async () => {
+  const distIndex = new URL("dist/index.html", root);
+  if (!existsSync(distIndex)) return;
+
+  const bodyOf = (path) => {
+    const file = new URL(`dist${path}/index.html`, root);
+    assert.ok(existsSync(file), `Expected prerendered HTML for ${path}`);
+    const html = readFileSync(file, "utf8");
+    const start = html.indexOf('<div id="root">');
+    return { html, body: html.slice(start, html.indexOf("<noscript>", start)) };
+  };
+
+  const { ALL_PATHS, RECOVERY_LINKS } = await import(new URL("dist-ssr/routes.js", root).href);
+
+  for (const path of ["/search", "/404"]) {
+    const { html, body } = bodyOf(path);
+
+    assert.equal([...html.matchAll(/<h1[^>]*>/g)].length, 1, `${path} must have exactly one h1`);
+    assert.equal([...html.matchAll(/<main[^>]*>/g)].length, 1, `${path} must have exactly one main`);
+
+    // Recovery has to work before any script runs, so every route offered is a
+    // plain anchor in the served HTML.
+    const hrefs = new Set([...body.matchAll(/<a[^>]+href="([^"]+)"/g)].map((m) => m[1]));
+    for (const link of RECOVERY_LINKS) {
+      if (link.to === path) continue;
+      assert.ok(hrefs.has(link.to), `${path} must offer a real link to ${link.to}`);
+    }
+
+    // A real form field named q, so the address bar and the box agree.
+    assert.match(body, /<form[^>]+action="\/search"/, `${path} needs a real search form`);
+    assert.match(body, /<input[^>]+name="q"/, `${path} search field must be named q`);
+  }
+
+  // Every recovery destination is a route that actually exists.
+  for (const link of RECOVERY_LINKS) {
+    assert.ok(ALL_PATHS.includes(link.to), `Recovery link ${link.to} is not a route`);
+  }
+
+  // Before anything is typed, /search is not a blank page: the suggested
+  // queries are real, shareable URLs.
+  const { body: searchBody } = bodyOf("/search");
+  assert.match(searchBody, /href="\/search\?q=/, "/search must suggest real query URLs");
+  assert.match(searchBody, /href="\/sitemap"/, "/search must offer the sitemap as a way to browse");
 });
 
 test("document metadata carries geo and structured-data hints", () => {

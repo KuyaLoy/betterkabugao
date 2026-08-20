@@ -1,10 +1,10 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { PageHeader } from "../components/PageHeader";
-import { SiteSearch } from "../components/SiteSearch";
+import { SearchPanel } from "../components/SearchPanel";
 import { siteContent } from "../app/site-content";
 import { BARANGAYS } from "../data/barangays";
 import { EXECUTIVE, OFFICIALS_TERM } from "../data/officials";
-import { metaFor } from "../lib/seo";
+import { RECOVERY_LINKS, metaFor } from "../lib/seo";
 
 /** /government — hub page with real content, never a redirect. */
 export function GovernmentPage() {
@@ -242,43 +242,95 @@ export function AboutPage() {
   );
 }
 
-/** /search */
+/** /search — grouped results, and useful before anything is typed. */
 export function SearchPage() {
   const meta = metaFor("/search");
   return (
     <>
       <PageHeader
         variant="hero"
-        title="Search"
-        description="Everything published on BetterKabugao — barangays, officials and pages."
+        eyebrow="Search"
+        title="Find anything published here"
+        description={`The ${BARANGAYS.length} barangays, the elected municipal officials, the published emergency hotlines and every page. A query can be shared as a link: /search?q=poblacion`}
         breadcrumbs={meta.breadcrumbs}
       />
       <section className="section">
-        <div className="shell narrow">
-          <SiteSearch inline limit={20} />
+        <div className="shell">
+          <SearchPanel />
         </div>
       </section>
     </>
   );
 }
 
-/** 404 */
+/**
+ * 404 — a recovery screen, not a joke page.
+ *
+ * A visitor here has usually mistyped an address or followed a stale link from
+ * Facebook. The search box and the six links are the whole point: the links are
+ * ordinary anchors, so they work even when the box does not.
+ */
 export function NotFoundPage() {
+  const navigate = useNavigate();
+
   return (
     <>
       <PageHeader
-        title="Page not found"
-        description="That page does not exist on BetterKabugao."
+        variant="hero"
+        eyebrow="404"
+        title="That page does not exist"
+        description="The address may be mistyped, or the page may never have existed. Search the site below, or go straight to one of these."
         breadcrumbs={[{ label: "Home", href: "/" }, { label: "Not found" }]}
       />
       <section className="section">
-        <div className="shell narrow">
-          <p className="section__body">Try one of these instead:</p>
-          <ul className="plain-list">
-            <li><Link to="/government/barangays">All {BARANGAYS.length} barangays</Link></li>
-            <li><Link to="/government/officials">Elected officials</Link></li>
-            <li><Link to="/search">Search the site</Link></li>
-          </ul>
+        <div className="shell">
+          <div className="recover">
+            {/* A real GET form, so the markup is right and the field is
+                submittable — but the CSP currently sets `form-action 'none'`,
+                which blocks an actual submission, so the handler navigates
+                instead. Every link below is a plain anchor for exactly that
+                reason: the box can fail and the page still works. */}
+            <form
+              className="recover__form"
+              method="get"
+              action="/search"
+              onSubmit={(event) => {
+                event.preventDefault();
+                const q = new FormData(event.currentTarget).get("q");
+                const query = typeof q === "string" ? q.trim() : "";
+                navigate(query ? `/search?q=${encodeURIComponent(query)}` : "/search");
+              }}
+            >
+              <label className="recover__label" htmlFor="notfound-q">
+                Search BetterKabugao
+              </label>
+              <div className="recover__row">
+                <input
+                  id="notfound-q"
+                  className="recover__input"
+                  type="search"
+                  name="q"
+                  placeholder="A barangay, an official, a hotline…"
+                  autoComplete="off"
+                />
+                <button className="btn btn--solid" type="submit">
+                  Search
+                </button>
+              </div>
+            </form>
+
+            <nav className="recover__links" aria-labelledby="recover-title">
+              <h2 id="recover-title">Or go straight to</h2>
+              <ul className="plain-list">
+                {RECOVERY_LINKS.filter((link) => link.to !== "/search").map((link) => (
+                  <li key={link.to}>
+                    <Link to={link.to}>{link.label}</Link>
+                    <span className="plain-list__meta">{link.to}</span>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          </div>
         </div>
       </section>
     </>

@@ -323,6 +323,81 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--color-primary-5
 .service-group ul { margin-top: 12px; display: flex; flex-direction: column; }
 .service-group li { padding-block: 9px; border-bottom: 1px solid var(--color-gray-200); color: var(--color-gray-700); font-size: 0.9375rem; }
 
+/* ---------------- Search page and 404 recovery ---------------- */
+
+/* One column at the prose measure: a results list that runs the full 1440 puts
+   the kind label a whole screen away from the title it belongs to. */
+.finder { max-width: 760px; }
+.finder__form { margin-top: 4px; }
+.finder__label { display: block; color: var(--color-gray-900); font-size: 0.8125rem; font-weight: 700; }
+.finder__row { display: flex; gap: 10px; margin-top: 8px; }
+.finder__input {
+  flex: 1; min-width: 0; height: 48px; padding: 0 14px;
+  border: 1px solid var(--color-gray-300); border-radius: 6px;
+  background: var(--color-white); color: var(--color-gray-900); font: inherit; font-size: 1rem;
+}
+.finder__input:focus-visible { outline: none; border-color: var(--color-primary-500); box-shadow: 0 0 0 3px rgba(0, 102, 235, 0.12); }
+.finder__input::placeholder { color: var(--color-gray-700); }
+
+.finder__start { margin-top: 34px; }
+.finder__start section + section { margin-top: 30px; }
+.finder__start h2, .finder__empty h2 { color: var(--color-gray-900); font-size: 1rem; font-weight: 700; }
+
+/* Suggested queries. Real links, so they work from a crawler or a shared URL. */
+.finder__chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.finder__chips a {
+  display: inline-block; padding: 7px 13px;
+  border: 1px solid var(--color-primary-300); border-radius: 6px;
+  background: var(--color-primary-50); color: var(--color-primary-800);
+  font-size: 0.875rem; font-weight: 600; text-decoration: none;
+}
+.finder__chips a:hover { border-color: var(--color-primary-500); background: var(--color-primary-100); }
+.finder__note { margin-top: 28px; color: var(--color-gray-700); font-size: 0.875rem; line-height: 1.65; }
+.finder__note a { color: var(--color-primary-700); font-weight: 600; }
+
+.finder__results { margin-top: 30px; }
+.finder__results section + section { margin-top: 26px; }
+/* Static, in the flow. Deliberately NOT .search__results, which is the
+   masthead dropdown and is absolutely positioned. */
+.finder__list { border: 1px solid var(--color-gray-300); border-radius: 10px; background: var(--color-white); overflow: hidden; }
+.finder__list li + li { border-top: 1px solid var(--color-gray-200); }
+.finder__list a { display: grid; gap: 3px; padding: 12px 16px; text-decoration: none; }
+.finder__list a:hover { background: var(--color-gray-50); }
+/* The group heading carries its own count, so the eye can skip a whole kind. */
+.finder__kind {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 10px;
+  padding-bottom: 8px; border-bottom: 2px solid var(--color-primary-800);
+}
+.finder__kind h2 {
+  color: var(--color-gray-900); font-size: 0.75rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.1em;
+}
+.finder__count {
+  min-width: 22px; padding: 1px 7px; border-radius: 4px;
+  background: var(--color-primary-800); color: var(--color-white);
+  font-size: 0.6875rem; letter-spacing: 0; text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.finder__empty { margin-top: 34px; padding: 22px; border: 1px solid var(--color-gray-300); border-radius: 10px; background: var(--color-gray-50); }
+.finder__empty .section__body { margin-top: 10px; }
+.finder__empty .plain-list { margin-top: 18px; }
+
+/* 404 */
+.recover { display: grid; max-width: 940px; grid-template-columns: minmax(0, 1fr) minmax(0, 320px); gap: 48px; align-items: start; }
+.recover__form { max-width: 520px; }
+.recover__label { display: block; color: var(--color-gray-900); font-size: 0.8125rem; font-weight: 700; }
+.recover__row { display: flex; gap: 10px; margin-top: 8px; }
+.recover__input {
+  flex: 1; min-width: 0; height: 48px; padding: 0 14px;
+  border: 1px solid var(--color-gray-300); border-radius: 6px;
+  background: var(--color-white); color: var(--color-gray-900); font: inherit; font-size: 1rem;
+}
+.recover__input:focus-visible { outline: none; border-color: var(--color-primary-500); box-shadow: 0 0 0 3px rgba(0, 102, 235, 0.12); }
+.recover__input::placeholder { color: var(--color-gray-700); }
+.recover__links h2 { color: var(--color-gray-900); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; }
+.recover__links .plain-list { margin-top: 6px; }
+
 /* ---------------- Sitemap ---------------- */
 
 /* Bordered lists under a navy rule, matching .service-group — not a card grid.
@@ -610,7 +685,6 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--color-primary-5
   background: var(--color-white); border: 1px solid var(--color-gray-300);
   border-radius: 8px; box-shadow: 0 16px 40px rgba(0, 20, 47, 0.16);
 }
-.search--inline .search__results { position: static; max-height: none; box-shadow: none; margin-top: 10px; }
 .search__results li + li { border-top: 1px solid var(--color-gray-200); }
 .search__results a { display: grid; gap: 3px; padding: 12px 15px; text-decoration: none; }
 .search__results a:hover { background: var(--color-gray-50); }
@@ -1046,4 +1120,14 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--color-primary-5
   .sitemap__group--wide .sitemap__list { column-count: 1; }
   /* The path is reference detail, not the link text — it goes under it. */
   .sitemap__list a { flex-direction: column; gap: 2px; }
+}
+
+@media (max-width: 860px) {
+  .recover { grid-template-columns: minmax(0, 1fr); gap: 34px; }
+}
+
+@media (max-width: 560px) {
+  /* The button drops under the field rather than squeezing it to nothing. */
+  .finder__row, .recover__row { flex-direction: column; }
+  .finder__row .btn, .recover__row .btn { width: 100%; }
 }

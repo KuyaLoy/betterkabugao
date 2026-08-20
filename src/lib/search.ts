@@ -8,9 +8,25 @@ import { BARANGAYS, populationShare } from "../data/barangays";
 import { HOTLINES, formatInternational } from "../data/hotlines";
 import { EXECUTIVE, SANGGUNIAN } from "../data/officials";
 
+/**
+ * Result kinds, in the order the search page groups them: a concrete record
+ * answers a question, an index page only points at one.
+ */
+export const SEARCH_KINDS = ["Barangay", "Official", "Hotline", "Page"] as const;
+
+export type SearchKind = (typeof SEARCH_KINDS)[number];
+
+/** Plural headings for the grouped results. */
+export const SEARCH_KIND_LABELS: Record<SearchKind, string> = {
+  Barangay: "Barangays",
+  Official: "Elected officials",
+  Hotline: "Emergency hotlines",
+  Page: "Pages",
+};
+
 export type SearchEntry = {
   path: string;
-  kind: "Barangay" | "Official" | "Page";
+  kind: SearchKind;
   title: string;
   summary: string;
   /** Extra terms that should match but need not be displayed. */
@@ -52,7 +68,7 @@ const OFFICIAL_ENTRIES: SearchEntry[] = [...EXECUTIVE, ...SANGGUNIAN].map((o) =>
  */
 const HOTLINE_ENTRIES: SearchEntry[] = HOTLINES.map((h) => ({
   path: "/emergency",
-  kind: "Page",
+  kind: "Hotline",
   title: `${h.abbreviation} — ${h.name}`,
   summary: `${h.purpose} ${h.numbers.map(formatInternational).join(", ")}`,
   keywords: [h.abbreviation, "emergency", "hotline", "number", ...h.numbers],
@@ -91,4 +107,33 @@ export function scoreEntry(entry: SearchEntry, query: string): number {
   // Prefer concrete records over index pages when scores tie.
   if (entry.kind !== "Page") score += 5;
   return score;
+}
+
+/**
+ * Suggested queries for the search page before anything is typed.
+ *
+ * Every one of these must return at least one result — a suggestion that leads
+ * nowhere is worse than no suggestion — so a unit test runs each through
+ * `scoreEntry`. They are drawn from terms already in the index: a barangay, a
+ * position, a hotline office, a PSGC lookup, and a cultural term.
+ */
+export const QUICK_SEARCHES: readonly string[] = [
+  "Poblacion",
+  "mayor",
+  "MDRRMO",
+  "Sangguniang Bayan",
+  "PSGC",
+  "Isnag",
+];
+
+/** Scored, sorted matches for a query. Fewer than two characters matches nothing. */
+export function searchSite(query: string, limit = 40): SearchEntry[] {
+  const trimmed = query.trim();
+  if (trimmed.length < 2) return [];
+
+  return SEARCH_INDEX.map((entry) => ({ entry, score: scoreEntry(entry, trimmed) }))
+    .filter((row) => row.score > 0)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, limit)
+    .map((row) => row.entry);
 }

@@ -16,13 +16,17 @@ session (see `docs/skills/session-memory/SKILL.md`).
   seven security headers sent, per-page titles and canonicals, BreadcrumbList
   JSON-LD, ~9.9 KB of real HTML per barangay page, OSM tiles rendering, live
   weather, no console or CSP errors.
-- **In flight:** `feature/html-sitemap-seo-pass` — a public `/sitemap` page and
-  a small sitemap.xml hygiene pass. 33 prerendered routes, 32 sitemap.xml URLs.
-  **Held for Codex QA; not to be merged to `main` without it.**
+- **In flight:** `improvement/search-404-recovery` — `/search` and `/404` rebuilt
+  as recovery screens: `?q=` query URLs, results grouped by kind, starter
+  suggestions, an empty state with a way out, and a real search form plus six
+  plain-anchor recovery links on the 404. **Held for Codex QA; not to be merged
+  to `main` without it.**
 - **BetterLGU Directory:** PR #208 open against `jmacj/better-lgu-directory` —
   Kabugao row updated to 🟢 Active with the domain and the three socials, PR body
   and checklist completed, and a comment answering the triage bot's four
   verification points. Nothing left on our side; awaiting `jmacj`.
+- **Merged:** the public `/sitemap` page (PR #1, `21f622b`). 33 prerendered
+  routes, 32 sitemap.xml URLs.
 - **What is live:** v3.0.0 — the real multi-page portal.
   **32 routes prerendered to static HTML**, each with its own title,
   description, canonical, OG tags and `BreadcrumbList` JSON-LD. Real homepage
@@ -54,7 +58,7 @@ session (see `docs/skills/session-memory/SKILL.md`).
   RMFB 15, ICT), each in local and `+63` form, with `tel:+63` links so overseas
   family can dial. 911 leads. The red bar on every page carries 911 plus the
   all eight offices in a marquee, and a popup with the full list.
-- **Quality:** 33 contract tests + 31 unit tests green; typecheck, lint,
+- **Quality:** 34 contract tests + 37 unit tests green; typecheck, lint,
   build clean; no horizontal overflow at 320–1560; one `h1`, one `header`, one
   `main` and zero inline styles (outside the Leaflet canvas) on every page at
   every width.
@@ -189,6 +193,30 @@ session (see `docs/skills/session-memory/SKILL.md`).
   **Open:** with JavaScript off the block still renders unstyled below the footer
   and restates the footer's cost chips, disclaimer and credit — a design call for
   Robin.
+- **2026-08-20** `/search` and `/404` rebuilt as recovery screens. `/search`
+  gained shareable `?q=` URLs, results grouped by kind with counts, six suggested
+  queries before anything is typed, and an empty state that offers a way out
+  instead of a dead end; `/404` gained a real search form and six recovery links.
+  A hotline is now its own result kind rather than a "Page", so searching
+  "police" surfaces the number rather than the page that lists it. Both screens
+  read their recovery links from one exported `RECOVERY_LINKS` list, so the two
+  cannot drift apart, and a test asserts every destination is a route that
+  actually prerenders. The scoring logic is now one `searchSite()` used by both
+  the masthead dropdown and the page — it had been duplicated.
+- **2026-08-20** **Open:** the CSP says `form-action 'none'`, which blocks a real
+  form submission outright, so both new forms intercept submit in JavaScript and
+  navigate. That is why every recovery route on those pages is also a plain
+  anchor: the box can fail and the page still works. Relaxing to
+  `form-action 'self'` would make them work with scripting off and would still
+  block cross-origin submission. Not changed here — loosening a CSP directive
+  needs maintainer approval, and a contract test now pins the deployed value so
+  the change has to be deliberate.
+- **2026-08-20** Two defects that a fully green suite did not catch, both found
+  in a screenshot: `.btn--primary` is the white-on-navy hero button and rendered
+  as bare text on a white section (`.btn--solid` is the light-background fill),
+  and reusing `.search__results` — the absolutely-positioned masthead dropdown —
+  for an in-flow list drew the results on top of the footer. Recorded in
+  START-HERE §8.
 - **2026-08-20** Public `/sitemap` page added — 8 of the 15 network portals have
   one and we did not. It is generated from `ALL_PATHS` + `BARANGAYS`, never typed
   out, so it cannot fall behind the routes; `auditSitemap()` reports anything
@@ -213,7 +241,15 @@ session (see `docs/skills/session-memory/SKILL.md`).
 
 ## Next steps
 
-1. **Codex QA on `feature/html-sitemap-seo-pass`** — then merge to `main`
+1. **Decision needed: CSP `form-action`.** `/search` and `/404` now render real
+   search forms, but the deployed policy says `form-action 'none'`, which blocks
+   an actual submission — so both forms intercept submit in JavaScript and
+   navigate instead. With scripting off the box does nothing, which is why every
+   recovery route on those pages is also a plain anchor. Relaxing it to
+   `form-action 'self'` would make them work with no JavaScript and would still
+   block cross-origin submission, the case the directive exists for. One word in
+   `public/_headers` and one line in a contract test. **Needs maintainer approval.**
+2. **Codex QA on `improvement/search-404-recovery`** — then merge to `main`
 2. **Open design decision:** with JavaScript off, the `<noscript>` block now
    renders below a complete page and unstyled, restating the footer's cost chips,
    disclaimer and `Built by` credit. Either trim it to the JavaScript
