@@ -8,6 +8,7 @@ import { BarangayDetailPage } from "./pages/BarangayDetailPage";
 import { BarangaysPage } from "./pages/BarangaysPage";
 import { HomePage } from "./pages/HomePage";
 import { OfficialsPage } from "./pages/OfficialsPage";
+import { SitemapPage } from "./pages/SitemapPage";
 import {
   AboutPage,
   ExplorePage,
@@ -40,6 +41,7 @@ export function App() {
           <Route path="/services" element={<ServicesPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/search" element={<SearchPage />} />
+          <Route path="/sitemap" element={<SitemapPage />} />
           {/* No bare catch-all like /:slug — a real 404 must stay reachable. */}
           <Route path="*" element={<NotFoundPage />} />
         </Routes>

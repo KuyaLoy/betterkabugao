@@ -7,7 +7,7 @@ the traps. This file is the dated decision log behind it.
 Living snapshot of BetterKabugao. Update both at the end of every working
 session (see `docs/skills/session-memory/SKILL.md`).
 
-## Current state (2026-08-19)
+## Current state (2026-08-20)
 
 - **Domain:** betterkabugao.org — Cloudflare Pages, deploys from `main`
   (build `npm run build`, output `dist`)
@@ -16,10 +16,9 @@ session (see `docs/skills/session-memory/SKILL.md`).
   seven security headers sent, per-page titles and canonicals, BreadcrumbList
   JSON-LD, ~9.9 KB of real HTML per barangay page, OSM tiles rendering, live
   weather, no console or CSP errors.
-- **In flight:** `fix/noscript-copy` — the `<noscript>` fallback in `index.html`
-  still read "Coming soon" on all 32 live pages, and its `<main>`/`<h1>` gave
-  every page a second `main` landmark and a second `h1` whenever JavaScript was
-  off. Both fixed and pinned by contract tests.
+- **In flight:** `feature/html-sitemap-seo-pass` — a public `/sitemap` page and
+  a small sitemap.xml hygiene pass. 33 prerendered routes, 32 sitemap.xml URLs.
+  **Held for Codex QA; not to be merged to `main` without it.**
 - **BetterLGU Directory:** PR #208 open against `jmacj/better-lgu-directory` —
   Kabugao row updated to 🟢 Active with the domain and the three socials, PR body
   and checklist completed, and a comment answering the triage bot's four
@@ -55,7 +54,7 @@ session (see `docs/skills/session-memory/SKILL.md`).
   RMFB 15, ICT), each in local and `+63` form, with `tel:+63` links so overseas
   family can dial. 911 leads. The red bar on every page carries 911 plus the
   all eight offices in a marquee, and a popup with the full list.
-- **Quality:** 30 contract tests + 27 unit tests green; typecheck, lint,
+- **Quality:** 33 contract tests + 31 unit tests green; typecheck, lint,
   build clean; no horizontal overflow at 320–1560; one `h1`, one `header`, one
   `main` and zero inline styles (outside the Leaflet canvas) on every page at
   every width.
@@ -190,6 +189,20 @@ session (see `docs/skills/session-memory/SKILL.md`).
   **Open:** with JavaScript off the block still renders unstyled below the footer
   and restates the footer's cost chips, disclaimer and credit — a design call for
   Robin.
+- **2026-08-20** Public `/sitemap` page added — 8 of the 15 network portals have
+  one and we did not. It is generated from `ALL_PATHS` + `BARANGAYS`, never typed
+  out, so it cannot fall behind the routes; `auditSitemap()` reports anything
+  unlinked or linked twice and a unit test asserts both are empty. Groups were
+  set by Codex: Core, Government, Barangays, Safety, Explore and services,
+  Project and meta. `/transparency` sits under Government because the
+  `/government` hub is the page that links to it. `/404` is excluded from both
+  the page and `sitemap.xml` — advertising a not-found page invites a crawler to
+  index it. `lastmod` was deliberately **not** touched: it is still one build-wide
+  stamp for all 32 URLs, which is a separate decision for a separate task.
+  **Known visual trade-off:** the wide barangay group is third, so the first row
+  holds two of three columns and the third is empty. Fixing it means moving
+  Barangays first or last, which changes the group order Codex specified — his
+  call, not ours.
 - **2026-08-19** BetterLGU Directory PR #208 completed on the contributor side:
   PR body filled from their template, all four checklist boxes ticked, and a
   comment answering the triage bot's four verification points. Recorded because
@@ -200,7 +213,8 @@ session (see `docs/skills/session-memory/SKILL.md`).
 
 ## Next steps
 
-1. **Open design decision:** with JavaScript off, the `<noscript>` block now
+1. **Codex QA on `feature/html-sitemap-seo-pass`** — then merge to `main`
+2. **Open design decision:** with JavaScript off, the `<noscript>` block now
    renders below a complete page and unstyled, restating the footer's cost chips,
    disclaimer and `Built by` credit. Either trim it to the JavaScript
    explanation alone or give it styles — the facts inside it are pinned by

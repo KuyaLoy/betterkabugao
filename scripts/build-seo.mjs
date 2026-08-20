@@ -13,6 +13,7 @@ const SITE = "https://betterkabugao.org";
 const STATIC_SECTIONS = [
   "/", "/government", "/government/officials", "/government/barangays",
   "/emergency", "/transparency", "/explore", "/services", "/about", "/search",
+  "/sitemap",
 ];
 
 /**

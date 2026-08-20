@@ -393,6 +393,7 @@ test("every class a component renders has a rule in the stylesheet", () => {
     "src/components/MapView.tsx",
     "src/components/PageHeader.tsx",
     "src/components/SiteSearch.tsx",
+    "src/pages/SitemapPage.tsx",
   ];
 
   const unstyled = [];
@@ -541,6 +542,17 @@ test("SEO artefacts are generated from the site's own data", async () => {
       `sitemap missing barangay page for ${slug}`,
     );
   }
+  // The HTML sitemap is itself a page, so it belongs in the XML one.
+  assert.ok(
+    locs.includes("https://betterkabugao.org/sitemap"),
+    "sitemap.xml must list the public /sitemap page",
+  );
+  // /404 exists only for URLs that do not. Advertising it invites a crawler to
+  // index a not-found page, so it stays out of the XML and out of the HTML list.
+  assert.ok(
+    !locs.some((loc) => loc.endsWith("/404")),
+    "sitemap.xml must not advertise the 404 page",
+  );
   assert.match(load("public/robots.txt"), /Sitemap: https:\/\/betterkabugao\.org\/sitemap\.xml/);
 });
 
@@ -563,7 +575,7 @@ test("every route is prerendered to its own static HTML, not a shared SPA shell"
   }
 
   const titles = new Map();
-  for (const path of ["/", "/government/barangays", "/government/barangays/poblacion", "/government/officials", "/about", "/404"]) {
+  for (const path of ["/", "/government/barangays", "/government/barangays/poblacion", "/government/officials", "/about", "/sitemap", "/404"]) {
     const file = path === "/" ? distIndex : new URL(`dist${path}/index.html`, root);
     assert.ok(existsSync(file), `Expected prerendered HTML for ${path}`);
     const html = readFileSync(file, "utf8");
@@ -613,6 +625,44 @@ test("every route is prerendered to its own static HTML, not a shared SPA shell"
 
   // Cloudflare Pages serves this for unmatched paths.
   assert.ok(existsSync(new URL("dist/404.html", root)), "Expected dist/404.html for Cloudflare Pages");
+});
+
+test("the HTML sitemap links every public page as a real anchor", async () => {
+  const distIndex = new URL("dist/index.html", root);
+  if (!existsSync(distIndex)) return;
+
+  const file = new URL("dist/sitemap/index.html", root);
+  assert.ok(existsSync(file), "Expected dist/sitemap/index.html — run npm run build");
+  const html = readFileSync(file, "utf8");
+
+  // Only the server-rendered body counts. A link that exists solely in the
+  // noscript block, or in a script payload, is not a link a crawler follows.
+  const start = html.indexOf('<div id="root">');
+  const body = html.slice(start, html.indexOf("<noscript>", start));
+
+  const { ALL_PATHS } = await import(new URL("dist-ssr/routes.js", root).href);
+  const hrefs = new Set([...body.matchAll(/<a[^>]+href="([^"]+)"/g)].map((m) => m[1]));
+
+  for (const path of ALL_PATHS) {
+    if (path === "/404") continue;
+    assert.ok(hrefs.has(path), `HTML sitemap is missing a crawlable link to ${path}`);
+  }
+
+  // Nothing may point at the 404 page, and it must not be named either — the
+  // page is for URLs that do not exist, so listing it is a contradiction.
+  assert.ok(!hrefs.has("/404"), "HTML sitemap must not link /404");
+  assert.doesNotMatch(body, /\/404/, "HTML sitemap must not mention /404");
+
+  // The machine-readable counterpart, as a real link rather than plain text.
+  assert.ok(hrefs.has("/sitemap.xml"), "HTML sitemap should link sitemap.xml");
+
+  // One h1 and one main, on a page built from six h2 groups.
+  assert.equal([...html.matchAll(/<h1[^>]*>/g)].length, 1, "/sitemap must have exactly one h1");
+  assert.equal([...html.matchAll(/<main[^>]*>/g)].length, 1, "/sitemap must have exactly one main");
+  assert.ok(
+    [...body.matchAll(/<h2[^>]*>/g)].length >= 6,
+    "/sitemap should group its links under headings",
+  );
 });
 
 test("document metadata carries geo and structured-data hints", () => {

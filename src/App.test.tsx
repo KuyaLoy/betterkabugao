@@ -4,7 +4,7 @@ import { MemoryRouter } from "react-router-dom";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { App } from "./App";
 import { BARANGAYS } from "./data/barangays";
-import { ALL_PATHS } from "./lib/seo";
+import { ALL_PATHS, SITEMAP_EXCLUDED, SITEMAP_GROUPS, auditSitemap } from "./lib/seo";
 
 function renderAt(path: string) {
   return render(
@@ -324,5 +324,51 @@ describe("site-wide guarantees", () => {
   it("never renders a weather placeholder while the request is pending", () => {
     renderAt("/");
     expect(screen.queryByText(/°C/)).not.toBeInTheDocument();
+  });
+});
+
+describe("sitemap page", () => {
+  it("links every route except the deliberate exclusions, exactly once", () => {
+    const { missing, duplicates } = auditSitemap();
+    expect(missing).toEqual([]);
+    expect(duplicates).toEqual([]);
+    expect(SITEMAP_EXCLUDED).toEqual(["/404"]);
+  });
+
+  it("groups the pages in the agreed order without inventing a group", () => {
+    expect(SITEMAP_GROUPS.map((group) => group.title)).toEqual([
+      "Core",
+      "Government",
+      "Barangays",
+      "Safety",
+      "Explore and services",
+      "Project and meta",
+    ]);
+    // Only the barangay group spans the row.
+    expect(SITEMAP_GROUPS.filter((group) => group.wide).map((g) => g.id)).toEqual(["barangays"]);
+  });
+
+  it("renders one h1 and a real href per page, and never offers /404", () => {
+    renderAt("/sitemap");
+
+    expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
+    expect(screen.getAllByRole("heading", { level: 2 })).toHaveLength(SITEMAP_GROUPS.length);
+
+    const hrefs = new Set(screen.getAllByRole("link").map((link) => link.getAttribute("href")));
+    for (const path of ALL_PATHS) {
+      if (path === "/404") continue;
+      expect(hrefs.has(path)).toBe(true);
+    }
+    expect(hrefs.has("/404")).toBe(false);
+    expect(hrefs.has("/sitemap.xml")).toBe(true);
+  });
+
+  it("is reachable from the footer of every page", () => {
+    for (const path of ["/", "/emergency", "/government/barangays/poblacion"]) {
+      cleanup();
+      renderAt(path);
+      const footer = within(screen.getByRole("contentinfo"));
+      expect(footer.getByRole("link", { name: "Sitemap" })).toHaveAttribute("href", "/sitemap");
+    }
   });
 });
