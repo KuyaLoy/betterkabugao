@@ -27,6 +27,7 @@ const PAGES: SearchEntry[] = [
   { path: "/explore", kind: "Page", title: "Explore Kabugao", summary: "Places, rivers, heritage and Isnag culture.", keywords: ["tourism", "isnag", "isneg", "river", "falls", "heritage"] },
   { path: "/services", kind: "Page", title: "Services", summary: "Certificates, permits, offices and contacts — in preparation.", keywords: ["permit", "certificate", "clearance", "office", "tax"] },
   { path: "/about", kind: "Page", title: "About", summary: "Who runs BetterKabugao, and how it is funded.", keywords: ["volunteer", "independent", "bettergov", "cost", "contact"] },
+  { path: "/sitemap", kind: "Page", title: "Sitemap", summary: "Every page on the site, grouped, as ordinary links.", keywords: ["sitemap", "site map", "index", "all pages", "directory"] },
 ];
 
 const BARANGAY_ENTRIES: SearchEntry[] = BARANGAYS.map((b) => ({

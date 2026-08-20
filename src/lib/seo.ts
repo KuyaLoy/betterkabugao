@@ -30,6 +30,7 @@ const SEGMENT_LABELS: Record<string, string> = {
   "/services": "Services",
   "/about": "About",
   "/search": "Search",
+  "/sitemap": "Sitemap",
 };
 
 const STATIC_META: Record<string, { title: string; description: string }> = {
@@ -81,6 +82,11 @@ const STATIC_META: Record<string, { title: string; description: string }> = {
   "/search": {
     title: "Search",
     description: "Search everything published on BetterKabugao.",
+  },
+  "/sitemap": {
+    title: "Sitemap — every page on this site",
+    description:
+      "Every page published on BetterKabugao, grouped and listed as ordinary links: the 21 barangay pages, the elected officials, the emergency hotlines and the project pages.",
   },
   "/404": {
     title: "Page not found",
@@ -142,5 +148,102 @@ export const ALL_PATHS: readonly string[] = [
   "/services",
   "/about",
   "/search",
+  "/sitemap",
   "/404",
 ];
+
+/**
+ * The public sitemap page, grouped for a reader rather than a crawler.
+ *
+ * Built from ALL_PATHS and BARANGAYS so a route cannot be added to the site and
+ * forgotten here — `auditSitemap()` reports anything unlinked or linked twice,
+ * and a unit test asserts both lists are empty. `/404` is excluded on purpose:
+ * a page that exists only for URLs that do not should never be advertised, in
+ * this list or in sitemap.xml.
+ */
+export const SITEMAP_EXCLUDED: readonly string[] = ["/404"];
+
+export type SitemapLink = { path: string; label: string };
+
+export type SitemapGroup = {
+  id: string;
+  title: string;
+  /** The barangay group spans the row and reads in columns; the rest do not. */
+  wide?: boolean;
+  links: readonly SitemapLink[];
+};
+
+/**
+ * Labels for the sitemap list, which are not the breadcrumb labels: a crumb
+ * reading "Barangays" is unambiguous under Government, but in a flat list next
+ * to a group of the same name it is not.
+ */
+const SITEMAP_LABELS: Record<string, string> = {
+  "/": "Home",
+  "/government": "Government of Kabugao",
+  "/government/officials": "Elected officials",
+  "/government/barangays": `All ${BARANGAYS.length} barangays`,
+  "/transparency": "Transparency",
+  "/emergency": "Emergency hotlines",
+  "/explore": "Explore Kabugao",
+  "/services": "Services",
+  "/about": "About this project",
+  "/search": "Search",
+  "/sitemap": "Sitemap",
+};
+
+const GROUP_ORDER: ReadonlyArray<{
+  id: string;
+  title: string;
+  paths?: readonly string[];
+  barangays?: true;
+}> = [
+  { id: "core", title: "Core", paths: ["/", "/search"] },
+  {
+    id: "government",
+    title: "Government",
+    // /transparency sits here because the /government hub is the page that
+    // links to it, alongside officials and barangays.
+    paths: ["/government", "/government/officials", "/government/barangays", "/transparency"],
+  },
+  { id: "barangays", title: "Barangays", barangays: true },
+  { id: "safety", title: "Safety", paths: ["/emergency"] },
+  { id: "explore", title: "Explore and services", paths: ["/explore", "/services"] },
+  { id: "project", title: "Project and meta", paths: ["/about", "/sitemap"] },
+];
+
+export const SITEMAP_GROUPS: readonly SitemapGroup[] = GROUP_ORDER.map((group) =>
+  group.barangays
+    ? {
+        id: group.id,
+        title: group.title,
+        wide: true,
+        links: BARANGAYS.map((b) => ({
+          path: `/government/barangays/${b.slug}`,
+          label: b.name,
+        })),
+      }
+    : {
+        id: group.id,
+        title: group.title,
+        links: (group.paths ?? []).map((path) => ({
+          path,
+          label: SITEMAP_LABELS[path] ?? path,
+        })),
+      },
+);
+
+/** Every path the sitemap page links, in page order. */
+export const SITEMAP_PATHS: readonly string[] = SITEMAP_GROUPS.flatMap((group) =>
+  group.links.map((link) => link.path),
+);
+
+export function auditSitemap(): { missing: string[]; duplicates: string[] } {
+  const counts = new Map<string, number>();
+  for (const path of SITEMAP_PATHS) counts.set(path, (counts.get(path) ?? 0) + 1);
+
+  return {
+    missing: ALL_PATHS.filter((path) => !SITEMAP_EXCLUDED.includes(path) && !counts.has(path)),
+    duplicates: [...counts].filter(([, times]) => times > 1).map(([path]) => path),
+  };
+}

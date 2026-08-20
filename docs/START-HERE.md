@@ -56,10 +56,10 @@ the **BetterGov.ph / BetterLGU** volunteer network.
 | | |
 |---|---|
 | **Live on `betterkabugao.org`** | the full multi-page portal — 32 prerendered routes, interactive maps, emergency hotlines. Merged and deployed. |
-| **`main` HEAD** | `441b766` — Kabugao emergency hotlines with `+63` dialling (18 Aug 2026) |
-| **In flight** | `fix/noscript-copy` — the no-JavaScript fallback still said "Coming soon" on all 32 live pages, and added a second `main`/`h1` to every one of them |
+| **`main` HEAD** | `00a3d2f` — the no-JavaScript fallback fix (19 Aug 2026), verified live |
+| **In flight** | `feature/html-sitemap-seo-pass` — public `/sitemap` page + sitemap.xml hygiene. 33 routes. **Awaiting Codex QA; do not merge to `main` without it.** |
 | **BetterLGU Directory** | PR [#208](https://github.com/jmacj/better-lgu-directory/pull/208) is open — Kabugao row updated to 🟢 Active with the domain and socials, awaiting review by `jmacj` |
-| **Quality gate** | 32 contract tests + 27 unit tests green; lint, typecheck, build clean |
+| **Quality gate** | 33 contract tests + 31 unit tests green; lint, typecheck, build clean |
 
 `c69101e` is 85 files changed / +6,128 / −509 against `main`, authored by
 KuyaLoy on 17 Aug 2026. The pushed tree was compared file by file against the
@@ -223,7 +223,8 @@ There is also a licence gate: **BLGF restricts redistribution — email
 
 In rough order of value per hour, all of it uncontroversial:
 
-1. **HTML `/sitemap` page** — 8 of the 15 network sites have one; we do not.
+1. ~~**HTML `/sitemap` page**~~ — built on `feature/html-sitemap-seo-pass`,
+   pending Codex QA. 8 of the 15 network sites have one.
 2. **Roadmap step 10, long-run trends** — Wikidata Q30053, CC0, no licence
    gate, no political sensitivity. Population 1918→2024, poverty, voters.
 3. **Roadmap step 12, services and offices** — needs the offices' cooperation,
@@ -385,6 +386,10 @@ render.
   `PAGES` list in `src/lib/search.ts`, and `STATIC_SECTIONS` in
   `scripts/build-seo.mjs`. Miss the last one and the page prerenders but never
   reaches `sitemap.xml` — which is exactly what happened with `/emergency`.
+  Since 2026-08-20 a fifth place exists — `SITEMAP_LABELS` + `GROUP_ORDER` in
+  `src/lib/seo.ts`, which drive the public `/sitemap` page — but that one cannot
+  be forgotten silently: `auditSitemap()` reports any route the page fails to
+  link, or links twice, and a unit test asserts both lists are empty.
 
 **Environment**
 
@@ -453,14 +458,14 @@ src/
     routes.ts                 ALL_PATHS re-export for the SSR bundle
     useKabugaoNow.ts          clock + weather
   pages/                      HomePage, BarangaysPage, BarangayDetailPage,
-                              OfficialsPage, SimplePages
+                              OfficialsPage, SitemapPage, SimplePages
 scripts/
   build-seo.mjs               structured-data.json, sitemap.xml, robots.txt
   prerender.mjs               one HTML file per route
   build-brand.mjs             regenerates brand SVGs from geometry.json
   render-social-card.mjs      1200×630 share image
 tests/
-  site-contracts.test.mjs     28 convention/security/data contracts
+  site-contracts.test.mjs     33 convention/security/data contracts
   brand-assets.test.mjs       brand geometry + output pinning
 public/
   _headers                    HSTS, CSP, nosniff, frame options

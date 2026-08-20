@@ -27,6 +27,7 @@ export function SiteFooter() {
             <Link to="/explore">Explore Kabugao</Link>
             <Link to="/services">Services</Link>
             <Link to="/about">About</Link>
+            <Link to="/sitemap">Sitemap</Link>
           </div>
         </div>
 

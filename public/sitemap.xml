@@ -61,6 +61,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://betterkabugao.org/sitemap</loc>
+    <lastmod>2026-08-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://betterkabugao.org/government/barangays/poblacion</loc>
     <lastmod>2026-08-17</lastmod>
     <changefreq>weekly</changefreq>
