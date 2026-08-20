@@ -323,6 +323,81 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--color-primary-5
 .service-group ul { margin-top: 12px; display: flex; flex-direction: column; }
 .service-group li { padding-block: 9px; border-bottom: 1px solid var(--color-gray-200); color: var(--color-gray-700); font-size: 0.9375rem; }
 
+/* ---------------- Search page and 404 recovery ---------------- */
+
+/* One column at the prose measure: a results list that runs the full 1440 puts
+   the kind label a whole screen away from the title it belongs to. */
+.finder { max-width: 760px; }
+.finder__form { margin-top: 4px; }
+.finder__label { display: block; color: var(--color-gray-900); font-size: 0.8125rem; font-weight: 700; }
+.finder__row { display: flex; gap: 10px; margin-top: 8px; }
+.finder__input {
+  flex: 1; min-width: 0; height: 48px; padding: 0 14px;
+  border: 1px solid var(--color-gray-300); border-radius: 6px;
+  background: var(--color-white); color: var(--color-gray-900); font: inherit; font-size: 1rem;
+}
+.finder__input:focus-visible { outline: none; border-color: var(--color-primary-500); box-shadow: 0 0 0 3px rgba(0, 102, 235, 0.12); }
+.finder__input::placeholder { color: var(--color-gray-700); }
+
+.finder__start { margin-top: 34px; }
+.finder__start section + section { margin-top: 30px; }
+.finder__start h2, .finder__empty h2 { color: var(--color-gray-900); font-size: 1rem; font-weight: 700; }
+
+/* Suggested queries. Real links, so they work from a crawler or a shared URL. */
+.finder__chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.finder__chips a {
+  display: inline-block; padding: 7px 13px;
+  border: 1px solid var(--color-primary-300); border-radius: 6px;
+  background: var(--color-primary-50); color: var(--color-primary-800);
+  font-size: 0.875rem; font-weight: 600; text-decoration: none;
+}
+.finder__chips a:hover { border-color: var(--color-primary-500); background: var(--color-primary-100); }
+.finder__note { margin-top: 28px; color: var(--color-gray-700); font-size: 0.875rem; line-height: 1.65; }
+.finder__note a { color: var(--color-primary-700); font-weight: 600; }
+
+.finder__results { margin-top: 30px; }
+.finder__results section + section { margin-top: 26px; }
+/* Static, in the flow. Deliberately NOT .search__results, which is the
+   masthead dropdown and is absolutely positioned. */
+.finder__list { border: 1px solid var(--color-gray-300); border-radius: 10px; background: var(--color-white); overflow: hidden; }
+.finder__list li + li { border-top: 1px solid var(--color-gray-200); }
+.finder__list a { display: grid; gap: 3px; padding: 12px 16px; text-decoration: none; }
+.finder__list a:hover { background: var(--color-gray-50); }
+/* The group heading carries its own count, so the eye can skip a whole kind. */
+.finder__kind {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 10px;
+  padding-bottom: 8px; border-bottom: 2px solid var(--color-primary-800);
+}
+.finder__kind h2 {
+  color: var(--color-gray-900); font-size: 0.75rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.1em;
+}
+.finder__count {
+  min-width: 22px; padding: 1px 7px; border-radius: 4px;
+  background: var(--color-primary-800); color: var(--color-white);
+  font-size: 0.6875rem; letter-spacing: 0; text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.finder__empty { margin-top: 34px; padding: 22px; border: 1px solid var(--color-gray-300); border-radius: 10px; background: var(--color-gray-50); }
+.finder__empty .section__body { margin-top: 10px; }
+.finder__empty .plain-list { margin-top: 18px; }
+
+/* 404 */
+.recover { display: grid; max-width: 940px; grid-template-columns: minmax(0, 1fr) minmax(0, 320px); gap: 48px; align-items: start; }
+.recover__form { max-width: 520px; }
+.recover__label { display: block; color: var(--color-gray-900); font-size: 0.8125rem; font-weight: 700; }
+.recover__row { display: flex; gap: 10px; margin-top: 8px; }
+.recover__input {
+  flex: 1; min-width: 0; height: 48px; padding: 0 14px;
+  border: 1px solid var(--color-gray-300); border-radius: 6px;
+  background: var(--color-white); color: var(--color-gray-900); font: inherit; font-size: 1rem;
+}
+.recover__input:focus-visible { outline: none; border-color: var(--color-primary-500); box-shadow: 0 0 0 3px rgba(0, 102, 235, 0.12); }
+.recover__input::placeholder { color: var(--color-gray-700); }
+.recover__links h2 { color: var(--color-gray-900); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; }
+.recover__links .plain-list { margin-top: 6px; }
+
 /* ---------------- Sitemap ---------------- */
 
 /* Bordered lists under a navy rule, matching .service-group — not a card grid.
@@ -604,22 +679,30 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--color-primary-5
   flex: 1; min-width: 0; border: 0; background: none; outline: none;
   font: inherit; font-size: 0.9375rem; color: var(--color-gray-900);
 }
-.search__results {
-  position: absolute; z-index: 30; top: calc(100% + 6px); left: 0; right: 0;
-  max-height: 60vh; overflow-y: auto;
-  background: var(--color-white); border: 1px solid var(--color-gray-300);
-  border-radius: 8px; box-shadow: 0 16px 40px rgba(0, 20, 47, 0.16);
+/* The hero field is a trigger, not an input: it opens the overlay and, without
+   JavaScript, is a plain link to /search. It keeps .search__field so the
+   homepage looks exactly as it did. */
+.search__trigger { text-decoration: none; cursor: pointer; }
+.search__trigger:hover { border-color: var(--color-primary-500); }
+.search__placeholder { flex: 1; min-width: 0; color: var(--color-gray-700); font-size: 0.9375rem; }
+/* A key hint means nothing without a keyboard. */
+.search__key { display: none; }
+@media (hover: hover) and (min-width: 769px) {
+  .search__key {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 22px; padding: 2px 6px;
+    border: 1px solid var(--color-gray-300); border-radius: 4px;
+    background: var(--color-gray-50); color: var(--color-gray-700);
+    font-family: inherit; font-size: 0.75rem; font-weight: 700;
+  }
 }
-.search--inline .search__results { position: static; max-height: none; box-shadow: none; margin-top: 10px; }
-.search__results li + li { border-top: 1px solid var(--color-gray-200); }
-.search__results a { display: grid; gap: 3px; padding: 12px 15px; text-decoration: none; }
-.search__results a:hover { background: var(--color-gray-50); }
 .search__kind {
   font-size: 0.625rem; font-weight: 700; text-transform: uppercase;
   letter-spacing: 0.08em; color: var(--color-accent-700);
 }
 .search__title { color: var(--color-primary-800); font-size: 0.9375rem; font-weight: 700; }
 .search__desc { color: var(--color-gray-700); font-size: 0.8125rem; }
+/* Still live: the barangay filter's no-match line, not the deleted dropdown. */
 .search__empty { margin-top: 12px; color: var(--color-gray-700); font-size: 0.875rem; }
 
 /* ---------------- Home ---------------- */
@@ -1046,4 +1129,95 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--color-primary-5
   .sitemap__group--wide .sitemap__list { column-count: 1; }
   /* The path is reference detail, not the link text — it goes under it. */
   .sitemap__list a { flex-direction: column; gap: 2px; }
+}
+
+@media (max-width: 860px) {
+  .recover { grid-template-columns: minmax(0, 1fr); gap: 34px; }
+}
+
+@media (max-width: 560px) {
+  /* The button drops under the field rather than squeezing it to nothing. */
+  .finder__row, .recover__row { flex-direction: column; }
+  .finder__row .btn, .recover__row .btn { width: 100%; }
+}
+
+/* ---------------- Search overlay ---------------- */
+
+/* Native <dialog>, so the browser owns the focus trap, Escape, the backdrop and
+   the top layer. Deliberately not a glass/blur SaaS palette: white panel, navy
+   rule, dense bordered rows — the same grammar as the rest of the site. */
+.palette {
+  width: min(680px, calc(100% - 32px));
+  max-height: min(70vh, 640px);
+  margin: 12vh auto auto;
+  padding: 0;
+  border: 1px solid var(--color-gray-300);
+  border-top: 3px solid var(--color-primary-700);
+  border-radius: 12px;
+  background: var(--color-white);
+  box-shadow: 0 24px 64px rgba(0, 11, 29, 0.28);
+  overflow: hidden;
+}
+.palette::backdrop { background: rgba(0, 20, 47, 0.55); }
+.palette__panel { display: flex; flex-direction: column; max-height: inherit; }
+
+.palette__field {
+  display: flex; align-items: center; gap: 12px;
+  padding: 0 14px 0 18px; min-height: 60px;
+  border-bottom: 1px solid var(--color-gray-200);
+}
+.palette__field svg { flex: none; color: var(--color-gray-600); }
+.palette__input {
+  flex: 1; min-width: 0; border: 0; background: none; outline: none;
+  font: inherit; font-size: 1rem; color: var(--color-gray-900);
+}
+.palette__close {
+  flex: none; padding: 7px 12px;
+  border: 1px solid var(--color-gray-300); border-radius: 6px;
+  background: var(--color-white); color: var(--color-gray-800);
+  font: inherit; font-size: 0.8125rem; font-weight: 600; cursor: pointer;
+}
+.palette__close:hover { border-color: var(--color-primary-500); color: var(--color-primary-700); }
+
+.palette__body { flex: 1; min-height: 0; overflow-y: auto; }
+.palette__list li + li { border-top: 1px solid var(--color-gray-200); }
+.palette__group + .palette__group .palette__list li:first-child { border-top: 1px solid var(--color-gray-200); }
+.palette__list a { display: grid; gap: 3px; padding: 12px 18px; text-decoration: none; }
+.palette__list a:hover, .palette__list a:focus-visible { background: var(--color-primary-50); }
+
+.palette__hint { padding: 18px; }
+.palette__hint-label {
+  color: var(--color-gray-700); font-size: 0.6875rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.08em;
+}
+.palette__chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.palette__chips button {
+  padding: 7px 12px;
+  border: 1px solid var(--color-gray-300); border-radius: 6px;
+  background: var(--color-white); color: var(--color-primary-700);
+  font: inherit; font-size: 0.875rem; font-weight: 600; cursor: pointer;
+}
+.palette__chips button:hover { border-color: var(--color-primary-500); background: var(--color-gray-50); }
+.palette__note { margin-top: 16px; color: var(--color-gray-700); font-size: 0.8125rem; line-height: 1.9; }
+.palette__kbd {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 20px; padding: 1px 5px;
+  border: 1px solid var(--color-gray-300); border-radius: 4px;
+  background: var(--color-gray-50); color: var(--color-gray-800);
+  font-family: inherit; font-size: 0.75rem; font-weight: 700;
+}
+.palette__none { padding: 18px; color: var(--color-gray-800); font-size: 0.9375rem; line-height: 1.65; }
+.palette__none a { color: var(--color-primary-700); font-weight: 600; }
+
+@media (max-width: 560px) {
+  /* A focused sheet, and the field is pinned at the TOP: an on-screen keyboard
+     takes the bottom third of the viewport, so a bottom sheet puts the input
+     under the keyboard the moment it opens. */
+  .palette {
+    width: 100%; max-width: none;
+    height: 100%; max-height: none;
+    margin: 0; border: 0; border-radius: 0;
+  }
+  .palette__field { min-height: 64px; padding-inline: 14px; }
+  .palette__list a { padding: 14px; }
 }

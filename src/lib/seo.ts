@@ -238,6 +238,20 @@ export const SITEMAP_PATHS: readonly string[] = SITEMAP_GROUPS.flatMap((group) =
   group.links.map((link) => link.path),
 );
 
+/**
+ * Where to send someone who is lost — the 404 page and the search page's empty
+ * state both use this list, so the two screens can never drift apart. Every
+ * entry must be a path the site actually prerenders; a unit test checks that.
+ */
+export const RECOVERY_LINKS: ReadonlyArray<{ to: string; label: string }> = [
+  { to: "/", label: "Home" },
+  { to: "/search", label: "Search" },
+  { to: "/government/barangays", label: `All ${BARANGAYS.length} barangays` },
+  { to: "/emergency", label: "Emergency hotlines" },
+  { to: "/government/officials", label: "Elected officials" },
+  { to: "/sitemap", label: "Sitemap" },
+];
+
 export function auditSitemap(): { missing: string[]; duplicates: string[] } {
   const counts = new Map<string, number>();
   for (const path of SITEMAP_PATHS) counts.set(path, (counts.get(path) ?? 0) + 1);

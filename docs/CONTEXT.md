@@ -16,13 +16,21 @@ session (see `docs/skills/session-memory/SKILL.md`).
   seven security headers sent, per-page titles and canonicals, BreadcrumbList
   JSON-LD, ~9.9 KB of real HTML per barangay page, OSM tiles rendering, live
   weather, no console or CSP errors.
-- **In flight:** `feature/html-sitemap-seo-pass` — a public `/sitemap` page and
-  a small sitemap.xml hygiene pass. 33 prerendered routes, 32 sitemap.xml URLs.
-  **Held for Codex QA; not to be merged to `main` without it.**
+- **In flight:** `improvement/search-404-recovery`, now two layers. First,
+  `/search` and `/404` rebuilt as recovery screens: `?q=` query URLs, results
+  grouped by kind, starter suggestions, an empty state with a way out, and a real
+  search form plus six plain-anchor recovery links on the 404. Second, search
+  made site-wide: a native-`<dialog>` overlay opened from the masthead, from the
+  homepage hero field and by `/` (or Ctrl/Cmd+K), with live results, arrow-key
+  navigation, Enter to the shareable `/search?q=` page, and Escape returning
+  focus to the Search button. **Held for Codex QA; not to be merged to `main`
+  without it.**
 - **BetterLGU Directory:** PR #208 open against `jmacj/better-lgu-directory` —
   Kabugao row updated to 🟢 Active with the domain and the three socials, PR body
   and checklist completed, and a comment answering the triage bot's four
   verification points. Nothing left on our side; awaiting `jmacj`.
+- **Merged:** the public `/sitemap` page (PR #1, `21f622b`). 33 prerendered
+  routes, 32 sitemap.xml URLs.
 - **What is live:** v3.0.0 — the real multi-page portal.
   **32 routes prerendered to static HTML**, each with its own title,
   description, canonical, OG tags and `BreadcrumbList` JSON-LD. Real homepage
@@ -54,7 +62,7 @@ session (see `docs/skills/session-memory/SKILL.md`).
   RMFB 15, ICT), each in local and `+63` form, with `tel:+63` links so overseas
   family can dial. 911 leads. The red bar on every page carries 911 plus the
   all eight offices in a marquee, and a popup with the full list.
-- **Quality:** 33 contract tests + 31 unit tests green; typecheck, lint,
+- **Quality:** 36 contract tests + 45 unit tests green; typecheck, lint,
   build clean; no horizontal overflow at 320–1560; one `h1`, one `header`, one
   `main` and zero inline styles (outside the Leaflet canvas) on every page at
   every width.
@@ -189,6 +197,52 @@ session (see `docs/skills/session-memory/SKILL.md`).
   **Open:** with JavaScript off the block still renders unstyled below the footer
   and restates the footer's cost chips, disclaimer and credit — a design call for
   Robin.
+- **2026-08-20** `/search` and `/404` rebuilt as recovery screens. `/search`
+  gained shareable `?q=` URLs, results grouped by kind with counts, six suggested
+  queries before anything is typed, and an empty state that offers a way out
+  instead of a dead end; `/404` gained a real search form and six recovery links.
+  A hotline is now its own result kind rather than a "Page", so searching
+  "police" surfaces the number rather than the page that lists it. Both screens
+  read their recovery links from one exported `RECOVERY_LINKS` list, so the two
+  cannot drift apart, and a test asserts every destination is a route that
+  actually prerenders. The scoring logic is now one `searchSite()` used by both
+  the masthead dropdown and the page — it had been duplicated.
+- **2026-08-20** **Resolved:** CSP `form-action` relaxed from `'none'` to
+  `'self'` with Codex's written approval. Under `'none'` the browser refused the
+  submission outright, so all three search forms — `/search`, `/404` and the
+  overlay — did nothing with scripting off. `'self'` permits that same-origin
+  `GET` and still blocks a submission reaching another origin, which is the case
+  the directive exists for; there is no `POST` anywhere on the site. A contract
+  test now also asserts no host and no wildcard ever appears in the directive.
+  Rationale recorded in `docs/skills/security-review/SKILL.md`.
+- **2026-08-20** Search became site-wide, on the native `<dialog>` element —
+  the same choice as the hotline popup, for the same reason: the browser owns the
+  focus trap, Escape, the backdrop and the top layer, and a hand-rolled palette
+  reimplements all four. `/` is the shortcut (GitHub, GitLab and Wikipedia use
+  it, and it collides with nothing); Ctrl/Cmd+K is the second binding, and both
+  are named in the overlay's hint line because Ctrl+K is what Windows users
+  reach for. One static string, not a platform branch — a label that differs
+  between the server and client render is a hydration mismatch, and "Ctrl K" is
+  accurate on a Mac too since the handler accepts `ctrlKey || metaKey`.
+  Escape hands focus back to the masthead Search button even when the overlay was
+  opened by the shortcut, which needs an explicit fallback because the platform
+  restores focus to `body` in that case. The open state lives in
+  `src/lib/search-overlay.ts` rather than React, so any trigger and the
+  document-level key handler reach one mounted overlay without a context
+  provider — and it is a component-free module because a mixed-export file breaks
+  fast refresh, the same reason `src/lib/routes.ts` exists.
+- **2026-08-20** The masthead `SiteSearch` dropdown was deleted, not kept
+  alongside the overlay. Two live search surfaces is two search behaviours. The
+  homepage hero keeps its field in place, unmoved and visually unchanged, but it
+  is now a trigger: a real `<a href="/search">` styled with the same
+  `.search__field`, so with scripting off it is still a link to the fallback
+  page. Codex approved this specific exception to "do not change the homepage".
+- **2026-08-20** Two defects that a fully green suite did not catch, both found
+  in a screenshot: `.btn--primary` is the white-on-navy hero button and rendered
+  as bare text on a white section (`.btn--solid` is the light-background fill),
+  and reusing `.search__results` — the absolutely-positioned masthead dropdown —
+  for an in-flow list drew the results on top of the footer. Recorded in
+  START-HERE §8.
 - **2026-08-20** Public `/sitemap` page added — 8 of the 15 network portals have
   one and we did not. It is generated from `ALL_PATHS` + `BARANGAYS`, never typed
   out, so it cannot fall behind the routes; `auditSitemap()` reports anything
@@ -213,23 +267,33 @@ session (see `docs/skills/session-memory/SKILL.md`).
 
 ## Next steps
 
-1. **Codex QA on `feature/html-sitemap-seo-pass`** — then merge to `main`
-2. **Open design decision:** with JavaScript off, the `<noscript>` block now
-   renders below a complete page and unstyled, restating the footer's cost chips,
+1. **React hydration error #418 on prerendered pages** — reported by Codex from
+   local browser QA; **open**. Did not reproduce against the built `dist` in the
+   sandbox across four routes with all console output captured. The clock's
+   server snapshot is `null` and `.utility__inner` is empty in the prerendered
+   HTML, so the utility strip is not the obvious cause. Needs Codex's exact
+   conditions — dev or built, which route, which browser, first load or after a
+   client navigation, and whether it survives with `StrictMode` removed —
+   because #418 is minified and names no element.
+2. **Codex QA on `improvement/search-404-recovery`**, then merge to `main`. The
+   one thing the sandbox cannot check is whether `form-action 'self'` actually
+   ships in the Cloudflare response headers.
+3. **Awaiting `jmacj`:** BetterLGU Directory PR #208.
+4. **Open design decision:** with JavaScript off, the `<noscript>` block renders
+   below a complete page and unstyled, restating the footer's cost chips,
    disclaimer and `Built by` credit. Either trim it to the JavaScript
-   explanation alone or give it styles — the facts inside it are pinned by
-   contract tests, so changing them is a deliberate act. Needs Robin's call.
-2. **Awaiting `jmacj`:** BetterLGU Directory PR #208
-3. HTML `/sitemap` page — 8 of 15 network sites have one
-4. `_headers` / `_routes.json` review now that the deploy is multi-page
-5. Collect verified Kabugao emergency hotline numbers, then fill the hotline bar
-6. Source project records from PhilGEPS / DILG FDP / COA / FOI before building
-   any UI for them — and email `lfdad@blgf.gov.ph` about the BLGF licence first
-7. Any future intake form needs Turnstile + rate limiting before launch
-8. Licence decision: `package.json` still says ISC; the network standard is
-   MIT + CC BY 4.0, and the footer already states MIT · CC BY 4.0 — align them
-9. Robin to delete `_to_delete/` and `.git/index.lock` by hand (the bridge
-   cannot remove files)
+   explanation alone or give it styles — the facts inside are pinned by contract
+   tests, so changing them is a deliberate act. Needs Robin's call.
+5. `_headers` / `_routes.json` review now that the deploy is multi-page.
+6. Collect verified Kabugao emergency hotline numbers — someone in Kabugao
+   test-dialling them, or the LGU confirming them.
+7. Source project records from PhilGEPS / DILG FDP / COA / FOI before building
+   any UI for them — and email `lfdad@blgf.gov.ph` about the BLGF licence first.
+8. Any future intake form needs Turnstile + rate limiting before launch.
+9. Licence decision: `package.json` still says ISC; the network standard is
+   MIT + CC BY 4.0, and the footer already states MIT · CC BY 4.0 — align them.
+10. Robin to delete `_to_delete/`, and `src/components/SiteSearch.tsx` if a
+    `git rm` ever leaves it behind (the device bridge cannot remove files).
 
 ## People
 

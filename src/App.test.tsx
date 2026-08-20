@@ -1,10 +1,12 @@
-import { cleanup, render, screen, within } from "@testing-library/react";
+import { cleanup, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { App } from "./App";
 import { BARANGAYS } from "./data/barangays";
-import { ALL_PATHS, SITEMAP_EXCLUDED, SITEMAP_GROUPS, auditSitemap } from "./lib/seo";
+import { ALL_PATHS, RECOVERY_LINKS, SITEMAP_EXCLUDED, SITEMAP_GROUPS, auditSitemap } from "./lib/seo";
+import { QUICK_SEARCHES, searchSite } from "./lib/search";
+import { closeSearchOverlay } from "./lib/search-overlay";
 
 function renderAt(path: string) {
   return render(
@@ -20,6 +22,7 @@ beforeEach(() => {
 
 afterEach(() => {
   cleanup();
+  closeSearchOverlay();
   vi.unstubAllGlobals();
 });
 
@@ -38,7 +41,7 @@ describe("site shell", () => {
 
   it("renders an honest 404 rather than swallowing unknown paths", () => {
     renderAt("/no-such-page");
-    expect(screen.getByRole("heading", { level: 1, name: /Page not found/i })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 1, name: /does not exist/i })).toBeInTheDocument();
   });
 
   it("renders every prerendered path without crashing", () => {
@@ -163,13 +166,18 @@ describe("officials page", () => {
 });
 
 describe("search", () => {
+  const field = () => screen.getByLabelText(/Search everything published here/i);
+  // The hotline bar is also a region named "Emergency hotlines" and the footer
+  // repeats Home and Sitemap, so every query here is scoped to <main>.
+  const page = () => within(screen.getByRole("main"));
+
   it("finds a barangay by name and links to its page", async () => {
     const user = userEvent.setup();
     renderAt("/search");
-    await user.type(screen.getByLabelText(/Search BetterKabugao/i), "musimut");
+    await user.type(field(), "musimut");
 
-    const results = screen.getByRole("list", { name: "Search results" });
-    expect(within(results).getByRole("link", { name: /Barangay Musimut/ })).toHaveAttribute(
+    const group = page().getByRole("region", { name: "Barangays" });
+    expect(within(group).getByRole("link", { name: /Barangay Musimut/ })).toHaveAttribute(
       "href",
       "/government/barangays/musimut",
     );
@@ -178,15 +186,90 @@ describe("search", () => {
   it("finds an official by name", async () => {
     const user = userEvent.setup();
     renderAt("/search");
-    await user.type(screen.getByLabelText(/Search BetterKabugao/i), "ligwang");
-    expect(screen.getByRole("list", { name: "Search results" }).textContent).toContain("Bensmar B. Ligwang");
+    await user.type(field(), "ligwang");
+    expect(page().getByRole("region", { name: "Elected officials" }).textContent).toContain(
+      "Bensmar B. Ligwang",
+    );
   });
 
-  it("says so plainly when nothing matches", async () => {
+  it("groups results by kind and counts them", async () => {
     const user = userEvent.setup();
     renderAt("/search");
-    await user.type(screen.getByLabelText(/Search BetterKabugao/i), "zzzzz");
-    expect(screen.getByText(/No matches for/)).toBeInTheDocument();
+    await user.type(field(), "mdrrmo");
+
+    // A hotline is its own kind of answer, not a page that mentions one.
+    const group = page().getByRole("region", { name: "Emergency hotlines" });
+    expect(within(group).getByRole("link", { name: /MDRRMO/ })).toHaveAttribute("href", "/emergency");
+    expect(page().getByText(/results? for/)).toBeInTheDocument();
+  });
+
+  it("suggests starting points before anything is typed", () => {
+    renderAt("/search");
+
+    for (const term of QUICK_SEARCHES) {
+      expect(page().getByRole("link", { name: term })).toHaveAttribute(
+        "href",
+        `/search?q=${encodeURIComponent(term)}`,
+      );
+    }
+    // And a way out that does not involve searching at all.
+    expect(page().getByRole("link", { name: "Sitemap" })).toHaveAttribute("href", "/sitemap");
+  });
+
+  it("preloads ?q= into the field and shows its results", async () => {
+    renderAt("/search?q=poblacion");
+    // The URL is only read after hydration, so the first paint matches the
+    // prerendered HTML. Wait for the value rather than asserting synchronously.
+    expect(await screen.findByDisplayValue("poblacion")).toBeInTheDocument();
+    expect(page().getByRole("link", { name: /Barangay Poblacion/ })).toHaveAttribute(
+      "href",
+      "/government/barangays/poblacion",
+    );
+  });
+
+  it("offers a way out when nothing matches", async () => {
+    const user = userEvent.setup();
+    renderAt("/search");
+    await user.type(field(), "zzzzz");
+
+    expect(page().getByRole("heading", { level: 2, name: /Nothing matches/ })).toBeInTheDocument();
+    // Scoped to the list: the breadcrumb above it also links Home.
+    const recovery = within(page().getByRole("list", { name: "Recovery links" }));
+    for (const link of RECOVERY_LINKS.filter((l) => l.to !== "/search")) {
+      expect(recovery.getByRole("link", { name: link.label })).toHaveAttribute("href", link.to);
+    }
+  });
+
+  it("every suggested query returns at least one result", () => {
+    for (const term of QUICK_SEARCHES) {
+      expect(searchSite(term).length, `no results for suggested query "${term}"`).toBeGreaterThan(0);
+    }
+  });
+});
+
+describe("404 recovery", () => {
+  it("offers a real search form aimed at /search", () => {
+    const { container } = renderAt("/no-such-page");
+
+    const form = container.querySelector("form");
+    expect(form).toHaveAttribute("action", "/search");
+    expect(form).toHaveAttribute("method", "get");
+    expect(form?.querySelector("input[name='q']")).toBeInTheDocument();
+    expect(screen.getAllByRole("main")).toHaveLength(1);
+    expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
+  });
+
+  it("keeps every recovery link an ordinary anchor, so it works without the box", () => {
+    renderAt("/no-such-page");
+
+    const recovery = within(screen.getByRole("navigation", { name: /Or go straight to/i }));
+    for (const link of RECOVERY_LINKS.filter((l) => l.to !== "/search")) {
+      expect(recovery.getByRole("link", { name: link.label })).toHaveAttribute("href", link.to);
+    }
+    // Every destination is a route the site actually prerenders.
+    for (const link of RECOVERY_LINKS) {
+      expect(ALL_PATHS).toContain(link.to);
+    }
   });
 });
 
@@ -370,5 +453,98 @@ describe("sitemap page", () => {
       const footer = within(screen.getByRole("contentinfo"));
       expect(footer.getByRole("link", { name: "Sitemap" })).toHaveAttribute("href", "/sitemap");
     }
+  });
+});
+
+describe("search overlay", () => {
+  function overlay() {
+    return document.querySelector<HTMLDialogElement>("dialog.palette");
+  }
+
+  it("is closed on first render, so a prerendered page shows one h1", () => {
+    renderAt("/");
+    expect(overlay()).not.toBeNull();
+    expect(overlay()?.open).toBe(false);
+    expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
+  });
+
+  it("keeps the header trigger a real link to /search", () => {
+    renderAt("/emergency");
+    const trigger = screen.getByRole("link", { name: "Search" });
+    expect(trigger).toHaveAttribute("href", "/search");
+    expect(trigger).toHaveAttribute("aria-keyshortcuts", "/");
+  });
+
+  it("opens from the header trigger on any page", async () => {
+    const user = userEvent.setup();
+    for (const path of ["/", "/government/officials", "/sitemap"]) {
+      cleanup();
+      closeSearchOverlay();
+      renderAt(path);
+      expect(overlay()?.open).toBe(false);
+      await user.click(screen.getByRole("link", { name: "Search" }));
+      expect(overlay()?.open).toBe(true);
+    }
+  });
+
+  it("opens on / and on Ctrl+K, and returns focus to Search on close", async () => {
+    const user = userEvent.setup();
+    renderAt("/about");
+
+    await user.keyboard("/");
+    expect(overlay()?.open).toBe(true);
+
+    overlay()?.close();
+    expect(overlay()?.open).toBe(false);
+    expect(screen.getByRole("link", { name: "Search" })).toHaveFocus();
+
+    await user.keyboard("{Control>}k{/Control}");
+    expect(overlay()?.open).toBe(true);
+    overlay()?.close();
+  });
+
+  it("leaves / alone while the visitor is typing", async () => {
+    const user = userEvent.setup();
+    renderAt("/government/barangays");
+
+    const filter = screen.getByLabelText("Filter barangays by name or PSGC code");
+    await user.type(filter, "pob/");
+
+    expect(overlay()?.open).toBe(false);
+    expect(filter).toHaveValue("pob/");
+  });
+
+  it("shows live results as real links and clears on close", async () => {
+    const user = userEvent.setup();
+    renderAt("/");
+    await user.click(screen.getByRole("link", { name: "Search" }));
+
+    const input = screen.getByLabelText("Search barangays, officials, hotlines and pages");
+    await user.type(input, "poblacion");
+
+    const result = screen.getByRole("link", { name: /Barangay Poblacion/ });
+    expect(result).toHaveAttribute("href", "/government/barangays/poblacion");
+
+    overlay()?.close();
+    await waitFor(() => expect(input).toHaveValue(""));
+  });
+
+  it("finds a hotline by office, not only the page that lists it", async () => {
+    const user = userEvent.setup();
+    renderAt("/");
+    await user.click(screen.getByRole("link", { name: "Search" }));
+    await user.type(screen.getByLabelText("Search barangays, officials, hotlines and pages"), "mdrrmo");
+
+    expect(screen.getByRole("link", { name: /MDRRMO/ })).toHaveAttribute("href", "/emergency");
+  });
+
+  it("offers a way out when nothing matches", async () => {
+    const user = userEvent.setup();
+    renderAt("/");
+    await user.click(screen.getByRole("link", { name: "Search" }));
+    await user.type(screen.getByLabelText("Search barangays, officials, hotlines and pages"), "zzzzz");
+
+    expect(screen.getByText(/Nothing matches/)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Browse every page" })).toHaveAttribute("href", "/sitemap");
   });
 });

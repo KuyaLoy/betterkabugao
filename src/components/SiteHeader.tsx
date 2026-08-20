@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
 import { BrandLockup } from "../brand/BrandLockup";
+import { SEARCH_TRIGGER_ID } from "../lib/search-overlay";
+import { SearchTrigger } from "./SearchOverlay";
 
 export function SiteHeader() {
   return (
@@ -16,12 +18,12 @@ export function SiteHeader() {
           <Link className="masthead__link" to="/services">Services</Link>
           <Link className="masthead__link" to="/about">About</Link>
         </nav>
-        <Link className="masthead__search" to="/search" aria-label="Search">
+        <SearchTrigger id={SEARCH_TRIGGER_ID} className="masthead__search" ariaLabel="Search">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
             <path d="M10 2a8 8 0 1 1-4.9 14.3l-3.4 3.4-1.4-1.4 3.4-3.4A8 8 0 0 1 10 2Zm0 2a6 6 0 1 0 0 12 6 6 0 0 0 0-12Z" />
           </svg>
           <span>Search</span>
-        </Link>
+        </SearchTrigger>
       </div>
     </header>
   );

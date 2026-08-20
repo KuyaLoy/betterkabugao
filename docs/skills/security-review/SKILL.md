@@ -19,12 +19,28 @@ Must always ship, verbatim spirit:
 - `Permissions-Policy: geolocation=(), camera=(), microphone=()`
 - CSP: `default-src 'self'; script-src 'self'; style-src 'self';
   img-src 'self' data:; font-src 'self'; object-src 'none';
-  base-uri 'self'; form-action 'none'; frame-ancestors 'none';
+  base-uri 'self'; form-action 'self'; frame-ancestors 'none';
   upgrade-insecure-requests`
 
 Loosening ANY directive requires maintainer approval + written reason in the
 PR. The contract test `tests/site-contracts.test.mjs` pins these — never
 weaken the test to make a change pass.
+
+### `form-action 'self'` — the one directive that has been relaxed
+
+Changed from `'none'` on **2026-08-20** with Codex's written approval. Three
+places render a real `<form method="get" action="/search">`: the `/search` page,
+the `/404` page and the search overlay. Under `'none'` the browser refused the
+submission outright, so all three boxes did nothing with scripting off, which is
+exactly the visitor this site is built for.
+
+`'self'` permits that same-origin `GET` and still blocks what the directive is
+for: a form — and any data in it — being submitted to another origin. There is
+no `POST` anywhere on this site, no endpoint to post to, and no user data in the
+query beyond what the visitor typed. Widening it further, to a named host or to
+`*`, is **not** approved, and a contract test asserts that no host or wildcard
+appears in the directive. If an intake form is ever added, revisit this together
+with the Turnstile and rate-limiting requirements below.
 
 ## Checklist before every commit
 

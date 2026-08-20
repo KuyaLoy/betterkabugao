@@ -40,7 +40,7 @@ export function BarangaysPage() {
         description={`Every barangay in Kabugao, with population from the ${BARANGAY_CENSUS}, its PSGC code, location and directions. Together they hold ${BARANGAY_POPULATION_TOTAL.toLocaleString("en-PH")} people across 935.12 km².`}
         breadcrumbs={meta.breadcrumbs}
         actions={
-          <div className="search search--inline">
+          <div className="search">
             <div className="search__field">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
                 <path d="M10 2a8 8 0 1 1-4.9 14.3l-3.4 3.4-1.4-1.4 3.4-3.4A8 8 0 0 1 10 2Zm0 2a6 6 0 1 0 0 12 6 6 0 0 0 0-12Z" />
