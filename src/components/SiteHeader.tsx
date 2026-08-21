@@ -43,10 +43,23 @@ export function SiteHeader() {
     return () => document.removeEventListener("keydown", onKey);
   }, [open]);
 
+  // Crossing to desktop must not leave the mobile disclosure open beside the
+  // desktop nav. The CSS also hides it above 900px, but this drops the stale
+  // open state so returning to mobile starts closed.
+  useEffect(() => {
+    if (typeof window.matchMedia !== "function") return;
+    const mq = window.matchMedia("(min-width: 901px)");
+    function onChange() {
+      if (mq.matches) setOpen(false);
+    }
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+
   return (
     <header className={over ? "mast mast--over" : "mast mast--solid"}>
       <div className="shell mast__inner">
-        <Link className="mast__home" to="/" aria-label="BetterKabugao.org home">
+        <Link className="mast__home" to="/" aria-label="BetterKabugao.org home" onClick={() => setOpen(false)}>
           <img
             className="mast__logo"
             src="/brand/betterkabugao-logo-inverse.svg"
@@ -65,14 +78,19 @@ export function SiteHeader() {
         </nav>
 
         <div className="mast__actions">
-          <SearchTrigger id={SEARCH_TRIGGER_ID} className="mast__search" ariaLabel="Search">
+          <SearchTrigger id={SEARCH_TRIGGER_ID} className="mast__search" ariaLabel="Search" onActivate={() => setOpen(false)}>
             <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
               <path d="M10 2a8 8 0 1 1-4.9 14.3l-3.4 3.4-1.4-1.4 3.4-3.4A8 8 0 0 1 10 2Zm0 2a6 6 0 1 0 0 12 6 6 0 0 0 0-12Z" />
             </svg>
             <span className="mast__search-label">Search</span>
           </SearchTrigger>
 
-          <Link className="mast__emerg" to="/emergency" aria-label="Emergency — call 911 and see local hotlines">
+          <Link
+            className="mast__emerg"
+            to="/emergency"
+            aria-label="Emergency 911 and local hotlines"
+            onClick={() => setOpen(false)}
+          >
             <span className="mast__emerg-dot" aria-hidden="true" />
             <span className="mast__emerg-long">Emergency </span>911
           </Link>

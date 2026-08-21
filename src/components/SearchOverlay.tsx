@@ -34,9 +34,11 @@ type SearchTriggerProps = {
   children: React.ReactNode;
   id?: string;
   ariaLabel?: string;
+  /** Fired on activation, before the overlay opens — lets the header close its menu. */
+  onActivate?: () => void;
 };
 
-export function SearchTrigger({ className, children, id, ariaLabel }: SearchTriggerProps) {
+export function SearchTrigger({ className, children, id, ariaLabel, onActivate }: SearchTriggerProps) {
   return (
     <a
       id={id}
@@ -45,6 +47,7 @@ export function SearchTrigger({ className, children, id, ariaLabel }: SearchTrig
       aria-label={ariaLabel}
       aria-keyshortcuts="/"
       onClick={(event) => {
+        onActivate?.();
         if (typeof HTMLDialogElement === "undefined") return;
         if (typeof HTMLDialogElement.prototype.showModal !== "function") return;
         event.preventDefault();
@@ -156,6 +159,17 @@ export function SearchOverlay() {
       className="palette"
       aria-label="Search BetterKabugao"
       onClick={() => dialog.current?.close()}
+      onKeyDownCapture={(event) => {
+        // A non-empty <input type="search"> consumes Escape to clear itself in
+        // Chromium/WebKit, swallowing the dialog's own Escape-to-close. Intercept
+        // in the capture phase — before the input sees it — so Escape always
+        // closes the overlay (the `close` handler then clears the query and
+        // returns focus to the trigger), whether or not a query is entered.
+        if (event.key === "Escape") {
+          event.preventDefault();
+          dialog.current?.close();
+        }
+      }}
     >
       {/* The backdrop is the dialog element itself, so a click that lands on
           the panel must not bubble up and close it. */}

@@ -82,13 +82,22 @@ describe("home page", () => {
 });
 
 describe("barangay list page", () => {
-  it("lists all 21 barangays, each linking to its own page", () => {
+  it("lists all 21 barangays as real crawlable links to their own pages", () => {
     renderAt("/government/barangays");
-    const rows = screen.getAllByRole("row").filter((r) => r.getAttribute("href"));
-    expect(rows).toHaveLength(21);
+    // Real navigating anchors, not role=row with cancelled clicks.
+    const dir = screen.getByRole("list", { name: "Barangays of Kabugao" });
+    const links = within(dir).getAllByRole("link");
+    expect(links).toHaveLength(21);
     for (const b of BARANGAYS) {
-      expect(rows.some((r) => r.getAttribute("href") === `/government/barangays/${b.slug}`)).toBe(true);
+      expect(links.some((l) => l.getAttribute("href") === `/government/barangays/${b.slug}`)).toBe(true);
     }
+  });
+
+  it("gives every barangay a separate map-preview control", () => {
+    renderAt("/government/barangays");
+    const dir = screen.getByRole("list", { name: "Barangays of Kabugao" });
+    // One preview button per barangay, distinct from the navigating link.
+    expect(within(dir).getAllByRole("button", { name: /Show .* on the map/i })).toHaveLength(21);
   });
 
   it("filters as you type and reports the count", async () => {
@@ -97,7 +106,8 @@ describe("barangay list page", () => {
     expect(screen.getByText(/Showing all 21 barangays/)).toBeInTheDocument();
 
     await user.type(screen.getByLabelText(/Filter barangays/i), "pobla");
-    expect(screen.getAllByRole("row").filter((r) => r.getAttribute("href"))).toHaveLength(1);
+    const dir = screen.getByRole("list", { name: "Barangays of Kabugao" });
+    expect(within(dir).getAllByRole("link")).toHaveLength(1);
     expect(screen.getByText(/1 of 21 barangays match/)).toBeInTheDocument();
   });
 
@@ -496,6 +506,26 @@ describe("search overlay", () => {
     await user.keyboard("{Control>}k{/Control}");
     expect(overlay()?.open).toBe(true);
     overlay()?.close();
+  });
+
+  it("closes on Escape with a query typed, clears it, and restores focus to the trigger", async () => {
+    const user = userEvent.setup();
+    renderAt("/");
+    const trigger = screen.getByRole("link", { name: "Search" });
+    await user.click(trigger);
+    expect(overlay()?.open).toBe(true);
+
+    const input = screen.getByLabelText("Search barangays, officials, hotlines and pages");
+    await user.type(input, "poblacion");
+    expect(input).toHaveValue("poblacion");
+
+    // A non-empty <input type="search"> tries to consume Escape to clear itself;
+    // the capture-phase handler must still close the dialog, clear the query,
+    // and return focus to the exact trigger that opened it.
+    await user.keyboard("{Escape}");
+    expect(overlay()?.open).toBe(false);
+    await waitFor(() => expect(input).toHaveValue(""));
+    expect(trigger).toHaveFocus();
   });
 
   it("leaves / alone while the visitor is typing", async () => {

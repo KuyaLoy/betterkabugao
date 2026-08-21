@@ -70,10 +70,40 @@ with focus return, mobile sheet keeps OSM attribution visible, reduced-motion +
 visible focus honoured, /404 excluded from sitemap.xml. Screenshots:
 `docs/qa/checkpoint-1/`.
 
+## Correction pass — Codex round 1
+
+Codex approved the direction but reproduced 8 blockers (and caught that the first
+handoff claimed successes the qa-report.json data actually showed as failing —
+the search Escape never closed, and an object-spread clobbered a QA field). All
+8 fixed on this branch in a second commit and verified honestly:
+
+1. Search Escape now intercepted in the dialog's capture phase (the `<input
+   type=search>` was eating it to self-clear); closes, clears, refocuses trigger.
+2. Mobile menu closes on logo/Search/Emergency/destination activation; its
+   `display` is scoped to `≤900px` (+ a `matchMedia` reset) so it can't show
+   beside the desktop nav after a resize.
+3. Hero Explore cue clears the search field by 25px at 320/360/390; the five
+   checkpoint kv-* negative `letter-spacing` values set to 0.
+4. Directory rows are real crawlable links again, with a separate map-preview
+   button — no anchor-as-`role=row`, no cancelled navigation.
+5. Sheet moves focus in on open, returns it to the exact invoker on Escape/Close,
+   and focuses the filter (never `<body>`) when a filter hides the selection.
+6. The sheet and legend OSM attributions are now links; a linked attribution is
+   visible and uncovered with the sheet open at all four required sizes.
+7. Header emergency link name is "Emergency 911 and local hotlines" (no call
+   promise).
+8. New QA harness asserts every boolean and exits non-zero on any failure;
+   qa-report.json regenerated (102/102 pass).
+
+Gate after the pass: 36 contract + 47 unit, typecheck, lint, build (33 pages);
+`/tmp/qa2.cjs` → 102/102 PASS exit 0. The one lint trap hit and fixed:
+`react-hooks/set-state-in-effect` — the filter-removes-selection logic moved from
+an effect into the filter's change handler. `window.matchMedia` guarded for jsdom.
+
 ## What is left
 
-Robin pushes `experiment/full-site-visual-rebuild-v2`
-(`git push -u origin experiment/full-site-visual-rebuild-v2`); Cloudflare builds
-a branch preview; Codex reviews the staging URL. **No further pages** until that
-review. The handoff block (base SHA, commit SHA, changed files, results,
-screenshots, asset sizes, risks, push command) was delivered for Codex.
+Robin pushes `experiment/full-site-visual-rebuild-v2` (correction commit);
+Cloudflare builds a branch preview; Codex does final QA on the staging URL.
+**No further pages / no Checkpoint 2** until that final QA. The legacy
+SEO/`<noscript>` copy (capital claim, public-works words, ₱0/₱670) remains a
+recorded production blocker for a separate, approved follow-up — untouched here.

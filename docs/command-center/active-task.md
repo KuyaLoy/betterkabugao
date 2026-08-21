@@ -120,6 +120,47 @@ Screenshots in `docs/qa/checkpoint-1/`: home-{desktop,mobile}, barangays-
 {desktop,mobile}, poblacion-{desktop,mobile}, search-open-{desktop,mobile},
 barangays-sheet-{desktop,mobile}, focus-visible-desktop, qa-report.json.
 
+## 2c. Correction pass — Codex round 1 (all 8 blockers fixed + verified)
+
+Codex approved the direction but reproduced 8 blockers. All fixed on this branch
+(second commit) and verified — `npm test` 36 contract + **47** unit, typecheck,
+lint, build PRERENDER_OK 33; the honest harness `/tmp/qa2.cjs` reports
+**102/102 checks PASS, exit 0** (report regenerated at
+`docs/qa/checkpoint-1/qa-report.json`).
+
+1. **Search Escape** — added a capture-phase `onKeyDownCapture` on the `<dialog>`
+   in `SearchOverlay.tsx`: `<input type="search">` was consuming Escape to clear
+   itself (Chromium), swallowing the dialog close. Now Escape (with a query
+   typed) closes, clears, and returns focus to the exact trigger. Regression
+   unit test added; verified desktop + mobile.
+2. **Mobile nav** — logo/Search/Emergency now close the menu (`onClick` +
+   `onActivate` prop on `SearchTrigger`); `.mast__menu`/`--open` `display` moved
+   inside `@media (max-width:900px)` so it can't render beside desktop nav; a
+   guarded `matchMedia` listener drops the open state on resize to desktop.
+3. **Homepage mobile spacing** — hero `padding-block` bottom 52→84px; Explore
+   cue now clears the search field by **25px** at 320/360/390. Negative
+   `letter-spacing` on the 5 checkpoint kv-* rules set to `0`.
+4. **Directory semantics** — rows are now `<li>` with a real crawlable
+   `<a class="kv-dir__link">` (normal nav, Ctrl/Cmd-click, open-in-new-tab) plus
+   a **separate** `<button class="kv-dir__preview">` map-preview control. No more
+   anchor-as-`role=row` with cancelled navigation.
+5. **Sheet focus** — opening moves focus into the sheet (close button); Escape
+   and Close return focus to the exact invoker (preview button, or map region
+   for pin-initiated); filtering out the selection closes the sheet and focuses
+   the filter (never `<body>`). Filter-out handled in the change event, not an
+   effect (`react-hooks/set-state-in-effect`).
+6. **OSM attribution** — the sheet's own attribution and the atlas legend are
+   now **links** to `openstreetmap.org/copyright`; a linked attribution is
+   visible & uncovered with the sheet open at 320x568, 320x640, 390x844, 768x900.
+7. **Emergency label** — header link accessible name is now "Emergency 911 and
+   local hotlines" (no longer promises to place a call), href `/emergency`.
+8. **QA honesty** — new harness asserts every required boolean and **exits
+   non-zero on any failure**; no object-spread key clobbering. The old report's
+   misleading `closedByEscapeWithText:false` / clobbered `kbd-select` are gone.
+
+Harnesses: `/tmp/static.cjs` (Cloudflare-like server, :4180), `/tmp/qa2.cjs`,
+`/tmp/shots.cjs`.
+
 ---
 
 ## 3. Implementation progress (Checkpoint 1)

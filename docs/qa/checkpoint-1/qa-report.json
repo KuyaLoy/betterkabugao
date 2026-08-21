@@ -1,347 +1,529 @@
 {
-  "results": [
-    {
-      "width": 320,
-      "name": "home",
-      "overflow": 0,
-      "scrollWidth": 320,
-      "innerWidth": 320,
-      "h1": 1,
-      "main": 1,
-      "osmVisible": false,
-      "osmOnTop": false
-    },
-    {
-      "width": 320,
-      "name": "barangays",
-      "overflow": 0,
-      "scrollWidth": 320,
-      "innerWidth": 320,
-      "h1": 1,
-      "main": 1,
-      "osmVisible": false,
-      "osmOnTop": false
-    },
-    {
-      "width": 320,
-      "name": "poblacion",
-      "overflow": 0,
-      "scrollWidth": 320,
-      "innerWidth": 320,
-      "h1": 1,
-      "main": 1,
-      "osmVisible": false,
-      "osmOnTop": false
-    },
-    {
-      "width": 360,
-      "name": "home",
-      "overflow": 0,
-      "scrollWidth": 360,
-      "innerWidth": 360,
-      "h1": 1,
-      "main": 1,
-      "osmVisible": false,
-      "osmOnTop": false
-    },
-    {
-      "width": 360,
-      "name": "barangays",
-      "overflow": 0,
-      "scrollWidth": 360,
-      "innerWidth": 360,
-      "h1": 1,
-      "main": 1,
-      "osmVisible": false,
-      "osmOnTop": false
-    },
-    {
-      "width": 360,
-      "name": "poblacion",
-      "overflow": 0,
-      "scrollWidth": 360,
-      "innerWidth": 360,
-      "h1": 1,
-      "main": 1,
-      "osmVisible": false,
-      "osmOnTop": false
-    },
-    {
-      "width": 390,
-      "name": "home",
-      "overflow": 0,
-      "scrollWidth": 390,
-      "innerWidth": 390,
-      "h1": 1,
-      "main": 1,
-      "osmVisible": false,
-      "osmOnTop": false
-    },
-    {
-      "width": 390,
-      "name": "barangays",
-      "overflow": 0,
-      "scrollWidth": 390,
-      "innerWidth": 390,
-      "h1": 1,
-      "main": 1,
-      "osmVisible": true,
-      "osmOnTop": true
-    },
-    {
-      "width": 390,
-      "name": "poblacion",
-      "overflow": 0,
-      "scrollWidth": 390,
-      "innerWidth": 390,
-      "h1": 1,
-      "main": 1,
-      "osmVisible": false,
-      "osmOnTop": false
-    },
-    {
-      "width": 768,
-      "name": "home",
-      "overflow": 0,
-      "scrollWidth": 768,
-      "innerWidth": 768,
-      "h1": 1,
-      "main": 1,
-      "osmVisible": false,
-      "osmOnTop": false
-    },
-    {
-      "width": 768,
-      "name": "barangays",
-      "overflow": 0,
-      "scrollWidth": 768,
-      "innerWidth": 768,
-      "h1": 1,
-      "main": 1,
-      "osmVisible": true,
-      "osmOnTop": true
-    },
-    {
-      "width": 768,
-      "name": "poblacion",
-      "overflow": 0,
-      "scrollWidth": 768,
-      "innerWidth": 768,
-      "h1": 1,
-      "main": 1,
-      "osmVisible": false,
-      "osmOnTop": false
-    },
-    {
-      "width": 1280,
-      "name": "home",
-      "overflow": 0,
-      "scrollWidth": 1280,
-      "innerWidth": 1280,
-      "h1": 1,
-      "main": 1,
-      "osmVisible": false,
-      "osmOnTop": false
-    },
-    {
-      "width": 1280,
-      "name": "barangays",
-      "overflow": 0,
-      "scrollWidth": 1280,
-      "innerWidth": 1280,
-      "h1": 1,
-      "main": 1,
-      "osmVisible": true,
-      "osmOnTop": true
-    },
-    {
-      "width": 1280,
-      "name": "poblacion",
-      "overflow": 0,
-      "scrollWidth": 1280,
-      "innerWidth": 1280,
-      "h1": 1,
-      "main": 1,
-      "osmVisible": false,
-      "osmOnTop": false
-    },
-    {
-      "width": 1440,
-      "name": "home",
-      "overflow": 0,
-      "scrollWidth": 1440,
-      "innerWidth": 1440,
-      "h1": 1,
-      "main": 1,
-      "osmVisible": false,
-      "osmOnTop": false
-    },
-    {
-      "width": 1440,
-      "name": "barangays",
-      "overflow": 0,
-      "scrollWidth": 1440,
-      "innerWidth": 1440,
-      "h1": 1,
-      "main": 1,
-      "osmVisible": true,
-      "osmOnTop": true
-    },
-    {
-      "width": 1440,
-      "name": "poblacion",
-      "overflow": 0,
-      "scrollWidth": 1440,
-      "innerWidth": 1440,
-      "h1": 1,
-      "main": 1,
-      "osmVisible": false,
-      "osmOnTop": false
-    },
-    {
-      "test": "search-desktop",
-      "opened": true,
-      "closedByEscapeWithText": false
-    },
-    {
-      "test": "search-mobile",
-      "opened": true,
-      "closedByEscapeWithText": false
-    },
-    {
-      "test": "hero-search-opens",
-      "open": true
-    },
-    {
-      "test": "emergency-911",
-      "allOk": true
-    },
-    {
-      "test": "kbd-select-desktop",
-      "sheet": false,
-      "current": true,
-      "focusOnRow": true
-    },
-    {
-      "test": "mobile-sheet-320",
-      "osmVisibleAndOnTop": true,
-      "pos": "fixed",
-      "sheetTop": 264,
-      "sheetBottom": 640,
-      "vh": 640,
-      "visLeaves": [
-        {
-          "text": "OpenStreetMap",
-          "fullyInView": true,
-          "onTop": true,
-          "cls": ""
-        },
-        {
-          "text": "Map data, tiles and barangay coordinates",
-          "fullyInView": true,
-          "onTop": true,
-          "cls": "map__note"
-        },
-        {
-          "text": "Pins show the 21 published barangay loca",
-          "fullyInView": true,
-          "onTop": true,
-          "cls": "kv-atlas__legend"
-        },
-        {
-          "text": "Population: 2024 POPCEN (PSA). Location:",
-          "fullyInView": true,
-          "onTop": true,
-          "cls": "kv-sheet__attr"
-        },
-        {
-          "text": "Population: 2024 POPCEN (Philippine Stat",
-          "fullyInView": false,
-          "onTop": false,
-          "cls": "section__note"
-        }
-      ]
-    },
-    {
-      "test": "mobile-sheet-360",
-      "osmVisibleAndOnTop": true,
-      "pos": "fixed",
-      "sheetTop": 404,
-      "sheetBottom": 780,
-      "vh": 780,
-      "visLeaves": [
-        {
-          "text": "OpenStreetMap",
-          "fullyInView": true,
-          "onTop": true,
-          "cls": ""
-        },
-        {
-          "text": "Map data, tiles and barangay coordinates",
-          "fullyInView": true,
-          "onTop": true,
-          "cls": "map__note"
-        },
-        {
-          "text": "Pins show the 21 published barangay loca",
-          "fullyInView": true,
-          "onTop": true,
-          "cls": "kv-atlas__legend"
-        },
-        {
-          "text": "Population: 2024 POPCEN (PSA). Location:",
-          "fullyInView": true,
-          "onTop": true,
-          "cls": "kv-sheet__attr"
-        },
-        {
-          "text": "Population: 2024 POPCEN (Philippine Stat",
-          "fullyInView": false,
-          "onTop": false,
-          "cls": "section__note"
-        }
-      ]
-    },
-    {
-      "test": "mobile-sheet-390",
-      "osmVisibleAndOnTop": true,
-      "pos": "fixed",
-      "sheetTop": 468,
-      "sheetBottom": 844,
-      "vh": 844,
-      "visLeaves": [
-        {
-          "text": "OpenStreetMap",
-          "fullyInView": true,
-          "onTop": true,
-          "cls": ""
-        },
-        {
-          "text": "Map data, tiles and barangay coordinates",
-          "fullyInView": true,
-          "onTop": true,
-          "cls": "map__note"
-        },
-        {
-          "text": "Pins show the 21 published barangay loca",
-          "fullyInView": true,
-          "onTop": true,
-          "cls": "kv-atlas__legend"
-        },
-        {
-          "text": "Population: 2024 POPCEN (PSA). Location:",
-          "fullyInView": true,
-          "onTop": true,
-          "cls": "kv-sheet__attr"
-        },
-        {
-          "text": "Population: 2024 POPCEN (Philippine Stat",
-          "fullyInView": false,
-          "onTop": false,
-          "cls": "section__note"
-        }
-      ]
-    }
+  "note": "Checkpoint-1 correction pass. Served like Cloudflare Pages (clean URLs). External OSM tiles are network-denied in this sandbox and filtered from console-error checks; pins and attribution still render.",
+  "server": "static dist/ on 127.0.0.1:4180",
+  "sizes": [
+    "320x568",
+    "320x640",
+    "360x780",
+    "390x844",
+    "768x900",
+    "1440x900"
   ],
-  "hardErrors": []
+  "overallPass": true,
+  "totalChecks": 102,
+  "passed": 102,
+  "failed": 0,
+  "failures": [],
+  "checks": [
+    {
+      "name": "[320x568] home: no horizontal overflow",
+      "pass": true,
+      "detail": "overflow=0px"
+    },
+    {
+      "name": "[320x568] home: exactly one <h1>",
+      "pass": true,
+      "detail": "h1=1"
+    },
+    {
+      "name": "[320x568] home: exactly one <main>",
+      "pass": true,
+      "detail": "main=1"
+    },
+    {
+      "name": "[320x568] barangays: no horizontal overflow",
+      "pass": true,
+      "detail": "overflow=0px"
+    },
+    {
+      "name": "[320x568] barangays: exactly one <h1>",
+      "pass": true,
+      "detail": "h1=1"
+    },
+    {
+      "name": "[320x568] barangays: exactly one <main>",
+      "pass": true,
+      "detail": "main=1"
+    },
+    {
+      "name": "[320x568] poblacion: no horizontal overflow",
+      "pass": true,
+      "detail": "overflow=0px"
+    },
+    {
+      "name": "[320x568] poblacion: exactly one <h1>",
+      "pass": true,
+      "detail": "h1=1"
+    },
+    {
+      "name": "[320x568] poblacion: exactly one <main>",
+      "pass": true,
+      "detail": "main=1"
+    },
+    {
+      "name": "[320x568] no hydration/serious console errors",
+      "pass": true,
+      "detail": "clean"
+    },
+    {
+      "name": "[320x640] home: no horizontal overflow",
+      "pass": true,
+      "detail": "overflow=0px"
+    },
+    {
+      "name": "[320x640] home: exactly one <h1>",
+      "pass": true,
+      "detail": "h1=1"
+    },
+    {
+      "name": "[320x640] home: exactly one <main>",
+      "pass": true,
+      "detail": "main=1"
+    },
+    {
+      "name": "[320x640] barangays: no horizontal overflow",
+      "pass": true,
+      "detail": "overflow=0px"
+    },
+    {
+      "name": "[320x640] barangays: exactly one <h1>",
+      "pass": true,
+      "detail": "h1=1"
+    },
+    {
+      "name": "[320x640] barangays: exactly one <main>",
+      "pass": true,
+      "detail": "main=1"
+    },
+    {
+      "name": "[320x640] poblacion: no horizontal overflow",
+      "pass": true,
+      "detail": "overflow=0px"
+    },
+    {
+      "name": "[320x640] poblacion: exactly one <h1>",
+      "pass": true,
+      "detail": "h1=1"
+    },
+    {
+      "name": "[320x640] poblacion: exactly one <main>",
+      "pass": true,
+      "detail": "main=1"
+    },
+    {
+      "name": "[320x640] no hydration/serious console errors",
+      "pass": true,
+      "detail": "clean"
+    },
+    {
+      "name": "[360x780] home: no horizontal overflow",
+      "pass": true,
+      "detail": "overflow=0px"
+    },
+    {
+      "name": "[360x780] home: exactly one <h1>",
+      "pass": true,
+      "detail": "h1=1"
+    },
+    {
+      "name": "[360x780] home: exactly one <main>",
+      "pass": true,
+      "detail": "main=1"
+    },
+    {
+      "name": "[360x780] barangays: no horizontal overflow",
+      "pass": true,
+      "detail": "overflow=0px"
+    },
+    {
+      "name": "[360x780] barangays: exactly one <h1>",
+      "pass": true,
+      "detail": "h1=1"
+    },
+    {
+      "name": "[360x780] barangays: exactly one <main>",
+      "pass": true,
+      "detail": "main=1"
+    },
+    {
+      "name": "[360x780] poblacion: no horizontal overflow",
+      "pass": true,
+      "detail": "overflow=0px"
+    },
+    {
+      "name": "[360x780] poblacion: exactly one <h1>",
+      "pass": true,
+      "detail": "h1=1"
+    },
+    {
+      "name": "[360x780] poblacion: exactly one <main>",
+      "pass": true,
+      "detail": "main=1"
+    },
+    {
+      "name": "[360x780] no hydration/serious console errors",
+      "pass": true,
+      "detail": "clean"
+    },
+    {
+      "name": "[390x844] home: no horizontal overflow",
+      "pass": true,
+      "detail": "overflow=0px"
+    },
+    {
+      "name": "[390x844] home: exactly one <h1>",
+      "pass": true,
+      "detail": "h1=1"
+    },
+    {
+      "name": "[390x844] home: exactly one <main>",
+      "pass": true,
+      "detail": "main=1"
+    },
+    {
+      "name": "[390x844] barangays: no horizontal overflow",
+      "pass": true,
+      "detail": "overflow=0px"
+    },
+    {
+      "name": "[390x844] barangays: exactly one <h1>",
+      "pass": true,
+      "detail": "h1=1"
+    },
+    {
+      "name": "[390x844] barangays: exactly one <main>",
+      "pass": true,
+      "detail": "main=1"
+    },
+    {
+      "name": "[390x844] poblacion: no horizontal overflow",
+      "pass": true,
+      "detail": "overflow=0px"
+    },
+    {
+      "name": "[390x844] poblacion: exactly one <h1>",
+      "pass": true,
+      "detail": "h1=1"
+    },
+    {
+      "name": "[390x844] poblacion: exactly one <main>",
+      "pass": true,
+      "detail": "main=1"
+    },
+    {
+      "name": "[390x844] no hydration/serious console errors",
+      "pass": true,
+      "detail": "clean"
+    },
+    {
+      "name": "[768x900] home: no horizontal overflow",
+      "pass": true,
+      "detail": "overflow=0px"
+    },
+    {
+      "name": "[768x900] home: exactly one <h1>",
+      "pass": true,
+      "detail": "h1=1"
+    },
+    {
+      "name": "[768x900] home: exactly one <main>",
+      "pass": true,
+      "detail": "main=1"
+    },
+    {
+      "name": "[768x900] barangays: no horizontal overflow",
+      "pass": true,
+      "detail": "overflow=0px"
+    },
+    {
+      "name": "[768x900] barangays: exactly one <h1>",
+      "pass": true,
+      "detail": "h1=1"
+    },
+    {
+      "name": "[768x900] barangays: exactly one <main>",
+      "pass": true,
+      "detail": "main=1"
+    },
+    {
+      "name": "[768x900] poblacion: no horizontal overflow",
+      "pass": true,
+      "detail": "overflow=0px"
+    },
+    {
+      "name": "[768x900] poblacion: exactly one <h1>",
+      "pass": true,
+      "detail": "h1=1"
+    },
+    {
+      "name": "[768x900] poblacion: exactly one <main>",
+      "pass": true,
+      "detail": "main=1"
+    },
+    {
+      "name": "[768x900] no hydration/serious console errors",
+      "pass": true,
+      "detail": "clean"
+    },
+    {
+      "name": "[1440x900] home: no horizontal overflow",
+      "pass": true,
+      "detail": "overflow=0px"
+    },
+    {
+      "name": "[1440x900] home: exactly one <h1>",
+      "pass": true,
+      "detail": "h1=1"
+    },
+    {
+      "name": "[1440x900] home: exactly one <main>",
+      "pass": true,
+      "detail": "main=1"
+    },
+    {
+      "name": "[1440x900] barangays: no horizontal overflow",
+      "pass": true,
+      "detail": "overflow=0px"
+    },
+    {
+      "name": "[1440x900] barangays: exactly one <h1>",
+      "pass": true,
+      "detail": "h1=1"
+    },
+    {
+      "name": "[1440x900] barangays: exactly one <main>",
+      "pass": true,
+      "detail": "main=1"
+    },
+    {
+      "name": "[1440x900] poblacion: no horizontal overflow",
+      "pass": true,
+      "detail": "overflow=0px"
+    },
+    {
+      "name": "[1440x900] poblacion: exactly one <h1>",
+      "pass": true,
+      "detail": "h1=1"
+    },
+    {
+      "name": "[1440x900] poblacion: exactly one <main>",
+      "pass": true,
+      "detail": "main=1"
+    },
+    {
+      "name": "[1440x900] no hydration/serious console errors",
+      "pass": true,
+      "detail": "clean"
+    },
+    {
+      "name": "[desktop] search overlay opens from header",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "[desktop] Escape closes overlay with a query typed",
+      "pass": true,
+      "detail": "open=false"
+    },
+    {
+      "name": "[desktop] Escape clears the query",
+      "pass": true,
+      "detail": "value=\"\""
+    },
+    {
+      "name": "[desktop] Escape returns focus to the Search trigger",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "[mobile] search overlay opens from header",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "[mobile] Escape closes overlay with a query typed",
+      "pass": true,
+      "detail": "open=false"
+    },
+    {
+      "name": "[mobile] Escape clears the query",
+      "pass": true,
+      "detail": "value=\"\""
+    },
+    {
+      "name": "[mobile] Escape returns focus to the Search trigger",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "hero search opens the site overlay",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "emergency link name does not promise to call 911",
+      "pass": true,
+      "detail": "aria-label=\"Emergency 911 and local hotlines\""
+    },
+    {
+      "name": "emergency link points to /emergency",
+      "pass": true,
+      "detail": "href=/emergency"
+    },
+    {
+      "name": "[390] burger opens the mobile menu",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "[390] activating a menu destination closes the menu",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "[390] activating the logo closes the menu",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "[390] activating Search closes the menu and opens the overlay",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "[390->1280] mobile menu is not visible after resizing to desktop",
+      "pass": true,
+      "detail": "before=true after=false"
+    },
+    {
+      "name": "[1280] desktop nav is visible",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "[320x568] Explore cue clears the hero search by >=12px",
+      "pass": true,
+      "detail": "gap=25px (searchBottom=416, cueTop=440)"
+    },
+    {
+      "name": "[320x640] Explore cue clears the hero search by >=12px",
+      "pass": true,
+      "detail": "gap=25px (searchBottom=479, cueTop=504)"
+    },
+    {
+      "name": "[360x780] Explore cue clears the hero search by >=12px",
+      "pass": true,
+      "detail": "gap=25px (searchBottom=602, cueTop=627)"
+    },
+    {
+      "name": "[390x844] Explore cue clears the hero search by >=12px",
+      "pass": true,
+      "detail": "gap=25px (searchBottom=659, cueTop=683)"
+    },
+    {
+      "name": "checkpoint headings use non-negative letter-spacing (0)",
+      "pass": true,
+      "detail": "{\"title\":\"normal\",\"place\":\"normal\",\"label\":\"normal\",\"fig\":\"normal\"}"
+    },
+    {
+      "name": "directory has 21 crawlable barangay links",
+      "pass": true,
+      "detail": "count=21"
+    },
+    {
+      "name": "directory has 21 separate preview controls",
+      "pass": true,
+      "detail": "count=21"
+    },
+    {
+      "name": "plain click on a directory link navigates to the detail page",
+      "pass": true,
+      "detail": "url=/government/barangays/poblacion"
+    },
+    {
+      "name": "[390] preview opens the sheet",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "[390] opening the sheet moves focus into it",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "[390] Escape closes the sheet",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "[390] Escape returns focus to the invoking preview button",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "[390] filtering out the selection closes the sheet",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "[390] filtering out the selection focuses the filter (not body)",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "[320x568] sheet open",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "[320x568] a LINKED OSM attribution is visible & uncovered with sheet open",
+      "pass": true,
+      "detail": "via .kv-atlas__legend"
+    },
+    {
+      "name": "[320x640] sheet open",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "[320x640] a LINKED OSM attribution is visible & uncovered with sheet open",
+      "pass": true,
+      "detail": "via .leaflet-control-attribution leaflet-control"
+    },
+    {
+      "name": "[390x844] sheet open",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "[390x844] a LINKED OSM attribution is visible & uncovered with sheet open",
+      "pass": true,
+      "detail": "via .leaflet-control-attribution leaflet-control"
+    },
+    {
+      "name": "[768x900] sheet open",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "name": "[768x900] a LINKED OSM attribution is visible & uncovered with sheet open",
+      "pass": true,
+      "detail": "via .leaflet-control-attribution leaflet-control"
+    },
+    {
+      "name": "reduced-motion disables hero animation",
+      "pass": true,
+      "detail": "animationName=none"
+    },
+    {
+      "name": "a visible focus ring appears on keyboard focus",
+      "pass": true,
+      "detail": "rgb(0, 102, 235) solid 3px"
+    },
+    {
+      "name": "/404 is excluded from sitemap.xml",
+      "pass": true,
+      "detail": null
+    }
+  ]
 }

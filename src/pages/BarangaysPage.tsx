@@ -20,53 +20,98 @@ const PLACE_LABEL: Record<string, string> = {
   hamlet: "Hamlet",
 };
 
+const OSM_COPYRIGHT = "https://www.openstreetmap.org/copyright";
+
+/** Whether a barangay matches the directory filter needle (already lowercased). */
+function matchesFilter(b: (typeof BARANGAYS)[number], needle: string): boolean {
+  if (!needle) return true;
+  return (
+    b.name.toLowerCase().includes(needle) ||
+    (b.oldName ? b.oldName.toLowerCase().includes(needle) : false) ||
+    b.psgc.includes(needle)
+  );
+}
+
 /**
  * Barangays directory — "Kabugao in View".
  *
  * A large live OpenStreetMap map is the working surface, paired with a filtered
- * directory. The two communicate: selecting a barangay (a row or its pin)
- * highlights the pin, centres the map, and opens a detail sheet — a bottom
- * sheet on phones, a card in the panel on desktop. Every row is a real link to
- * the barangay's own page, so the list works with no JavaScript at all, and the
- * OpenStreetMap attribution stays visible whether or not the sheet is open.
+ * directory. Each directory row is a **real, crawlable link** to the barangay's
+ * own page — normal navigation, Ctrl/Cmd-click and open-in-new-tab all work, and
+ * the list is fully usable with no JavaScript. A **separate** "show on map"
+ * button previews the barangay: it highlights the pin, centres the map, and
+ * opens a detail sheet (a bottom sheet on phones, a card in the panel on
+ * desktop) without navigating. A linked OpenStreetMap attribution stays visible
+ * whether or not the sheet is open.
  */
 export function BarangaysPage() {
   const meta = metaFor("/government/barangays");
   const [filter, setFilter] = useState("");
   const [selected, setSelected] = useState<string | null>(null);
-  const rowRefs = useRef<Map<string, HTMLAnchorElement | null>>(new Map());
+
+  const filterRef = useRef<HTMLInputElement | null>(null);
+  const mapRegionRef = useRef<HTMLDivElement | null>(null);
+  const sheetCloseRef = useRef<HTMLButtonElement | null>(null);
+  // The control that opened the sheet, so Escape/Close return focus to it
+  // exactly — never to <body>.
+  const invokerRef = useRef<HTMLElement | null>(null);
 
   const shown = useMemo(() => {
     const needle = filter.trim().toLowerCase();
-    if (!needle) return BARANGAYS;
-    return BARANGAYS.filter(
-      (b) =>
-        b.name.toLowerCase().includes(needle) ||
-        b.oldName?.toLowerCase().includes(needle) ||
-        b.psgc.includes(needle),
-    );
+    return needle ? BARANGAYS.filter((b) => matchesFilter(b, needle)) : BARANGAYS;
   }, [filter]);
+
+  // Filtering the selected barangay out of view closes the sheet and moves
+  // focus to the filter — handled here in the change event, not in an effect
+  // (react-hooks/set-state-in-effect), so focus never lands on <body>.
+  function onFilterChange(value: string) {
+    setFilter(value);
+    if (!selected) return;
+    const current = findBarangay(selected);
+    if (current && !matchesFilter(current, value.trim().toLowerCase())) {
+      setSelected(null);
+      filterRef.current?.focus();
+    }
+  }
 
   const selectedBarangay = selected ? findBarangay(selected) : undefined;
 
-  // Escape closes the sheet and returns focus to the row it came from.
+  /** Preview from the list: the invoker is that row's button. */
+  function selectFromRow(slug: string, invoker: HTMLElement) {
+    invokerRef.current = invoker;
+    setSelected(slug);
+  }
+
+  /** Preview from a map pin: return focus to the map region on close. */
+  function selectFromMap(slug: string) {
+    invokerRef.current = mapRegionRef.current;
+    setSelected(slug);
+  }
+
+  function closeSheet() {
+    const invoker = invokerRef.current ?? filterRef.current;
+    setSelected(null);
+    invoker?.focus();
+  }
+
+  // When the sheet opens, move focus into it (its close button).
+  useEffect(() => {
+    if (selected) sheetCloseRef.current?.focus();
+  }, [selected]);
+
+  // Escape closes the sheet and returns focus to the invoker (never <body>).
   useEffect(() => {
     if (!selected) return;
     function onKey(event: KeyboardEvent) {
       if (event.key !== "Escape") return;
-      const slug = selected;
+      event.preventDefault();
+      const invoker = invokerRef.current ?? filterRef.current;
       setSelected(null);
-      if (slug) rowRefs.current.get(slug)?.focus();
+      invoker?.focus();
     }
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
   }, [selected]);
-
-  function closeSheet() {
-    const slug = selected;
-    setSelected(null);
-    if (slug) rowRefs.current.get(slug)?.focus();
-  }
 
   return (
     <>
@@ -83,9 +128,10 @@ export function BarangaysPage() {
                 <path d="M10 2a8 8 0 1 1-4.9 14.3l-3.4 3.4-1.4-1.4 3.4-3.4A8 8 0 0 1 10 2Zm0 2a6 6 0 1 0 0 12 6 6 0 0 0 0-12Z" />
               </svg>
               <input
+                ref={filterRef}
                 type="search"
                 value={filter}
-                onChange={(event) => setFilter(event.target.value)}
+                onChange={(event) => onFilterChange(event.target.value)}
                 placeholder="Find a barangay or PSGC…"
                 aria-label="Filter barangays by name or PSGC code"
               />
@@ -101,17 +147,21 @@ export function BarangaysPage() {
           </h2>
 
           <div className="kv-atlas">
-            <div className="kv-atlas__map">
+            <div className="kv-atlas__map" ref={mapRegionRef} tabIndex={-1}>
               <MapView
                 slugs={BARANGAYS.map((b) => b.slug)}
                 height="tall"
                 label="Map of the 21 barangays of Kabugao"
                 selectedSlug={selected}
-                onSelectSlug={setSelected}
+                onSelectSlug={selectFromMap}
               />
               <p className="kv-atlas__legend">
                 Pins show the 21 published barangay locations. A municipal boundary is not shown in this
-                version. Map &copy; OpenStreetMap contributors (ODbL).
+                version. Map data &copy;{" "}
+                <a href={OSM_COPYRIGHT} target="_blank" rel="noreferrer">
+                  OpenStreetMap
+                </a>{" "}
+                contributors (ODbL).
               </p>
             </div>
 
@@ -125,8 +175,14 @@ export function BarangaysPage() {
                       <h2 className="kv-sheet__name">{selectedBarangay.name}</h2>
                       <p className="kv-sheet__type">{PLACE_LABEL[selectedBarangay.place]}</p>
                     </div>
-                    <button type="button" className="kv-sheet__close" onClick={closeSheet} aria-label="Close details">
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" aria-hidden="true">
+                    <button
+                      ref={sheetCloseRef}
+                      type="button"
+                      className="kv-sheet__close"
+                      onClick={closeSheet}
+                      aria-label="Close details"
+                    >
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" aria-hidden="true" focusable="false">
                         <path d="M6 6l12 12M18 6 6 18" />
                       </svg>
                     </button>
@@ -157,7 +213,11 @@ export function BarangaysPage() {
                     View full barangay page →
                   </Link>
                   <p className="kv-sheet__attr">
-                    Population: {BARANGAY_CENSUS} (PSA). Location: &copy; OpenStreetMap contributors (ODbL).
+                    Population: {BARANGAY_CENSUS} (PSA). Location &copy;{" "}
+                    <a href={OSM_COPYRIGHT} target="_blank" rel="noreferrer">
+                      OpenStreetMap
+                    </a>{" "}
+                    contributors (ODbL).
                   </p>
                 </div>
               ) : null}
@@ -168,43 +228,38 @@ export function BarangaysPage() {
               </p>
 
               {shown.length > 0 ? (
-                <div className="kv-dir" role="table" aria-label="Barangays of Kabugao">
-                  <div className="kv-dir__head" role="row">
-                    <span role="columnheader">Barangay</span>
-                    <span role="columnheader">Population</span>
-                    <span role="columnheader" className="sr-only">
-                      Select
-                    </span>
-                  </div>
+                <ul className="kv-dir" aria-label="Barangays of Kabugao">
+                  <li className="kv-dir__head" aria-hidden="true">
+                    <span>Barangay</span>
+                    <span>Population</span>
+                  </li>
                   {shown.map((b) => (
-                    <Link
-                      className={selected === b.slug ? "kv-dir__row is-selected" : "kv-dir__row"}
-                      role="row"
-                      to={`/government/barangays/${b.slug}`}
-                      key={b.psgc}
-                      ref={(el) => {
-                        rowRefs.current.set(b.slug, el);
-                      }}
-                      aria-current={selected === b.slug ? "true" : undefined}
-                      onClick={(event) => {
-                        event.preventDefault();
-                        setSelected(b.slug);
-                      }}
-                    >
-                      <span role="cell" className="kv-dir__name">
-                        {b.slug === "poblacion" ? <span className="kv-dir__cap" aria-hidden="true" /> : null}
-                        {b.name}
-                        {b.oldName ? <em>formerly {b.oldName}</em> : null}
-                      </span>
-                      <span role="cell" className="kv-dir__pop" data-label="Population">
-                        {b.population.toLocaleString("en-PH")}
-                      </span>
-                      <span role="cell" className="kv-dir__go" aria-hidden="true">
-                        →
-                      </span>
-                    </Link>
+                    <li className={selected === b.slug ? "kv-dir__row is-selected" : "kv-dir__row"} key={b.psgc}>
+                      <Link className="kv-dir__link" to={`/government/barangays/${b.slug}`}>
+                        <span className="kv-dir__name">
+                          {b.slug === "poblacion" ? <span className="kv-dir__cap" aria-hidden="true" /> : null}
+                          {b.name}
+                          {b.oldName ? <em>formerly {b.oldName}</em> : null}
+                        </span>
+                        <span className="kv-dir__pop" data-label="Population">
+                          {b.population.toLocaleString("en-PH")}
+                        </span>
+                      </Link>
+                      <button
+                        type="button"
+                        className="kv-dir__preview"
+                        aria-pressed={selected === b.slug}
+                        aria-label={`Show ${b.name} on the map`}
+                        onClick={(event) => selectFromRow(b.slug, event.currentTarget)}
+                      >
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true" focusable="false">
+                          <path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11Z" />
+                          <circle cx="12" cy="10" r="2.5" />
+                        </svg>
+                      </button>
+                    </li>
                   ))}
-                </div>
+                </ul>
               ) : (
                 <p className="search__empty">No barangay matches “{filter.trim()}”.</p>
               )}
@@ -228,7 +283,6 @@ export function BarangaysPage() {
           </p>
         </div>
       </section>
-
     </>
   );
 }
