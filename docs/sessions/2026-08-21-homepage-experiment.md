@@ -64,6 +64,30 @@ Three blockers, all fixed on the same branch and re-verified:
 Gates after the revision: **37 contract + 45 unit tests**, typecheck, lint,
 `PRERENDER_OK 33 pages`. Screenshots regenerated at all four widths.
 
+## Revision 3 (same day) — locked topics in the fallback, and motion
+
+1. **`index.html` was the leak.** The `<noscript>` block is the shell for all 33
+   prerendered pages, so "flood control … budget … contractor" was shipping on
+   every one of them while the visible homepage copy was already clean.
+   Neutralised; the contract test now covers the shell's fallback too. Built
+   output swept: `dist/index.html` carries **zero** locked terms. They survive
+   only on `/transparency` (by design) and on `/government`'s hub card, which is
+   an inner page and was left alone — flagged to Codex, not changed.
+2. **Motion added as a system**, three tokens and one easing. Overlay
+   fade-and-rise on the native `<dialog>` via `allow-discrete` +
+   `@starting-style`; gold edge markers on ledger, overlay-result and barangay
+   rows; 1px lift on the front-desk chips; map markers scale on hover and
+   fade-scale in once on mount. No section entrance animation — a civic page
+   should not withhold content until scrolled.
+3. **Reduced motion measured, not assumed.** `transition-delay` is now zeroed
+   alongside duration, and Chromium at `prefers-reduced-motion: reduce` reports
+   every duration and delay at 0 across all seven animated surfaces including
+   the hotline marquee.
+
+Gates: **38 contract + 45 unit tests**, typecheck, lint, `PRERENDER_OK 33
+pages`. Overlay animation confirmed mid-flight (opacity 0.66 at 60ms). Escape
+with text still closes and restores focus. Two interaction screenshots added.
+
 ## Open threads
 
 - Codex verdict on the direction; the QA note lists the likely objections.

@@ -807,13 +807,59 @@ test("the homepage does not foreground money or public-works topics", () => {
   // Robin's call, enforced by Codex: those topics stay on /transparency, which
   // frames them as unpublished, until he unlocks them. A homepage that leads
   // with budgets implies data this project does not have yet.
+  const LOCKED = [/\bbudgets?\b/i, /procurement/i, /public works/i, /flood.control/i, /contractors?\b/i, /public spending/i];
+
   const home = load("src/pages/HomePage.tsx");
-  for (const term of [/\bbudgets?\b/i, /procurement/i, /public works/i, /flood.control/i, /contractors?\b/i, /public spending/i]) {
+  for (const term of LOCKED) {
     assert.doesNotMatch(home, term, `homepage copy must not use ${term}`);
+  }
+
+  // index.html is the shell for every prerendered page, so its <noscript>
+  // fallback shipped the locked wording on all 33 of them until 2026-08-21.
+  const noscript = load("index.html").match(/<noscript>[\s\S]*?<\/noscript>/)[0];
+  for (const term of LOCKED) {
+    assert.doesNotMatch(noscript, term, `the no-JavaScript fallback must not use ${term}`);
   }
 
   // And it must still be honest that more is coming, via a neutral label.
   assert.match(home, /source-linked records/);
+});
+
+test("motion is a system, and prefers-reduced-motion turns all of it off", () => {
+  const css = load("src/styles.css");
+
+  // One easing and two durations, declared as tokens. Hard-coded one-off
+  // durations are how a page ends up feeling like several different sites.
+  for (const token of ["--ease-civic:", "--dur-fast:", "--dur-base:"]) {
+    assert.ok(css.includes(token), `expected motion token ${token}`);
+  }
+
+  // Reduced motion must zero delays as well as durations, or a transition with
+  // a delay still stalls for someone who asked for no animation.
+  const reduced = css.match(/@media \(prefers-reduced-motion: reduce\)[\s\S]*?\n}/)[0];
+  for (const prop of ["animation-duration", "animation-delay", "transition-duration", "transition-delay"]) {
+    assert.match(reduced, new RegExp(`${prop}:[^;]*!important`), `reduced motion must override ${prop}`);
+  }
+
+  // The overlay animates via the native dialog's discrete properties. Without
+  // `allow-discrete` the panel would pop in with no transition at all.
+  assert.match(css, /allow-discrete/);
+  assert.match(css, /@starting-style/);
+
+  // Leaflet positions each marker with a transform on `.map-pin`, so only the
+  // inner dot may be animated. Animating the pin moves it off its coordinates.
+  assert.doesNotMatch(css, /\.map-pin\s*\{[^}]*(animation|scale|translate|transform)\s*:/);
+  assert.match(css, /\.map-pin__dot\s*\{[^}]*animation:/);
+
+  // No fake gloss. `blur()` is the glassmorphism tell and has no other use here.
+  assert.doesNotMatch(css, /blur\(/, "no glassmorphism");
+
+  // Gradients are allowed only as a mask — the marquee fades its own edges so
+  // the numbers do not appear sliced. A gradient used as a *background* is the
+  // decorative kind this project rejects.
+  for (const [, decl] of css.matchAll(/(^|[;{\s])(background(?:-image)?\s*:[^;}]*)/g)) {
+    assert.doesNotMatch(decl, /gradient\(/, `decorative gradient in: ${decl.trim().slice(0, 70)}`);
+  }
 });
 
 test("document metadata carries geo and structured-data hints", () => {

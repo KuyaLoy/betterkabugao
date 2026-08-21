@@ -17,6 +17,8 @@ same data, same routes. The change is hierarchy and presentation.
 | `tablet-768.png` | 768 | hero stacks, desk drops 4-across → 2×2, ledgers still 2-up |
 | `mobile-390.png` | 390 | one action per row, record card stacked, map then top-5 |
 | `mobile-320.png` | 320 | tightest case — checked, no squeeze |
+| `interaction-hover-1440.png` | 1440 | a hovered front-desk chip: gold border, 1px lift |
+| `interaction-overlay-1440.png` | 1440 | overlay open, result row hovered — gold edge marker |
 
 ## What changed visually
 
@@ -112,6 +114,60 @@ source: **zero** forbidden terms.
 Kept exactly as Codex asked: search-first hero, four front-desk actions,
 at-a-glance registry card, Ready now / Being built ledgers, desktop map with
 data beside it, navy-blue-gold identity.
+
+## Revision 3 — locked topics in the fallback, and purposeful motion
+
+**1. Locked topics removed from the no-JavaScript fallback.** The visible copy
+was already clean, but `index.html` — the shell for **all 33** prerendered
+pages — still carried "flood control … with budget, funding source and
+contractor" in its `<noscript>` block, so the locked wording was shipping on
+every page including the homepage. Rewritten to "more source-linked records,
+plain-language guides to municipal services, and documentation of Kabugao's
+places, heritage and culture", matching the ledger label. The contract test now
+checks the shell's `<noscript>` as well as `HomePage.tsx`.
+
+Swept the built output: **`dist/index.html` contains zero** of the six locked
+terms, in the visible markup and in the fallback. They remain only on
+`/transparency`, whose whole purpose is to say those records are not published
+yet — and, noted for you rather than changed, on `/government`, whose hub card
+still reads "Budgets, procurement and public projects". That is an inner page
+and outside this task's scope; say the word and it is a one-line fix.
+
+**2. Motion, as a system rather than a pile of effects.** Three tokens —
+`--ease-civic`, `--dur-fast: 120ms`, `--dur-base: 180ms` — so everything shares
+one feel:
+
+- **Search overlay** fades and rises 8px on open, reverses on close, backdrop
+  fading with it. Uses the native `<dialog>`'s discrete-property transitions
+  (`allow-discrete` + `@starting-style`); browsers without support simply show
+  it instantly. Measured mid-flight: opacity **0.66 at 60ms**, 1.00 settled —
+  a real transition, not a claim.
+- **Front-desk chips**: gold border and a 1px lift on hover, returning on
+  `:active` so a press feels pressed.
+- **Ledger rows, overlay results, and the top-6 barangay rows** all share one
+  gesture: a 3px gold edge marker grows from the left via inset shadow — no
+  reflow, and it reads as a registry marker rather than a glow.
+- **Map markers** scale to 1.3 with a soft blue ring on hover, and fade-scale in
+  once when Leaflet mounts. Only `.map-pin__dot` is animated: Leaflet positions
+  each marker with a transform on `.map-pin`, so animating that element moves
+  the pin off its coordinates. A contract test forbids it.
+- **Hero search trigger** gains the same focus ring treatment as the field.
+
+**No entrance animation on page sections, deliberately.** A civic page should
+not withhold content until it is scrolled into view — it delays the reading for
+everyone and reads as decoration. The motion here is all *response to input*,
+plus the one marker entrance where content genuinely arrives late.
+
+**3. Reduced motion verified, not assumed.** The global block now zeroes
+`transition-delay` as well as duration. Measured with Chromium at
+`prefers-reduced-motion: reduce` — computed values on the dialog, chips, ledger
+rows, barangay rows, trigger, map pins **and** the hotline marquee: every
+transition and animation duration and delay at 0. Nothing moves.
+
+**4. No fake gloss, asserted rather than promised.** A contract test fails on
+`blur(` anywhere, and on any gradient used as a `background` — gradients survive
+only as the marquee's `mask-image` edge fade, which is functional. Navy, blue
+and gold only; nothing rounded past 12px.
 
 ## Risks / reasons Codex might reject
 

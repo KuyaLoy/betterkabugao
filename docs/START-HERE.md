@@ -449,6 +449,11 @@ render.
   Correct for one document and one overlay, but a test that opens it leaks into
   the next: `src/App.test.tsx` calls `closeSearchOverlay()` in `afterEach`, and
   again inside any loop that re-renders.
+- **`index.html`'s `<noscript>` is homepage copy too.** It is the shell for all
+  33 prerendered pages, so anything written there ships on every one of them.
+  A copy rule enforced only against `HomePage.tsx` misses it — which is how
+  locked topics survived a "homepage copy is clean" pass. The contract test now
+  checks both.
 - **`<input type="search">` eats the first Escape.** Chrome clears the field
   instead of letting the event reach the enclosing `<dialog>`, so a search
   overlay stays open on the first press when a query is typed. The overlay now

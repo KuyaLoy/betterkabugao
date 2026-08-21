@@ -33,7 +33,12 @@ session (see `docs/skills/session-memory/SKILL.md`).
   three QA blockers: the mobile map/attribution collision, Escape not closing
   the search overlay when a query was typed (Chrome's `<input type="search">`
   eats the first Escape), and money/public-works wording on the homepage — the
-  last now pinned by a contract test. Lives or dies by Robin's and Codex's
+  last now pinned by a contract test. **Revision 3** removed the locked topics
+  from the `<noscript>` shell (they were shipping on all 33 pages) and added a
+  restrained motion system — three tokens, overlay fade-and-rise on the native
+  `<dialog>`, gold edge markers on interactive rows, map-marker hover and mount
+  entrance — with `prefers-reduced-motion` measured at zero across every
+  animated surface. Lives or dies by Robin's and Codex's
   review; the live homepage is unchanged.
 - **BetterLGU Directory:** PR #208 open against `jmacj/better-lgu-directory` —
   Kabugao row updated to 🟢 Active with the domain and the three socials, PR body
