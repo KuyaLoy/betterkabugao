@@ -35,9 +35,9 @@ const SEGMENT_LABELS: Record<string, string> = {
 
 const STATIC_META: Record<string, { title: string; description: string }> = {
   "/": {
-    title: "Kabugao, Apayao — public information, barangays and officials",
+    title: "Kabugao, Apayao — barangays, officials and emergency hotlines",
     description:
-      "Public information about Kabugao, the capital of Apayao: all 21 barangays with population and directions, elected municipal officials, and sourced local data. Independent and volunteer-run.",
+      "Public information about Kabugao, the capital of Apayao: all 21 barangays with population and directions, elected municipal officials, and every published emergency hotline. Independent, volunteer-run, sourced.",
   },
   "/government": {
     title: "Government of Kabugao",

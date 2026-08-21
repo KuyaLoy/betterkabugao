@@ -232,6 +232,8 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--color-primary-5
 /* ---------------- Section furniture ---------------- */
 
 .section { padding-block: clamp(56px, 7vw, 88px); }
+/* Homepage sections: the front desk should scan in two screens, not four. */
+.section--dense { padding-block: clamp(36px, 4.5vw, 52px); }
 .section--tint { background: var(--color-gray-50); border-block: 1px solid var(--color-gray-200); }
 /* Trailing bands that hold only a note and a back link: full section padding
    leaves a visible void above them. */
@@ -266,7 +268,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--color-primary-5
 
 /* ---------------- Transparency ---------------- */
 
-.split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: 64px; align-items: start; }
+.split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: 48px; align-items: start; }
 
 .schema { border: 1px solid var(--color-gray-300); border-radius: 12px; background: var(--color-white); overflow: hidden; }
 .schema__head {
@@ -428,7 +430,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--color-primary-5
 /* ---------------- Mission ---------------- */
 
 .mission { background: var(--color-primary-800); color: var(--color-white); }
-.mission__inner { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 520px); gap: 64px; align-items: start; padding-block: clamp(52px, 6vw, 76px); }
+.mission__inner { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 520px); gap: 56px; align-items: start; padding-block: clamp(40px, 5vw, 60px); }
 .mission .kicker { color: var(--color-primary-200); }
 .mission h2 { color: var(--color-white); font-size: clamp(1.75rem, 3.2vw, 2.25rem); font-weight: 700; letter-spacing: -0.025em; line-height: 1.2; }
 .mission__body { max-width: var(--measure); margin-top: 16px; color: var(--color-primary-100); font-size: 1.0625rem; line-height: 1.7; }
@@ -710,7 +712,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--color-primary-5
 .home-hero { background: var(--color-primary-700); color: var(--color-white); }
 .home-hero__inner {
   display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 420px);
-  gap: 56px; align-items: start; padding-block: clamp(44px, 6vw, 72px);
+  gap: 44px; align-items: start; padding-block: clamp(30px, 3.8vw, 46px);
 }
 .home-hero__eyebrow {
   font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
@@ -721,17 +723,44 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--color-primary-5
   font-size: clamp(2.1rem, 4.4vw, 3.1rem); font-weight: 800;
   letter-spacing: -0.035em; line-height: 1.08;
 }
-.home-hero__lede { max-width: 62ch; margin-top: 18px; color: var(--color-primary-100); font-size: 1.0625rem; line-height: 1.65; }
-.home-hero__search { max-width: 520px; margin-top: 26px; }
-.home-hero__quick { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 16px; color: var(--color-primary-200); font-size: 0.875rem; }
-.home-hero__quick a { color: var(--color-white); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+.home-hero__lede { max-width: 62ch; margin-top: 14px; color: var(--color-primary-100); font-size: 1.03125rem; line-height: 1.6; }
+.home-hero__lead { min-width: 0; }
+.home-hero__search { margin-top: 20px; }
+/* The homepage search is the site's front door, so it is a size up from the
+   field's default — a target, not a decoration. */
+.home-hero__search .search__field { min-height: 54px; padding-inline: 16px; }
+.home-hero__search .search__placeholder { font-size: 1rem; }
 
-.glance { background: rgba(0, 20, 47, 0.34); border: 1px solid rgba(255, 255, 255, 0.16); border-radius: 12px; overflow: hidden; }
+/* The front desk: four destinations, phrased as places rather than features.
+   Same surface treatment as the record card so the hero reads as one system. */
+/* One row of four on desktop: the hero stays inside one viewport. */
+.home-desk { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-top: 10px; }
+.home-desk__item {
+  display: flex; flex-direction: column; gap: 3px;
+  padding: 10px 14px;
+  background: rgba(0, 20, 47, 0.34); border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 8px; text-decoration: none;
+  transition: border-color 150ms ease, background-color 150ms ease;
+}
+.home-desk__item:hover { border-color: var(--color-gold); background: rgba(0, 20, 47, 0.55); }
+.home-desk__item:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 2px; }
+.home-desk__label { color: var(--color-white); font-size: 0.9375rem; font-weight: 700; }
+.home-desk__sub { color: var(--color-primary-200); font-size: 0.75rem; }
+
+.home-hero__trust { margin-top: 14px; color: var(--color-primary-200); font-size: 0.8125rem; line-height: 1.6; }
+
+.glance {
+  background: rgba(0, 20, 47, 0.34); border: 1px solid rgba(255, 255, 255, 0.16);
+  border-top: 3px solid var(--color-gold);
+  border-radius: 12px; overflow: hidden;
+}
 .glance__title {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 12px;
   padding: 13px 20px; background: rgba(0, 0, 0, 0.16);
   font-size: 0.6875rem; font-weight: 700; text-transform: uppercase;
   letter-spacing: 0.09em; color: var(--color-primary-200);
 }
+.glance__source { color: var(--color-gold); font-weight: 700; letter-spacing: 0.06em; }
 .glance > div { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; padding: 15px 20px; border-top: 1px solid rgba(255, 255, 255, 0.12); }
 .glance dt { color: var(--color-primary-100); font-size: 0.875rem; }
 .glance dd { display: flex; flex-direction: column; align-items: flex-end; font-size: 1.25rem; font-weight: 800; letter-spacing: -0.02em; }
@@ -754,6 +783,57 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--color-primary-5
 .nav-card h3 { margin-top: 9px; color: var(--color-primary-800); font-size: 1.125rem; font-weight: 700; letter-spacing: -0.015em; }
 .nav-card p { margin-top: 8px; color: var(--color-gray-700); font-size: 0.9375rem; line-height: 1.6; }
 .nav-card__go { position: absolute; bottom: 18px; left: 24px; color: var(--color-primary-700); font-size: 1.125rem; font-weight: 700; }
+
+/* ---------------- Home: portal index ---------------- */
+
+/* Two ledgers under navy rules — the sitemap/service-group grammar — instead
+   of the six-card wall. Rows scan; cards had to be read one by one. */
+.home-index { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 44px; margin-top: 26px; }
+.home-index__group { border-top: 2px solid var(--color-primary-800); padding-top: 16px; }
+.home-index__heading { color: var(--color-gray-900); font-size: 1rem; font-weight: 700; }
+.home-index__list { margin-top: 6px; }
+.home-index__list li { border-bottom: 1px solid var(--color-gray-200); }
+.home-index__row {
+  display: flex; align-items: center; justify-content: space-between; gap: 18px;
+  padding-block: 12px; text-decoration: none;
+}
+.home-index__row:hover { background: #fafcff; }
+.home-index__row:hover .home-index__go { color: var(--color-primary-700); transform: translateX(2px); }
+.home-index__text { display: grid; gap: 4px; min-width: 0; }
+.home-index__title { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; color: var(--color-primary-800); font-size: 1rem; font-weight: 700; }
+.home-index__tag {
+  padding: 2px 8px; border: 1px solid var(--color-gray-300); border-radius: 4px;
+  color: var(--color-accent-700); font-size: 0.625rem; font-style: normal;
+  font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em;
+}
+.home-index__body { color: var(--color-gray-700); font-size: 0.9rem; line-height: 1.55; }
+.home-index__go { flex: none; color: var(--color-gray-600); font-size: 1.125rem; font-weight: 700; transition: transform 150ms ease, color 150ms ease; }
+
+/* ---------------- Home: map with its data beside it ---------------- */
+
+.home-map { display: grid; grid-template-columns: minmax(0, 2.1fr) minmax(0, 1fr); gap: 18px; align-items: stretch; margin-top: 24px; }
+.home-map .map { margin-top: 0; }
+/* The map matches its panel: title + six rows + footer, not a fixed 460px. */
+.home-map .map--tall .map__canvas { height: 100%; min-height: 380px; }
+.home-map .map__fallback { height: 100%; }
+.home-bgy { display: flex; flex-direction: column; background: var(--color-white); border: 1px solid var(--color-gray-300); border-radius: 10px; overflow: hidden; }
+.home-bgy__list { flex: 1; }
+.home-bgy__title {
+  padding: 12px 18px; background: var(--color-gray-100); border-bottom: 1px solid var(--color-gray-300);
+  font-size: 0.6875rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.08em; color: var(--color-gray-700);
+}
+.home-bgy__list li { border-bottom: 1px solid var(--color-gray-200); }
+.home-bgy__list a {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 14px;
+  padding: 10px 18px; text-decoration: none;
+}
+.home-bgy__list a:hover { background: #fafcff; }
+.home-bgy__name { color: var(--color-primary-800); font-size: 0.9375rem; font-weight: 700; }
+.home-bgy__num { display: flex; flex-direction: column; align-items: flex-end; color: var(--color-gray-900); font-size: 0.9375rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.home-bgy__share { color: var(--color-gray-700); font-size: 0.6875rem; font-weight: 500; }
+.home-bgy__all { display: block; padding: 13px 18px; color: var(--color-primary-700); font-size: 0.875rem; font-weight: 600; text-decoration: none; }
+.home-bgy__all:hover { text-decoration: underline; }
 
 /* ---------------- Barangay table ---------------- */
 
@@ -823,6 +903,9 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--color-primary-5
 
 @media (max-width: 1024px) {
   .home-hero__inner { grid-template-columns: minmax(0, 1fr); gap: 36px; }
+  .home-desk { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .home-map { grid-template-columns: minmax(0, 1fr); }
+  .home-index { gap: 28px; }
   .page-head__actions { max-width: none; }
   .card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .official-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -842,6 +925,9 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--color-primary-5
 
 @media (max-width: 560px) {
   .card-grid { grid-template-columns: minmax(0, 1fr); }
+  /* One action per row on a phone: two columns squeezed the labels. */
+  .home-desk { grid-template-columns: minmax(0, 1fr); }
+  .home-index { grid-template-columns: minmax(0, 1fr); }
   .official-grid { grid-template-columns: minmax(0, 1fr); }
 }
 

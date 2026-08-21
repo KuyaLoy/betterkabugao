@@ -25,6 +25,12 @@ session (see `docs/skills/session-memory/SKILL.md`).
   navigation, Enter to the shareable `/search?q=` page, and Escape returning
   focus to the Search button. **Held for Codex QA; not to be merged to `main`
   without it.**
+- **Experiment (not for `main`):** `experiment/modern-civic-homepage` — a
+  homepage-only design test ("front desk" hero with four destination chips,
+  registry-style record card, two ledgers instead of the six-card wall, map
+  with a top-5 panel). Screenshots and self-scores in
+  `docs/qa/modern-civic-homepage-experiment/`. Lives or dies by Robin's and
+  Codex's review; the live homepage is unchanged.
 - **BetterLGU Directory:** PR #208 open against `jmacj/better-lgu-directory` —
   Kabugao row updated to 🟢 Active with the domain and the three socials, PR body
   and checklist completed, and a comment answering the triage bot's four
