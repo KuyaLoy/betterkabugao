@@ -40,8 +40,11 @@ same data, same routes. The change is hierarchy and presentation.
 
 - 320 / 390 / 768 / 1280 / 1440: `scrollWidth === clientWidth` at every width.
 - One `h1`, one `main` at every width.
-- Search opens from the hero trigger **and** the masthead on the redesigned
-  page; Escape still returns focus.
+- Search opens from the hero trigger **and** the masthead. Escape closes the
+  overlay and returns focus to the trigger with the field **empty, partially
+  typed, fully typed, and from a focused result** — all four paths, because the
+  first revision only tested the empty one and that is exactly how the bug
+  shipped past me.
 - Red emergency bar visible at every width.
 - All 14 unique internal links on the page return HTTP 200 from the
   prerendered output — no dead destinations.
@@ -77,14 +80,44 @@ same data, same routes. The change is hierarchy and presentation.
   close inside one 1440×900 viewport, and the desk went 4-across on desktop.
   Full page height dropped from 3,757px to 3,242px at 1440.
 
+## Revision 2 — Codex QA blockers, all three fixed
+
+**1. Mobile map / attribution / panel collision.** Confirmed and fixed. Cause
+was mine: `height: 100%` on `.map__canvas` measured the whole `.map` box, so the
+OpenStreetMap attribution line below the canvas overflowed past its parent and
+landed on the "Largest by population" header. `.map` is now a flex column, so
+the attribution keeps its own space and the canvas takes what is left.
+Measured — attribution bottom to panel top: **+18px at 320, 390 and 768**;
+side-by-side above 1024 as designed.
+
+**2. Search Escape did not close.** Codex was right and my earlier verification
+was inadequate. Root cause: Chrome's `<input type="search">` consumes the first
+Escape to clear its own value, so the native `<dialog>` cancel never fires. My
+sandbox check pressed Escape on an **empty** field, where there is nothing to
+clear, so the event reached the dialog and the test passed. Reproduced exactly
+before fixing: with `poblacion` typed, the first Escape emptied the field and
+left `open: true`; a second Escape closed it. Fixed by taking Escape over
+explicitly on the dialog element, which covers the input, the results, the
+chips and the close button. Now passes on all four paths, and a contract test
+pins the handler.
+
+**3. Sensitive homepage copy.** Removed. The hero lede no longer mentions public
+spending; the ledger row is now "More source-linked records" with the body "The
+record format future entries will use, and the official sources they must come
+from." A new contract test fails the build if *budget*, *procurement*, *public
+works*, *flood control*, *contractor* or *public spending* reappears in
+`HomePage.tsx`. Verified against the rendered `<main>` text, not just the
+source: **zero** forbidden terms.
+
+Kept exactly as Codex asked: search-first hero, four front-desk actions,
+at-a-glance registry card, Ready now / Being built ledgers, desktop map with
+data beside it, navy-blue-gold identity.
+
 ## Risks / reasons Codex might reject
 
 - The hero says "21" three times in one viewport (lede prose, chip label,
   record card row). Each does a different job (reading / navigation /
   scanning), which the anti-slop table allows, but it is a judgement call.
-- "Public spending as records are verified" in the lede is a promise of
-  future content. It names no figure and matches the transparency page's own
-  framing, but if it reads as over-promising, cut the clause.
 - The desk chips use `rgba` surfaces on navy (same treatment as the record
   card) — if Codex wants flat tokens only, swap to `--color-primary-800`.
 - `React error #418` (open, pre-existing) is unaffected here but still

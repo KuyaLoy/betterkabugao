@@ -43,6 +43,27 @@ opens from hero and masthead, red bar visible, all 13 internal links return
 handoff. **Not verified:** Cloudflare preview (appears only after Robin
 pushes) and the open #418 report from Codex's machine (unaffected either way).
 
+## Revision 2 (same day) — Codex QA said REVISION NEEDED
+
+Three blockers, all fixed on the same branch and re-verified:
+
+1. **Mobile collision.** `height: 100%` on the map canvas pushed the OSM
+   attribution past its parent onto the population panel header. `.map` is now a
+   flex column. Measured +18px clearance at 320/390/768.
+2. **Escape did not close the search overlay.** Chrome's `<input type="search">`
+   consumes the first Escape to clear itself, so the native dialog cancel never
+   fired. My earlier check pressed Escape on an **empty** field and passed —
+   the blind spot that let it ship. Reproduced with a typed query, then fixed by
+   handling Escape on the dialog explicitly. Verified on four paths: empty,
+   partial, full query, and from a focused result.
+3. **Sensitive copy.** "Public spending" is out of the hero lede; the ledger row
+   is now "More source-linked records". A contract test fails the build if
+   budget / procurement / public works / flood control / contractor / public
+   spending reappears in `HomePage.tsx`.
+
+Gates after the revision: **37 contract + 45 unit tests**, typecheck, lint,
+`PRERENDER_OK 33 pages`. Screenshots regenerated at all four widths.
+
 ## Open threads
 
 - Codex verdict on the direction; the QA note lists the likely objections.

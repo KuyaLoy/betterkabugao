@@ -449,6 +449,17 @@ render.
   Correct for one document and one overlay, but a test that opens it leaks into
   the next: `src/App.test.tsx` calls `closeSearchOverlay()` in `afterEach`, and
   again inside any loop that re-renders.
+- **`<input type="search">` eats the first Escape.** Chrome clears the field
+  instead of letting the event reach the enclosing `<dialog>`, so a search
+  overlay stays open on the first press when a query is typed. The overlay now
+  handles Escape explicitly. **Test it with text in the field** — pressing
+  Escape on an empty input passes while the real path is broken, which is
+  exactly how this shipped past a green sandbox check and was caught by Codex
+  in live QA.
+- **`height: 100%` on a child whose parent has siblings below it overflows.**
+  `.map__canvas` at `height: 100%` measured the whole `.map` box, so the
+  attribution line beneath it spilled past the parent and collided with the next
+  panel on mobile. Use a flex column and let the canvas take the remainder.
 - **A `/`-shortcut test must wait for hydration.** The key listener is attached
   on hydration, not on `DOMContentLoaded`. Pressing `/` immediately after
   `page.goto` does nothing and looks exactly like a broken shortcut.

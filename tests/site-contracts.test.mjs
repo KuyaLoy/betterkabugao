@@ -746,8 +746,15 @@ test("the search overlay degrades to the /search page and never eats a slash", (
   assert.match(overlay, /Ctrl<\/kbd>/);
   assert.match(overlay, /palette__kbd">\/</);
 
-  // Escape is the browser's; the close handler is what returns focus, and the
-  // shortcut path has no trigger element so it falls back to the masthead.
+  // Escape cannot be left to the browser here. `<input type="search">` consumes
+  // the first Escape to clear its own value, so with a query typed the native
+  // dialog cancel never fires and the overlay stays open — Codex caught this in
+  // live QA after a sandbox check that only pressed Escape on an empty field.
+  assert.match(overlay, /event\.key !== "Escape"/);
+  assert.match(overlay, /onKeyDown=\{\(event\) => \{/);
+
+  // The close handler is what returns focus, and the shortcut path has no
+  // trigger element so it falls back to the masthead.
   assert.match(overlay, /addEventListener\("close"/);
   assert.match(overlay, /target\?\.focus\(\)/);
   assert.match(store, /getElementById\(SEARCH_TRIGGER_ID\)/);
@@ -794,6 +801,19 @@ test("every prerendered page offers a crawlable route to search", async () => {
     // A closed <dialog> is inert, so it must not contribute a second landmark.
     assert.equal([...body.matchAll(/<h1[^>]*>/g)].length, 1, `${path} must have exactly one h1`);
   }
+});
+
+test("the homepage does not foreground money or public-works topics", () => {
+  // Robin's call, enforced by Codex: those topics stay on /transparency, which
+  // frames them as unpublished, until he unlocks them. A homepage that leads
+  // with budgets implies data this project does not have yet.
+  const home = load("src/pages/HomePage.tsx");
+  for (const term of [/\bbudgets?\b/i, /procurement/i, /public works/i, /flood.control/i, /contractors?\b/i, /public spending/i]) {
+    assert.doesNotMatch(home, term, `homepage copy must not use ${term}`);
+  }
+
+  // And it must still be honest that more is coming, via a neutral label.
+  assert.match(home, /source-linked records/);
 });
 
 test("document metadata carries geo and structured-data hints", () => {

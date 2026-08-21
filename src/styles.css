@@ -812,10 +812,12 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--color-primary-5
 /* ---------------- Home: map with its data beside it ---------------- */
 
 .home-map { display: grid; grid-template-columns: minmax(0, 2.1fr) minmax(0, 1fr); gap: 18px; align-items: stretch; margin-top: 24px; }
-.home-map .map { margin-top: 0; }
-/* The map matches its panel: title + six rows + footer, not a fixed 460px. */
-.home-map .map--tall .map__canvas { height: 100%; min-height: 380px; }
-.home-map .map__fallback { height: 100%; }
+/* A flex column, so the OpenStreetMap attribution keeps its own space instead
+   of overflowing the map box and colliding with the panel below it on mobile. */
+.home-map .map { display: flex; flex-direction: column; margin-top: 0; }
+/* The map fills what the panel leaves, rather than a fixed 460px. */
+.home-map .map--tall .map__canvas { flex: 1; height: auto; min-height: 380px; }
+.home-map .map__note { flex: none; }
 .home-bgy { display: flex; flex-direction: column; background: var(--color-white); border: 1px solid var(--color-gray-300); border-radius: 10px; overflow: hidden; }
 .home-bgy__list { flex: 1; }
 .home-bgy__title {

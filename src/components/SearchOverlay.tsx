@@ -156,6 +156,14 @@ export function SearchOverlay() {
       className="palette"
       aria-label="Search BetterKabugao"
       onClick={() => dialog.current?.close()}
+      onKeyDown={(event) => {
+        if (event.key !== "Escape") return;
+        // `<input type="search">` eats the first Escape to clear itself, so the
+        // native dialog cancel never fires and the overlay stays open with a
+        // query typed. Take Escape over explicitly, from anywhere inside.
+        event.preventDefault();
+        dialog.current?.close();
+      }}
     >
       {/* The backdrop is the dialog element itself, so a click that lands on
           the panel must not bubble up and close it. */}

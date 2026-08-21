@@ -48,8 +48,8 @@ const BUILDING = [
   {
     to: "/transparency",
     tag: "In progress",
-    title: "Public money and projects",
-    body: "Budgets, procurement and public works — the fields each record will carry, and where the data comes from.",
+    title: "More source-linked records",
+    body: "The record format future entries will use, and the official sources they must come from.",
   },
   {
     to: "/explore",
@@ -78,9 +78,8 @@ export function HomePage() {
             <h1 id="home-title">Public information about Kabugao, in one place.</h1>
             <p className="home-hero__lede">
               An independent, volunteer-run portal for Kabugao, the capital of Apayao — the{" "}
-              {BARANGAYS.length} barangays, the officials who represent you, the emergency numbers
-              the municipality has published, and public spending as records are verified. Every
-              figure names its source.
+              {BARANGAYS.length} barangays, the officials who represent you, and the emergency
+              numbers the municipality has published. Every figure names its source.
             </p>
 
             <div className="home-hero__search">

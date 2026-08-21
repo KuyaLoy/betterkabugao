@@ -29,8 +29,12 @@ session (see `docs/skills/session-memory/SKILL.md`).
   homepage-only design test ("front desk" hero with four destination chips,
   registry-style record card, two ledgers instead of the six-card wall, map
   with a top-5 panel). Screenshots and self-scores in
-  `docs/qa/modern-civic-homepage-experiment/`. Lives or dies by Robin's and
-  Codex's review; the live homepage is unchanged.
+  `docs/qa/modern-civic-homepage-experiment/`. **Revision 2** answered Codex's
+  three QA blockers: the mobile map/attribution collision, Escape not closing
+  the search overlay when a query was typed (Chrome's `<input type="search">`
+  eats the first Escape), and money/public-works wording on the homepage — the
+  last now pinned by a contract test. Lives or dies by Robin's and Codex's
+  review; the live homepage is unchanged.
 - **BetterLGU Directory:** PR #208 open against `jmacj/better-lgu-directory` —
   Kabugao row updated to 🟢 Active with the domain and the three socials, PR body
   and checklist completed, and a comment answering the triage bot's four
