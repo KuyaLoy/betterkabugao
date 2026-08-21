@@ -5,7 +5,7 @@ this file completely before you touch anything else.** It tells you what the
 project is, what is already built, what comes next and in what order, and which
 mistakes have already cost us time.
 
-Last updated: **18 August 2026**. Update it at the end of every session — see
+Last updated: **21 August 2026**. Update it at the end of every session — see
 [§11](#11-before-you-finish-a-session).
 
 ## Reading order
@@ -58,6 +58,7 @@ the **BetterGov.ph / BetterLGU** volunteer network.
 | **Live on `betterkabugao.org`** | the full multi-page portal — 32 prerendered routes, interactive maps, emergency hotlines. Merged and deployed. |
 | **`main` HEAD** | `21f622b` — the public `/sitemap` page, merged via PR #1 (20 Aug 2026) |
 | **In flight** | `improvement/search-404-recovery` — `/search` and `/404` turned into recovery screens, then the site-wide search overlay (`/` shortcut, native `<dialog>`) on top. **Awaiting Codex QA; do not merge to `main` without it.** |
+| **Visual rebuild (experimental)** | `experiment/full-site-visual-rebuild-v2` — the approved **"Kabugao in View"** photo-led redesign, Checkpoint 1 (foundations, header, footer, homepage, barangays directory + map/list sheet, Poblacion detail, search integration). Committed locally, **not pushed**. For an **experimental Cloudflare staging preview only — not `main`.** Robin pushes; Codex reviews the staging URL before further pages. See `docs/command-center/active-task.md` and `docs/superpowers/specs/2026-08-21-full-site-visual-rebuild-v2-kabugao-in-view.md`. |
 | **BetterLGU Directory** | PR [#208](https://github.com/jmacj/better-lgu-directory/pull/208) is open — Kabugao row updated to 🟢 Active with the domain and socials, awaiting review by `jmacj` |
 | **Quality gate** | 36 contract tests + 45 unit tests green; lint, typecheck, build clean |
 

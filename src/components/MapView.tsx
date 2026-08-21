@@ -1,4 +1,4 @@
-import { useEffect, useId, useMemo, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { directionsLink, findBarangay, mapLink } from "../data/barangays";
 
 /**
@@ -47,6 +47,10 @@ type MapViewProps = {
   height: "tall" | "short";
   /** Accessible name for the map region. */
   label: string;
+  /** When set, that pin is highlighted, its popup opened, and the map centres on it. */
+  selectedSlug?: string | null;
+  /** Called with a barangay slug when its pin is clicked — powers list↔map sync. */
+  onSelectSlug?: (slug: string) => void;
 };
 
 const TILE_URL = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
@@ -61,11 +65,20 @@ function escapeHtml(value: string): string {
   );
 }
 
-export function MapView({ slugs, primarySlug, maxZoom, height, label }: MapViewProps) {
+export function MapView({ slugs, primarySlug, maxZoom, height, label, selectedSlug, onSelectSlug }: MapViewProps) {
   const [holder, setHolder] = useState<HTMLDivElement | null>(null);
   const [ready, setReady] = useState(false);
   const [failed, setFailed] = useState(false);
   const fallbackId = useId();
+  // Kept across renders so the selection effect can highlight a pin without
+  // rebuilding the map. onSelectSlug lives in a ref so a new callback identity
+  // never re-runs the mount effect and tears the map down.
+  const mapRef = useRef<import("leaflet").Map | null>(null);
+  const markersRef = useRef<Map<string, import("leaflet").Marker>>(new Map());
+  const onSelectRef = useRef(onSelectSlug);
+  useEffect(() => {
+    onSelectRef.current = onSelectSlug;
+  });
 
   // A primitive key so the effect below re-runs only when the plotted set
   // genuinely changes, not on every render of the parent page.
@@ -79,6 +92,7 @@ export function MapView({ slugs, primarySlug, maxZoom, height, label }: MapViewP
   useEffect(() => {
     if (!holder || barangays.length === 0) return;
 
+    const markers = markersRef.current;
     let cancelled = false;
     // Kept so the cleanup can dispose the map even if the import resolves after
     // this effect has been torn down by a route change.
@@ -99,6 +113,7 @@ export function MapView({ slugs, primarySlug, maxZoom, height, label }: MapViewP
         attributionControl: true,
       });
       created = map;
+      mapRef.current = map;
 
       L.tileLayer(TILE_URL, { attribution: TILE_ATTRIBUTION, maxZoom: 17, minZoom: 8 }).addTo(map);
 
@@ -143,6 +158,8 @@ export function MapView({ slugs, primarySlug, maxZoom, height, label }: MapViewP
           ].join(""),
         );
         marker.addTo(map);
+        markers.set(b.slug, marker);
+        if (onSelectRef.current) marker.on("click", () => onSelectRef.current?.(b.slug));
       }
 
       if (!cancelled) setReady(true);
@@ -154,9 +171,29 @@ export function MapView({ slugs, primarySlug, maxZoom, height, label }: MapViewP
       cancelled = true;
       created?.remove();
       created = null;
+      mapRef.current = null;
+      markers.clear();
       setReady(false);
     };
   }, [holder, barangays, primarySlug, maxZoom]);
+
+  // Highlight the selected pin and centre on it, driven from the parent's
+  // selection state. Runs only after the markers exist, and on every change,
+  // so the list and the map always agree on what is selected.
+  useEffect(() => {
+    if (!ready) return;
+    for (const [slug, marker] of markersRef.current) {
+      const el = typeof marker.getElement === "function" ? marker.getElement() : null;
+      if (el) el.classList.toggle("map-pin--selected", slug === selectedSlug);
+    }
+    if (!selectedSlug) return;
+    const marker = markersRef.current.get(selectedSlug);
+    const map = mapRef.current;
+    if (marker && map) {
+      if (typeof marker.openPopup === "function") marker.openPopup();
+      if (typeof map.setView === "function") map.setView(marker.getLatLng(), map.getZoom());
+    }
+  }, [selectedSlug, ready]);
 
   if (!subject) return null;
 

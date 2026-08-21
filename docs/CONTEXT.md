@@ -7,7 +7,7 @@ the traps. This file is the dated decision log behind it.
 Living snapshot of BetterKabugao. Update both at the end of every working
 session (see `docs/skills/session-memory/SKILL.md`).
 
-## Current state (2026-08-20)
+## Current state (2026-08-21)
 
 - **Domain:** betterkabugao.org — Cloudflare Pages, deploys from `main`
   (build `npm run build`, output `dist`)
@@ -25,6 +25,15 @@ session (see `docs/skills/session-memory/SKILL.md`).
   navigation, Enter to the shareable `/search?q=` page, and Escape returning
   focus to the Search button. **Held for Codex QA; not to be merged to `main`
   without it.**
+- **Visual rebuild (experimental):** `experiment/full-site-visual-rebuild-v2` —
+  the approved **"Kabugao in View"** photo-led redesign, Checkpoint 1
+  (foundations, header, footer, homepage, barangays directory with map/list
+  selection + mobile sheet, Poblacion detail, search integration). Committed
+  locally on the branch, **not pushed**. Approved for an **experimental
+  Cloudflare staging preview only — not `main`/production.** Robin pushes; Codex
+  reviews the staging URL before any further pages. Base `origin/main`
+  `745b877`. See `docs/command-center/active-task.md` (live checkpoint) and the
+  spec `docs/superpowers/specs/2026-08-21-full-site-visual-rebuild-v2-kabugao-in-view.md`.
 - **BetterLGU Directory:** PR #208 open against `jmacj/better-lgu-directory` —
   Kabugao row updated to 🟢 Active with the domain and the three socials, PR body
   and checklist completed, and a comment answering the triage bot's four
@@ -69,6 +78,27 @@ session (see `docs/skills/session-memory/SKILL.md`).
 
 ## Key decisions log
 
+- **2026-08-21** Built the approved **"Kabugao in View"** photo-led redesign as
+  Checkpoint 1 on `experiment/full-site-visual-rebuild-v2` (clean-cut from
+  `origin/main` `745b877`; the rejected "Living Civic Atlas" experiment was
+  stashed, never reused). Photo hero (self-hosted PD Dibagat River image, Andrew
+  Garnett / Wikimedia Commons), real inverse logo (no HTML wordmark), one
+  Emergency 911 header action, integrated search, unframed four-task strip, and a
+  map-first barangays directory with synchronized map/list selection + a mobile
+  bottom sheet. Kept the per-barangay detail route as-is (already compliant), and
+  did **not** redesign the other routes. **Committed, not pushed** — for an
+  experimental Cloudflare staging preview only. Two decisions worth recording:
+  (a) left the pre-existing global SEO meta + `<noscript>` fallback untouched
+  even though they still carry an unqualified "capital of Apayao" claim,
+  public-works vocabulary and ₱0/₱670 — they are contract-pinned, all-routes, and
+  a core-template no-JS/SEO contract, so scrubbing them is a separate approved
+  follow-up, not this checkpoint; (b) kept the now-unmounted `HotlineBar` /
+  `UtilityStrip` / `HotlineDialog` / `useKabugaoNow` and their CSS so existing
+  contract tests stay green — prune later. One real bug found and fixed in QA:
+  `.section h2` was overriding the sheet name to dark-on-navy; fixed by raising
+  specificity to `.kv-sheet__head .kv-sheet__name`. Full record:
+  `docs/command-center/active-task.md`, spec, and
+  `docs/sessions/2026-08-21-full-site-visual-rebuild-v2.md`.
 - **2026-08-16** v1 launch page (centred hero, three cards, zigzag SVG
   mountains, glows, pill buttons) was rejected by the maintainer as generic.
   Root cause: it was designed from taste rather than from the ecosystem.

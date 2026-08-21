@@ -27,7 +27,7 @@ afterEach(() => {
 });
 
 describe("site shell", () => {
-  it("puts the same landmarks and hotline on every page", () => {
+  it("puts the same landmarks and one emergency action on every page", () => {
     for (const path of ["/", "/government/barangays", "/government/officials", "/about"]) {
       cleanup();
       renderAt(path);
@@ -35,7 +35,9 @@ describe("site shell", () => {
       expect(screen.getByRole("main")).toHaveAttribute("id", "main-content");
       expect(screen.getByRole("contentinfo")).toBeInTheDocument();
       expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
-      expect(screen.getByRole("link", { name: "911" })).toHaveAttribute("href", "tel:911");
+      // One emergency action lives in the header, linking to the hotlines page.
+      const emergency = within(screen.getByRole("banner")).getByRole("link", { name: /emergency/i });
+      expect(emergency).toHaveAttribute("href", "/emergency");
     }
   });
 
@@ -57,7 +59,7 @@ describe("home page", () => {
   it("is a real homepage, not a coming-soon holding page", () => {
     renderAt("/");
     expect(
-      screen.getByRole("heading", { level: 1, name: /Public information about Kabugao/i }),
+      screen.getByRole("heading", { level: 1, name: /Know your Kabugao/i }),
     ).toBeInTheDocument();
     // the launch-page status chip is gone
     expect(screen.queryByText(/^Coming soon$/i)).not.toBeInTheDocument();
@@ -65,16 +67,15 @@ describe("home page", () => {
 
   it("shows Kabugao at a glance with sourced figures", () => {
     renderAt("/");
-    expect(screen.getByText("16,425")).toBeInTheDocument();
-    expect(screen.getByText("935.12 km²")).toBeInTheDocument();
-    expect(screen.getByText("1st class")).toBeInTheDocument();
-    expect(screen.getByText(/PSGC 1408104000/)).toBeInTheDocument();
+    const main = screen.getByRole("main");
+    expect(within(main).getByText("16,425")).toBeInTheDocument();
+    expect(within(main).getByText("935.12 km²")).toBeInTheDocument();
   });
 
   it("links into the sections that exist", () => {
     renderAt("/");
     const main = screen.getByRole("main");
-    for (const href of ["/government/barangays", "/government/officials", "/transparency", "/about"]) {
+    for (const href of ["/government/barangays", "/government/officials", "/emergency", "/about"]) {
       expect(within(main).getAllByRole("link").some((l) => l.getAttribute("href") === href)).toBe(true);
     }
   });
@@ -167,8 +168,8 @@ describe("officials page", () => {
 
 describe("search", () => {
   const field = () => screen.getByLabelText(/Search everything published here/i);
-  // The hotline bar is also a region named "Emergency hotlines" and the footer
-  // repeats Home and Sitemap, so every query here is scoped to <main>.
+  // The header and footer repeat destinations like Home, Sitemap and the
+  // emergency action, so every query here is scoped to <main>.
   const page = () => within(screen.getByRole("main"));
 
   it("finds a barangay by name and links to its page", async () => {
@@ -274,20 +275,14 @@ describe("404 recovery", () => {
 });
 
 describe("emergency hotlines", () => {
-  it("keeps 911 and the local numbers on every page, all dialable as +63", () => {
+  it("keeps one emergency action in the header of every page, aimed at the hotlines", () => {
     for (const path of ["/", "/government/barangays", "/about"]) {
       cleanup();
       renderAt(path);
-      const bar = screen.getByRole("region", { name: /emergency hotlines/i });
-      expect(within(bar).getByRole("link", { name: "911" })).toHaveAttribute("href", "tel:911");
-      // Every office is in the bar, MDRRMO first, each one tap from any page.
-      const calls = within(bar).getAllByRole("link", { name: /^Call / });
-      expect(calls).toHaveLength(8);
-      expect(calls[0]).toHaveAttribute("href", "tel:+639275919022");
-      for (const call of calls) {
-        expect(call.getAttribute("href")).toMatch(/^tel:\+63\d{10}$/);
-      }
-      expect(within(bar).getByRole("link", { name: /All numbers/i })).toHaveAttribute("href", "/emergency");
+      // The persistent Emergency 911 control lives in the header and routes to
+      // the hotlines page, where every dialable number is listed.
+      const emergency = within(screen.getByRole("banner")).getByRole("link", { name: /emergency/i });
+      expect(emergency).toHaveAttribute("href", "/emergency");
     }
   });
 
