@@ -254,6 +254,25 @@ test("the map is CSP-safe by construction", async () => {
   }
 });
 
+test("prerendered pages carry a real OpenStreetMap attribution link (JS-off)", () => {
+  // With JavaScript disabled — before Leaflet's own attribution control exists —
+  // the ODbL-required attribution must still be a real link in the server-
+  // rendered body of every prerendered page that shows a map. Measured against
+  // the built output, not the source, and scoped to the #root render (before the
+  // shared <noscript> block).
+  const linked = /<a href="https:\/\/www\.openstreetmap\.org\/copyright"[^>]*>\s*OpenStreetMap\s*<\/a>/;
+  for (const route of [
+    "dist/index.html",
+    "dist/government/barangays/index.html",
+    "dist/government/barangays/poblacion/index.html",
+  ]) {
+    const html = load(route);
+    const noscriptAt = html.indexOf("<noscript>");
+    const body = html.slice(0, noscriptAt === -1 ? html.length : noscriptAt);
+    assert.match(body, linked, `${route}: server-rendered OSM attribution must be a real link`);
+  }
+});
+
 test("emergency hotlines are sourced, well-formed and never hardcoded", () => {
   const data = load("src/data/hotlines.ts");
 

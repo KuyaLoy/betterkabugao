@@ -1,6 +1,6 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { SEARCH_TRIGGER_ID } from "../lib/search-overlay";
+import { SEARCH_TRIGGER_ID, getOverlayState, subscribeOverlay } from "../lib/search-overlay";
 import { SearchTrigger } from "./SearchOverlay";
 
 /**
@@ -56,15 +56,33 @@ export function SiteHeader() {
     return () => mq.removeEventListener("change", onChange);
   }, []);
 
+  // Opening the search overlay by ANY route (/, Ctrl/Cmd+K, header or hero
+  // trigger) must collapse the mobile menu. Driven from the overlay store rather
+  // than each trigger, so no open path is missed. setState lives in the store
+  // callback, not the effect body, so it does not trip set-state-in-effect.
+  useEffect(() => subscribeOverlay(() => {
+    if (getOverlayState().open) setOpen(false);
+  }), []);
+
   return (
     <header className={over ? "mast mast--over" : "mast mast--solid"}>
       <div className="shell mast__inner">
         <Link className="mast__home" to="/" aria-label="BetterKabugao.org home" onClick={() => setOpen(false)}>
+          {/* Full wordmark on wider screens; the symbol-only mark on phones so it
+              stays legible beside Search, 911 and Menu. The link's aria-label is
+              the single accessible name, so both images are decorative. */}
           <img
             className="mast__logo"
             src="/brand/betterkabugao-logo-inverse.svg"
-            alt="BetterKabugao.org"
+            alt=""
             width="469"
+            height="160"
+          />
+          <img
+            className="mast__mark"
+            src="/brand/betterkabugao-mark-inverse.svg"
+            alt=""
+            width="160"
             height="160"
           />
         </Link>
@@ -109,12 +127,14 @@ export function SiteHeader() {
         </div>
       </div>
 
-      {/* Mobile disclosure: same task links, one per row, inert when closed. */}
+      {/* Mobile disclosure: same task links, one per row. `inert` when closed so
+          the hidden links are never keyboard-focusable during the fade; the
+          slide/opacity transition lives in the stylesheet. */}
       <nav
         id={menuId}
         className={open ? "mast__menu mast__menu--open" : "mast__menu"}
         aria-label="Menu"
-        hidden={!open}
+        inert={!open}
       >
         {NAV.map((item) => (
           <Link className="mast__menu-link" to={item.to} key={item.to} onClick={() => setOpen(false)}>

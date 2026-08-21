@@ -16,7 +16,8 @@
     "seo:build": "node scripts/build-seo.mjs",
     "build:client": "vite build",
     "build:ssr": "vite build --ssr src/entry-server.tsx --outDir dist-ssr && vite build --ssr src/lib/routes.ts --outDir dist-ssr --emptyOutDir false",
-    "prerender": "node scripts/prerender.mjs"
+    "prerender": "node scripts/prerender.mjs",
+    "qa": "npm run build && node scripts/qa/checkpoint1.mjs"
   },
   "keywords": [],
   "author": "",
@@ -44,6 +45,7 @@
     "fontkit": "^2.0.4",
     "globals": "^17.8.0",
     "jsdom": "^29.1.1",
+    "playwright": "^1.56.0",
     "sharp": "^0.35.3",
     "tailwindcss": "^4.3.3",
     "typescript": "^6.0.3",

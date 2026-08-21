@@ -225,8 +225,14 @@ export function MapView({ slugs, primarySlug, maxZoom, height, label, selectedSl
           </p>
         </div>
       ) : null}
+      {/* Server-rendered, so the licensed attribution is a real link even with
+          JavaScript off — before Leaflet's own attribution control exists. */}
       <p className="map__note">
-        Map data, tiles and barangay coordinates &copy; OpenStreetMap contributors (ODbL).
+        Map data, tiles and barangay coordinates &copy;{" "}
+        <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">
+          OpenStreetMap
+        </a>{" "}
+        contributors (ODbL).
       </p>
     </div>
   );

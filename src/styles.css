@@ -869,6 +869,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--color-primary-5
 .map__fallback-links { display: flex; flex-wrap: wrap; gap: 16px; }
 .map__fallback-links a { color: var(--color-primary-700); font-size: 0.9375rem; font-weight: 600; }
 .map__note { margin-top: 10px; color: var(--color-gray-700); font-size: 0.75rem; line-height: 1.6; }
+.map__note a { color: var(--color-primary-600); }
 
 /* Markers are divIcons styled here, so no marker image is ever requested.
    Do NOT set `position` on .map-pin: Leaflet gives .leaflet-marker-icon
@@ -1239,7 +1240,8 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--color-primary-5
 .mast--over { position: absolute; top: 0; left: 0; right: 0; z-index: 40; background: transparent; }
 .mast__inner { display: flex; align-items: center; gap: 20px; min-height: 76px; }
 .mast__home { display: inline-flex; align-items: center; }
-.mast__logo { height: 34px; width: auto; display: block; }
+.mast__logo { height: 42px; width: auto; display: block; }
+.mast__mark { display: none; height: 40px; width: auto; }
 .mast__nav { display: flex; gap: 24px; align-items: center; margin-left: 8px; }
 .mast__link { color: #e7eefb; font-size: 0.9375rem; font-weight: 600; text-decoration: none; }
 .mast__link:hover { color: #fff; text-decoration: underline; text-underline-offset: 4px; }
@@ -1255,10 +1257,10 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--color-primary-5
 .mast__burger-icon, .mast__burger-icon::before, .mast__burger-icon::after { content: ""; display: block; width: 20px; height: 2px; background: #fff; position: relative; }
 .mast__burger-icon::before { position: absolute; top: -6px; }
 .mast__burger-icon::after { position: absolute; top: 6px; }
+/* Hidden entirely at desktop; the mobile media query below gives it its
+   animated disclosure, so an open menu can never render beside the desktop nav
+   after a resize/rotate. */
 .mast__menu { display: none; }
-/* Colours only; `display` lives in the mobile media query below, so an open
-   menu can never render beside the desktop nav after a resize/rotate. */
-.mast__menu--open { background: var(--color-primary-800); border-top: 1px solid rgba(255, 255, 255, 0.1); }
 .mast__menu-link { display: block; color: #e7eefb; padding: 13px 24px; font-weight: 600; text-decoration: none; border-top: 1px solid rgba(255, 255, 255, 0.07); }
 .mast__menu-link:first-child { border-top: 0; }
 
@@ -1372,7 +1374,14 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--color-primary-5
   .mast__nav, .mast__search-label, .mast__emerg-long { display: none; }
   .mast__search { padding: 0 12px; }
   .mast__burger { display: inline-flex; }
-  .mast__menu--open { display: block; position: absolute; top: 100%; left: 0; right: 0; box-shadow: 0 14px 34px rgba(0, 10, 30, 0.45); }
+  .mast__menu {
+    display: block; position: absolute; top: 100%; left: 0; right: 0;
+    background: var(--color-primary-800); border-top: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 14px 34px rgba(0, 10, 30, 0.45);
+    transform: translateY(-10px); opacity: 0; pointer-events: none;
+    transition: opacity 200ms ease-out, transform 200ms ease-out;
+  }
+  .mast__menu--open { transform: translateY(0); opacity: 1; pointer-events: auto; }
   .kv-desk__inner { grid-template-columns: 1fr 1fr; }
   .kv-desk__item:nth-child(2)::before, .kv-desk__item:nth-child(4)::before { display: none; }
   .kv-desk__item { border-top: 1px solid var(--color-gray-200); }
@@ -1382,6 +1391,10 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--color-primary-5
   .kv-sheet__head { border-radius: 18px 18px 0 0; }
 }
 @media (max-width: 640px) {
+  /* Phones: the full wordmark would be cramped beside Search/911/Menu, so show
+     the approved Kabugao symbol only. The home link keeps its accessible name. */
+  .mast__logo { display: none; }
+  .mast__mark { display: block; }
   .kv-hero { min-height: 88vh; }
   /* Bottom padding must clear the absolutely-positioned Explore cue so the
      hero search field keeps >=12px of visible separation from it. */
@@ -1392,12 +1405,13 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--color-primary-5
 }
 @media (max-width: 520px) {
   .mast__inner { min-height: 60px; gap: 12px; }
-  .mast__logo { height: 28px; }
+  .mast__mark { height: 36px; }
   .mast__emerg { padding: 0 12px; }
   .kv-hero__search { height: 56px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .kv-hero__eyebrow, .kv-hero__title, .kv-hero__sub, .kv-hero__search { animation: none !important; }
   .kv-sheet { transition: none !important; }
+  .mast__menu { transition: none !important; }
 }
 .kv-place__text { min-width: 0; }

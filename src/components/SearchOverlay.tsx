@@ -160,14 +160,19 @@ export function SearchOverlay() {
       aria-label="Search BetterKabugao"
       onClick={() => dialog.current?.close()}
       onKeyDownCapture={(event) => {
-        // A non-empty <input type="search"> consumes Escape to clear itself in
-        // Chromium/WebKit, swallowing the dialog's own Escape-to-close. Intercept
-        // in the capture phase — before the input sees it — so Escape always
-        // closes the overlay (the `close` handler then clears the query and
-        // returns focus to the trigger), whether or not a query is entered.
-        if (event.key === "Escape") {
+        // Only the topmost layer handles Escape. Two things are intercepted in
+        // the capture phase, before anything below sees the key:
+        //  - a non-empty <input type="search"> would otherwise consume Escape to
+        //    clear itself (Chromium/WebKit), swallowing the dialog's close;
+        //  - the event must not reach a lower layer's document listener — e.g.
+        //    the barangays selection sheet — or one Escape would close both.
+        // So: close the overlay (its `close` handler clears the query and
+        // returns focus to the trigger) and stop propagation. A second Escape
+        // then reaches the sheet.
+        if (event.key === "Escape" && dialog.current?.open) {
           event.preventDefault();
-          dialog.current?.close();
+          event.stopPropagation();
+          dialog.current.close();
         }
       }}
     >

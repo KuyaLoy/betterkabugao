@@ -372,13 +372,19 @@ describe("maps", () => {
     );
   });
 
-  it("credits OpenStreetMap on every page that shows a map", () => {
+  it("credits OpenStreetMap with a real link on every page that shows a map", () => {
     for (const path of ["/", "/government/barangays/waga"]) {
       cleanup();
       renderAt(path);
-      expect(
-        screen.getByText(/Map data, tiles and barangay coordinates © OpenStreetMap contributors \(ODbL\)/),
-      ).toBeInTheDocument();
+      const note = document.querySelector(".map__note") as HTMLElement;
+      expect(note).not.toBeNull();
+      expect(note.textContent).toMatch(
+        /Map data, tiles and barangay coordinates © OpenStreetMap contributors \(ODbL\)/,
+      );
+      expect(within(note).getByRole("link", { name: "OpenStreetMap" })).toHaveAttribute(
+        "href",
+        "https://www.openstreetmap.org/copyright",
+      );
     }
   });
 
@@ -571,5 +577,55 @@ describe("search overlay", () => {
 
     expect(screen.getByText(/Nothing matches/)).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Browse every page" })).toHaveAttribute("href", "/sitemap");
+  });
+
+  it("layers Escape: first closes only Search, second closes the barangay sheet", async () => {
+    const user = userEvent.setup();
+    renderAt("/government/barangays");
+
+    // Open a barangay preview sheet from the list.
+    const previewButtons = within(screen.getByRole("list", { name: "Barangays of Kabugao" })).getAllByRole(
+      "button",
+      { name: /Show .* on the map/i },
+    );
+    await user.click(previewButtons[0]);
+    expect(document.querySelector(".kv-sheet")).not.toBeNull();
+
+    // Open Search over the sheet and type a query.
+    const trigger = screen.getByRole("link", { name: "Search" });
+    await user.click(trigger);
+    expect(overlay()?.open).toBe(true);
+    await user.type(screen.getByLabelText("Search barangays, officials, hotlines and pages"), "poblacion");
+
+    // First Escape: only Search closes; the sheet stays; focus returns to trigger.
+    await user.keyboard("{Escape}");
+    expect(overlay()?.open).toBe(false);
+    expect(document.querySelector(".kv-sheet")).not.toBeNull();
+    expect(trigger).toHaveFocus();
+
+    // Second Escape: the sheet closes and focus returns to its preview button.
+    await user.keyboard("{Escape}");
+    expect(document.querySelector(".kv-sheet")).toBeNull();
+    expect(document.activeElement).toBe(previewButtons[0]);
+  });
+
+  it("closes the mobile menu when Search opens via '/', and it stays closed after navigating", async () => {
+    const user = userEvent.setup();
+    renderAt("/government/barangays");
+
+    const burger = document.querySelector(".mast__burger") as HTMLButtonElement;
+    await user.click(burger);
+    expect(burger).toHaveAttribute("aria-expanded", "true");
+
+    // '/' opens the overlay -> the mobile menu must collapse.
+    await user.keyboard("/");
+    expect(overlay()?.open).toBe(true);
+    expect(burger).toHaveAttribute("aria-expanded", "false");
+
+    // Navigating from a result leaves the menu closed.
+    await user.type(screen.getByLabelText("Search barangays, officials, hotlines and pages"), "poblacion");
+    const dialog = document.querySelector("dialog.palette") as HTMLElement;
+    await user.click(within(dialog).getByRole("link", { name: /Barangay Poblacion/ }));
+    expect(burger).toHaveAttribute("aria-expanded", "false");
   });
 });
