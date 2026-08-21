@@ -1276,7 +1276,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--color-primary-5
 .kv-hero__search { display: flex; align-items: center; gap: 12px; margin-top: 28px; max-width: 560px; height: 62px; padding: 0 20px; border-radius: 12px; background: #fff; color: var(--color-gray-600); text-decoration: none; box-shadow: 0 18px 50px -14px rgba(0, 10, 30, 0.5); }
 .kv-hero__search:hover { color: var(--color-gray-700); }
 .kv-hero__search svg { flex: none; }
-.kv-hero__search-text { flex: 1; color: var(--color-gray-700); font-size: 1.0625rem; }
+.kv-hero__search-text { flex: 1; min-width: 0; color: var(--color-gray-700); font-size: 1.0625rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .kv-hero__search-key { flex: none; color: var(--color-gray-600); border: 1px solid var(--color-gray-300); border-radius: 4px; padding: 2px 8px; font-size: 0.8125rem; }
 .kv-hero__cue { position: absolute; left: 50%; bottom: 18px; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 3px; color: #dfe8f6; font-size: 0.6875rem; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 600; }
 @media (prefers-reduced-motion: no-preference) {
