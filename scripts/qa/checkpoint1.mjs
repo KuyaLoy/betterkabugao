@@ -26,6 +26,11 @@ const OUT = fileURLToPath(new URL("../../docs/qa/checkpoint-1/", import.meta.url
 mkdirSync(OUT, { recursive: true });
 
 const SIZES = [
+  // 305 = a 320px Windows window minus a ~15px classic (non-overlay) scrollbar.
+  // Headless Chromium uses overlay scrollbars (0px), so it never reduced the
+  // content area on its own; testing 305 reproduces the classic reduction and
+  // catches any element that forces a 320px min-width (horizontal overflow).
+  { w: 305, h: 568 },
   { w: 320, h: 568 },
   { w: 360, h: 780 },
   { w: 390, h: 844 },

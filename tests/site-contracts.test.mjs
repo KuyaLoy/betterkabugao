@@ -856,3 +856,11 @@ test("README documents local and Cloudflare build settings", () => {
   assert.match(readme, /Build output directory:\s*`dist`/);
   assert.match(readme, /independent/i);
 });
+
+test("no element forces a 320px min-width (classic scrollbars overflow at 320)", () => {
+  assert.doesNotMatch(
+    load("src/styles.css"),
+    /min-width\s*:\s*320px/,
+    "min-width: 320px causes horizontal overflow under classic scrollbars",
+  );
+});

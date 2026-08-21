@@ -71,7 +71,7 @@
 
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
-body { margin: 0; min-width: 320px; background: var(--color-white); }
+body { margin: 0; background: var(--color-white); }
 a { color: inherit; }
 h1, h2, h3, h4, p, ul, ol, dl, dd, figure { margin: 0; }
 ul { padding: 0; list-style: none; }

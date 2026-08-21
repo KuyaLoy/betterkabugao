@@ -1,6 +1,7 @@
 {
   "note": "Checkpoint-1 committed QA (npm run qa). Served like Cloudflare Pages (clean URLs). External OSM tiles are network-blocked here and filtered from console-error checks; pins and attribution still render.",
   "sizes": [
+    "305x568",
     "320x568",
     "360x780",
     "390x844",
@@ -9,11 +10,61 @@
     "1440x900"
   ],
   "overallPass": true,
-  "totalChecks": 113,
-  "passed": 113,
+  "totalChecks": 123,
+  "passed": 123,
   "failed": 0,
   "failures": [],
   "checks": [
+    {
+      "name": "[305x568] home: no horizontal overflow",
+      "pass": true,
+      "detail": "overflow=0px"
+    },
+    {
+      "name": "[305x568] home: one <h1>",
+      "pass": true,
+      "detail": "h1=1"
+    },
+    {
+      "name": "[305x568] home: one <main>",
+      "pass": true,
+      "detail": "main=1"
+    },
+    {
+      "name": "[305x568] barangays: no horizontal overflow",
+      "pass": true,
+      "detail": "overflow=0px"
+    },
+    {
+      "name": "[305x568] barangays: one <h1>",
+      "pass": true,
+      "detail": "h1=1"
+    },
+    {
+      "name": "[305x568] barangays: one <main>",
+      "pass": true,
+      "detail": "main=1"
+    },
+    {
+      "name": "[305x568] poblacion: no horizontal overflow",
+      "pass": true,
+      "detail": "overflow=0px"
+    },
+    {
+      "name": "[305x568] poblacion: one <h1>",
+      "pass": true,
+      "detail": "h1=1"
+    },
+    {
+      "name": "[305x568] poblacion: one <main>",
+      "pass": true,
+      "detail": "main=1"
+    },
+    {
+      "name": "[305x568] no hydration/serious console errors",
+      "pass": true,
+      "detail": "clean"
+    },
     {
       "name": "[320x568] home: no horizontal overflow",
       "pass": true,
