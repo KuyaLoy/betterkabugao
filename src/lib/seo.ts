@@ -37,7 +37,7 @@ const STATIC_META: Record<string, { title: string; description: string }> = {
   "/": {
     title: "Kabugao, Apayao — public information, barangays and officials",
     description:
-      "Public information about Kabugao, the capital of Apayao: all 21 barangays with population and directions, elected municipal officials, and sourced local data. Independent and volunteer-run.",
+      "Public information about the municipality of Kabugao, Apayao: all 21 barangays with population and directions, elected municipal officials, and sourced local data. Independent and volunteer-run.",
   },
   "/government": {
     title: "Government of Kabugao",
@@ -60,9 +60,9 @@ const STATIC_META: Record<string, { title: string; description: string }> = {
       "Emergency numbers published by the Municipality of Kabugao — MDRRMO, police, fire, the Rural Health Unit, MSWDO and the Apayao Provincial Hospital — with +63 international dialling for family abroad.",
   },
   "/transparency": {
-    title: "Transparency — public money and public projects",
+    title: "Public records for Kabugao — in preparation",
     description:
-      "What BetterKabugao is building on public spending and public projects in Kabugao: budgets, procurement, contractors and flood-control works, every figure sourced.",
+      "Public records for the municipality of Kabugao are in preparation. Nothing is published here until it is verified against an official source. Independent and volunteer-run.",
   },
   "/explore": {
     title: "Explore Kabugao — places, heritage and culture",

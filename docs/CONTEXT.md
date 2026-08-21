@@ -78,6 +78,20 @@ session (see `docs/skills/session-memory/SKILL.md`).
 
 ## Key decisions log
 
+- **2026-08-21 (round 3)** Cleared the final production **copy blocker** and two
+  QA/UX fixes on `experiment/full-site-visual-rebuild-v2`. Neutralised the
+  unqualified "capital of Apayao" everywhere (→ "the municipality of Kabugao,
+  Apayao"); removed public-works / procurement / contractor / flood-control /
+  spending promises from the global `<noscript>`, the homepage / `/transparency`
+  / `/government` copy, the SEO metadata and the structured data; dropped ₱0/₱670
+  from the global `<noscript>` (they stay on `/about`'s own body). Kept the
+  independence disclaimer and the contract-required strings. Also: the mobile
+  homepage header now has a solid compact **navy** surface (white logo/Search/
+  Menu were unreadable over the photo; desktop overlay unchanged); and
+  `npm ci && npm test` now builds first via a `pretest` hook so the prerendered
+  OSM-attribution contract test runs for real, while `npm run qa` builds only if
+  `dist/` is missing (verification sequence builds once). A new contract test
+  guards the prohibited wording across every built route. `npm run qa` → 113/113.
 - **2026-08-21** Built the approved **"Kabugao in View"** photo-led redesign as
   Checkpoint 1 on `experiment/full-site-visual-rebuild-v2` (clean-cut from
   `origin/main` `745b877`; the rejected "Living Civic Atlas" experiment was

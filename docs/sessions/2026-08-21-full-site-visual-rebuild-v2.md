@@ -123,11 +123,34 @@ but real-Chrome QA found 4 blockers + 2 visual asks. All fixed in a third commit
 Verified by `npm run qa` (110/110 pass) at 320x568/360x780/390x844/768x900/
 1280x900/1440x900, plus 37 contract + 49 unit, typecheck, lint, build.
 
+## Correction pass — Codex round 3 (final Checkpoint 1 correction)
+
+Four focused items:
+
+1. Mobile header contrast: the over-hero header was transparent, so the white
+   logo/Search/Menu faded into the photo. At ≤900px the header now has a solid
+   compact navy surface (no gradient/blur/glow); 911 stays red; desktop overlay
+   unchanged.
+2. Clean-checkout test order: `pretest: npm run build` so `npm ci && npm test`
+   builds before the contract tests that read `dist/`; `npm run qa` builds only
+   if `dist/` is missing (verification sequence builds once); all exit non-zero
+   on failure.
+3. The production copy blocker is CLEARED: unqualified "capital of Apayao"
+   neutralised everywhere; public-works/procurement/contractor/flood-control/
+   spending promises removed from the global noscript, homepage, /transparency,
+   /government, SEO meta and structured data; ₱0/₱670 removed from the global
+   noscript (kept on /about). A new contract test guards prohibited wording on
+   every built route.
+4. All round-2 fixes preserved (layered Escape, menu close, motion, inert, focus
+   restoration, crawlable links, linked no-JS attribution, logo).
+
+Verified: 38 contract + 49 unit, typecheck, lint; `npm run qa` 113/113 at
+320x568/360x780/390x844/768x900/1280x900/1440x900.
+
 ## What is left
 
-Robin pushes the round-2 commit on `experiment/full-site-visual-rebuild-v2`;
-Cloudflare rebuilds the branch preview; Codex does final code + UI/UX QA.
-**No merge, no Checkpoint 2** until Codex approves. The legacy SEO/`<noscript>`
-copy (capital claim, public-works words, ₱0/₱670) remains a recorded production
-blocker for a separate, approved follow-up — untouched here, and the branch is
-not ready for `main` while it stands.
+Robin pushes the round-3 commit on `experiment/full-site-visual-rebuild-v2`;
+Cloudflare rebuilds the branch preview; Codex does final code + UI/UX QA. **No
+merge, no Checkpoint 2** until Codex approves. The copy blocker that stood
+through rounds 1–2 is now resolved, so nothing known blocks `main` on the copy
+front — but the decision to merge remains Codex's after the staging review.

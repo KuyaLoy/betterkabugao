@@ -198,6 +198,41 @@ Verified header/menu at 320x568, 360x780, 390x844, 768x900, 1280x900, 1440x900.
 Committed harness: `scripts/qa/serve.mjs`, `scripts/qa/checkpoint1.mjs`
 (`npm run qa`).
 
+## 2e. Final correction — Codex round 3 (4 items; the copy blocker is now CLEARED)
+
+`npm run qa` → **113/113 PASS, exit 0**. Gates: 38 contract + 49 unit, typecheck,
+lint. Verified at 320x568/360x780/390x844/768x900/1280x900/1440x900.
+
+1. **Mobile header contrast** — the homepage over-hero header was transparent, so
+   the white logo/Search/Menu faded into the photo. At ≤900px `.mast--over` now
+   has a solid compact **navy** surface (`rgb(0,20,47)`) + hairline border; no
+   glass/gradient/blur/glow; 911 stays red; the desktop image-overlay header is
+   unchanged. New harness check confirms the opaque navy surface at 320/360/390.
+2. **Clean-checkout test order** — added `"pretest": "npm run build"`, so
+   `npm ci && npm test` builds before the contract tests that read `dist/`. The
+   OSM/prerender tests skip gracefully if `dist/` is absent (as `test:contracts`
+   alone). `npm run qa` no longer prepends a build; the harness builds **only if**
+   `dist/` is missing, so the verification sequence (test builds → qa reuses)
+   builds exactly once. All commands exit non-zero on failure.
+3. **Copy blocker CLEARED (was §5)** — removed the unqualified "capital of
+   Apayao" everywhere (→ "the municipality of Kabugao, Apayao"), removed
+   public-works/procurement/contractor/flood-control/spending promises from the
+   global `<noscript>`, homepage + `/transparency` + `/government` copy, SEO
+   metadata, and structured data, and removed ₱0/₱670 from the global
+   `<noscript>` (₱0/₱670 stays on `/about`'s own body per the standing rule). Kept
+   the independence disclaimer + "not the official website" + "Public project
+   records are being prepared" (contract-required). New contract test asserts the
+   prohibited wording is absent from built HTML on every route and that the global
+   `<noscript>` carries no peso figures.
+4. **Round-2 fixes preserved** — layered Escape, menu-close-on-any-search-path,
+   menu motion + reduced-motion + inert, focus restoration, crawlable barangay
+   links, linked no-JS OSM attribution, desktop/mobile logo — all still green in
+   `npm run qa`.
+
+Files: index.html, src/lib/seo.ts, scripts/build-seo.mjs, src/app/site-content.ts,
+src/pages/SimplePages.tsx, src/lib/search.ts, src/styles.css, package.json,
+scripts/qa/checkpoint1.mjs, tests/site-contracts.test.mjs + docs.
+
 ---
 
 ## 3. Implementation progress (Checkpoint 1)
@@ -247,7 +282,7 @@ Committed harness: `scripts/qa/serve.mjs`, `scripts/qa/checkpoint1.mjs`
 
 ## 5. Risks / unresolved decisions
 
-- **DECISION NEEDED — pre-existing SEO + no-JS layer still carries flagged copy.**
+- **RESOLVED in round 3 (was: DECISION NEEDED) — pre-existing SEO + no-JS layer carried flagged copy.**
   The visible redesign is clean, but two pre-existing, contract-protected,
   **global** (all-routes) surfaces still contain material the copy mandate flags:
   - The shared homepage SEO meta description (from `src/lib/seo.ts`, rendered

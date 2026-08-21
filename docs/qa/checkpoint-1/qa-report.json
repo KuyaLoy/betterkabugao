@@ -9,8 +9,8 @@
     "1440x900"
   ],
   "overallPass": true,
-  "totalChecks": 110,
-  "passed": 110,
+  "totalChecks": 113,
+  "passed": 113,
   "failed": 0,
   "failures": [],
   "checks": [
@@ -478,6 +478,21 @@
       "name": "[390] home link keeps its accessible name",
       "pass": true,
       "detail": "name=\"BetterKabugao.org home\""
+    },
+    {
+      "name": "[320x568] homepage mobile header has an opaque navy surface",
+      "pass": true,
+      "detail": "bg=rgb(0, 20, 47)"
+    },
+    {
+      "name": "[360x780] homepage mobile header has an opaque navy surface",
+      "pass": true,
+      "detail": "bg=rgb(0, 20, 47)"
+    },
+    {
+      "name": "[390x844] homepage mobile header has an opaque navy surface",
+      "pass": true,
+      "detail": "bg=rgb(0, 20, 47)"
     },
     {
       "name": "[390] preview opens the sheet",

@@ -39,7 +39,7 @@ export function GovernmentPage() {
             <Link className="nav-card" to="/transparency">
               <span className="nav-card__kicker">In progress</span>
               <h3>Transparency</h3>
-              <p>Budgets, procurement and public projects, with every figure traced to its source.</p>
+              <p>Public records for Kabugao, in preparation — every figure traced to its official source before it is published.</p>
               <span className="nav-card__go" aria-hidden="true">→</span>
             </Link>
           </div>
@@ -69,9 +69,8 @@ export function TransparencyPage() {
           <div>
             <h2>{transparency.schemaTitle}</h2>
             <p className="section__body">
-              These are the fields every project record will carry. They are shown empty on purpose: no
-              budget, contractor or project name is published here until it is verified against an official
-              source.
+              These are the fields each record will use. They are shown empty on purpose: nothing is
+              published here until it is verified against an official source.
             </p>
             <div className="sources">
               <h3>{transparency.sourcesTitle}</h3>

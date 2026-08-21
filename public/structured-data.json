@@ -6,7 +6,7 @@
       "@id": "https://betterkabugao.org/#website",
       "url": "https://betterkabugao.org",
       "name": "BetterKabugao.org",
-      "description": "A volunteer-run civic portal for Kabugao, the capital of Apayao — public spending, public projects, local services and local knowledge in one readable place.",
+      "description": "A volunteer-run civic portal for the municipality of Kabugao, Apayao — its barangays, elected officials, local services and local knowledge in one readable place.",
       "inLanguage": "en-PH",
       "publisher": {
         "@id": "https://betterkabugao.org/#publisher"

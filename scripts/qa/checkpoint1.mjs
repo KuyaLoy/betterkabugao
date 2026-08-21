@@ -17,7 +17,8 @@
  * (auto-fetches the matching browser) or `npx playwright install chromium`.
  */
 import { chromium } from "playwright";
-import { mkdirSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, writeFileSync } from "node:fs";
+import { execSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { startServer } from "./serve.mjs";
 
@@ -73,6 +74,15 @@ const menuVisible = (page) =>
   });
 
 async function main() {
+  // Ensure the site is built. Idempotent: the verification sequence runs
+  // `npm test` first (which builds via pretest), so dist/ already exists here
+  // and we do NOT rebuild; run standalone, we build once. Never twice.
+  const distIndex = fileURLToPath(new URL("../../dist/index.html", import.meta.url));
+  if (!existsSync(distIndex)) {
+    console.log("dist/ not found — building once (npm run build)…");
+    execSync("npm run build", { stdio: "inherit", cwd: fileURLToPath(new URL("../../", import.meta.url)) });
+  }
+
   const { server, base } = await startServer(0);
   const browser = await launchBrowser();
 
@@ -315,6 +325,24 @@ async function main() {
     record(`[390] phone shows the symbol-only mark, not the wordmark`, mob.logoHidden && mob.markShown, `markH=${mob.markH}`);
     record(`[390] home link keeps its accessible name`, mob.homeName === "BetterKabugao.org home", `name="${mob.homeName}"`);
     await m.close();
+  }
+
+  // 9b. Mobile homepage header has a solid (opaque navy) surface, not transparent
+  for (const { w, h } of [{ w: 320, h: 568 }, { w: 360, h: 780 }, { w: 390, h: 844 }]) {
+    const ctx = await browser.newContext({ viewport: { width: w, height: h } });
+    const page = await ctx.newPage();
+    await stable(page, base, "/");
+    const hdr = await page.evaluate(() => {
+      const el = document.querySelector("header.mast");
+      const bg = getComputedStyle(el).backgroundColor;
+      const m = bg.match(/rgba?\(([^)]+)\)/);
+      const parts = m ? m[1].split(",").map((n) => parseFloat(n)) : [0, 0, 0, 0];
+      const alpha = parts.length >= 4 ? parts[3] : 1;
+      return { bg, alpha, over: el.classList.contains("mast--over") };
+    });
+    record(`[${w}x${h}] homepage mobile header has an opaque navy surface`, hdr.over && hdr.alpha >= 0.99 && hdr.bg !== "rgba(0, 0, 0, 0)", `bg=${hdr.bg}`);
+    if (w === 390) await page.screenshot({ path: `${OUT}/header-mobile-home.png`, fullPage: false });
+    await ctx.close();
   }
 
   // 10. Sheet focus management (390)

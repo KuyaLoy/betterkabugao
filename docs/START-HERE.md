@@ -27,8 +27,8 @@ Do not skip 5 and 6. The design and the roadmap are both *measured* and
 
 ## 1. What this project is
 
-An independent, volunteer-run civic transparency portal for **Kabugao, the
-capital municipality of Apayao, Philippines** (21 barangays, 16,425 residents
+An independent, volunteer-run civic transparency portal for **Kabugao, a
+municipality of Apayao, Philippines** (21 barangays, 16,425 residents
 per the 2024 POPCEN, 935.12 km², 1st-class income, PSGC 1408104000). Part of
 the **BetterGov.ph / BetterLGU** volunteer network.
 

@@ -1,6 +1,6 @@
 # BetterKabugao
 
-BetterKabugao is an independent, community-maintained civic portal for Kabugao, the capital municipality of Apayao. It is an independent civic initiative, not the official website of the Municipality of Kabugao, and is part of the [BetterGov.ph](https://bettergov.ph/) volunteer network — see the [BetterLGU Directory](https://lgu.bettergov.ph/).
+BetterKabugao is an independent, community-maintained civic portal for Kabugao, a municipality of Apayao. It is an independent civic initiative, not the official website of the Municipality of Kabugao, and is part of the [BetterGov.ph](https://bettergov.ph/) volunteer network — see the [BetterLGU Directory](https://lgu.bettergov.ph/).
 
 Kabugao: 21 barangays · 16,425 residents (2024 POPCEN) · 935.12 km² · 1st-class income · PSGC 1408104000. Built at ₱0 cost to the people.
 

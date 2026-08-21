@@ -255,6 +255,10 @@ test("the map is CSP-safe by construction", async () => {
 });
 
 test("prerendered pages carry a real OpenStreetMap attribution link (JS-off)", () => {
+  // `npm test` builds first (pretest), so dist/ normally exists here; skip when
+  // it does not, exactly like the prerender test, so `test:contracts` alone is
+  // safe. The build itself fails loudly if prerendering breaks.
+  if (!existsSync(new URL("dist/index.html", root))) return;
   // With JavaScript disabled — before Leaflet's own attribution control exists —
   // the ODbL-required attribution must still be a real link in the server-
   // rendered body of every prerendered page that shows a map. Measured against
@@ -270,6 +274,27 @@ test("prerendered pages carry a real OpenStreetMap attribution link (JS-off)", (
     const noscriptAt = html.indexOf("<noscript>");
     const body = html.slice(0, noscriptAt === -1 ? html.length : noscriptAt);
     assert.match(body, linked, `${route}: server-rendered OSM attribution must be a real link`);
+  }
+});
+
+test("no capital-claim or unpublished-spending wording ships on any route", async () => {
+  // The site must only claim what it actually publishes. The unqualified capital
+  // claim and public-works/procurement/contractor/flood-control wording must be
+  // absent from every prerendered page, and the shared <noscript> fallback must
+  // carry no peso figures (those live on /about's own body only). Measured
+  // against the built output on every route.
+  if (!existsSync(new URL("dist/index.html", root))) return;
+  const { ALL_PATHS } = await import(new URL("dist-ssr/routes.js", root).href);
+  const banned = [/capital of Apayao/i, /flood[- ]control/i, /procurement/i, /\bcontractor\b/i, /public works/i];
+  for (const path of ALL_PATHS) {
+    const file = path === "/" ? new URL("dist/index.html", root) : new URL(`dist${path}/index.html`, root);
+    if (!existsSync(file)) continue;
+    const html = readFileSync(file, "utf8");
+    for (const re of banned) {
+      assert.doesNotMatch(html, re, `${path}: built HTML must not contain ${re}`);
+    }
+    const noscript = (html.match(/<noscript>[\s\S]*?<\/noscript>/) || [""])[0];
+    assert.doesNotMatch(noscript, /₱/, `${path}: the global <noscript> must not carry peso figures`);
   }
 });
 

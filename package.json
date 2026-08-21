@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "Independent, community-maintained civic portal for Kabugao, Apayao — part of the BetterGov.ph volunteer network",
   "scripts": {
+    "pretest": "npm run build",
     "test": "npm run test:contracts && npm run test:unit",
     "dev": "vite",
     "build": "npm run seo:build && tsc -b && npm run build:client && npm run build:ssr && npm run prerender",
@@ -17,7 +18,7 @@
     "build:client": "vite build",
     "build:ssr": "vite build --ssr src/entry-server.tsx --outDir dist-ssr && vite build --ssr src/lib/routes.ts --outDir dist-ssr --emptyOutDir false",
     "prerender": "node scripts/prerender.mjs",
-    "qa": "npm run build && node scripts/qa/checkpoint1.mjs"
+    "qa": "node scripts/qa/checkpoint1.mjs"
   },
   "keywords": [],
   "author": "",

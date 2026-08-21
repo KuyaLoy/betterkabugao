@@ -1372,6 +1372,11 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--color-primary-5
 }
 @media (max-width: 900px) {
   .mast__nav, .mast__search-label, .mast__emerg-long { display: none; }
+  /* On phones the transparent over-hero header left the white logo/Search/Menu
+     unreadable against the photo. Give the mobile header a solid, compact navy
+     surface (no gradient/blur/glow); the desktop image-overlay stays untouched. */
+  .mast--over { background: var(--color-primary-900); border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
+  .mast--over .mast__link { text-shadow: none; }
   .mast__search { padding: 0 12px; }
   .mast__burger { display: inline-flex; }
   .mast__menu {
