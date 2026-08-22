@@ -9,23 +9,30 @@ AI assistants (Claude Code, Codex, Copilot) must follow them literally.
 
 ## What this project is
 
-An independent, community-maintained civic transparency portal for Kabugao,
-the capital municipality of Apayao (21 barangays, **16,425 residents per the
-2024 POPCEN**, 935.12 km², 1st-class income, PSGC 1408104000). Part of the
-BetterGov.ph volunteer network — registered in the BetterLGU Directory
-(https://lgu.bettergov.ph/). Built at ₱0 cost to the people. It is NOT the
-official website of the Municipality of Kabugao, and every page must keep that
-disclaimer.
+An independent, community-maintained civic transparency portal for the
+municipality of Kabugao, Apayao (21 barangays, **16,425 residents per the
+2024 POPCEN**, 935.12 km², 1st-class income, PSGC 1408104000). Note: published
+site copy must never make an **unqualified "capital of Apayao"** claim — a
+contract test bans that wording (and public-works/procurement vocabulary) on
+every built route. Part of the BetterGov.ph volunteer network — registered in
+the BetterLGU Directory (https://lgu.bettergov.ph/). Built at ₱0 cost to the
+people. It is NOT the official website of the Municipality of Kabugao, and
+every page must keep that disclaimer.
 
-Releases: the **multi-page portal is live on `main`** — 32 prerendered routes,
-a page per barangay, officials, search, maps and emergency hotlines. Transparency
-data, service guides and FIL/Isneg language support come later — see
-`docs/research/data-tracker.html` for the ordered roadmap.
+Releases: the **multi-page portal is live on `main`** — 33 prerendered routes,
+a page per barangay, officials, search (site-wide overlay + `/search`), maps
+and emergency hotlines. The approved **"Kabugao in View"** visual rebuild is on
+`experiment/full-site-visual-rebuild-v2` (Checkpoint 1 approved by Codex; not
+merged) — see `docs/command-center/` for status, and
+`docs/sessions/2026-08-23-claude-account-migration-handoff.md` for the full
+handoff. Transparency data, service guides and FIL/Isneg language support come
+later — see `docs/research/data-tracker.html` for the ordered roadmap.
 
 `index.html` is the shell for **every** prerendered route, `<noscript>` included.
-A line written there is served on all 32 pages, and the `<noscript>` block is
+A line written there is served on all 33 pages, and the `<noscript>` block is
 *additive* — with JavaScript off a visitor sees the full prerendered page **and**
-that block, so it must not contain a `<main>` or an `<h1>`.
+that block, so it must not contain a `<main>` or an `<h1>` (or any peso figure —
+contract-tested).
 
 ## Stack — do not swap or add without maintainer approval
 
@@ -108,8 +115,12 @@ Never hand-edit files in `public/brand/`.
   through a `style={{...}}` prop.
 - External links: `target="_blank"` always pairs with `rel="noreferrer"`
 - Mobile-first: verify 390px, 768px, 1280px and 1440px before calling UI work
-  done, and confirm `scrollWidth === clientWidth` at 320/360/390/414 — no
-  horizontal scroll on any phone
+  done, and confirm `scrollWidth === clientWidth` at 305/320/360/390/414 — no
+  horizontal scroll on any phone. **305px matters**: a 320px Windows window
+  minus a classic (~15px) scrollbar leaves a 305px content area, which headless
+  overlay-scrollbar QA never reproduces. No element may pin `min-width: 320px`
+  (contract-tested). The committed harness (`npm run qa`) covers
+  305/320/360/390/768/1280/1440.
 
 ## Security rules
 
@@ -148,11 +159,18 @@ Never hand-edit files in `public/brand/`.
 ## Quality gates — all must pass before commit
 
 ```bash
-npm test          # contract tests (tests/*.mjs) + unit tests (vitest)
+npm test          # pretest builds first, then contract tests (tests/*.mjs) + unit tests (vitest)
 npm run typecheck
 npm run lint
-npm run build
+npm run build     # must end "PRERENDER_OK 33 pages"
+npm run qa        # committed Playwright harness; builds only if dist/ is missing
 ```
+
+QA numbers reported to anyone come **only** from the committed harness
+(`scripts/qa/`), never from an ad-hoc script. And a green suite does not
+replace looking at the render in a real browser on the real Cloudflare
+preview — that is where the scrollbar overflow, the wrapping hero text and the
+dark-on-navy heading were actually caught.
 
 The contract tests intentionally pin these conventions (palette, headers,
 facts, scripts). If you change a convention on purpose, update the matching
@@ -160,8 +178,20 @@ contract test in the same commit — never delete a contract to make it pass.
 
 ## Workflow
 
+Roles: **Robin Tapiru** — product owner and civic source owner; pushes from the
+authorized PC (the sandbox has no push credentials). **Codex** — commander and
+final QA; **approves every checkpoint before work continues**, and approves any
+merge. **Claude** — the website builder. `docs/command-center/` carries the
+live status (active task, release tracker, source registry).
+
 - Work in checkpoints: implement one phase, show the result (screenshots for
   UI), get a go-ahead, continue. No unreviewed mega-changes.
+- **Never push to `main`.** All work goes to a review/experiment branch and
+  waits for Codex. Merging is a separate, explicitly approved act.
+- Prepare commits against the **fetched, verified origin tip**: pin the exact
+  SHA and have the push instructions verify `git rev-parse HEAD` prints it.
+  Never `git reset --hard` to an unverified ref — that is how a fix was once
+  silently dropped (see the release tracker's `3352ee3` incident).
 - Session memory: before starting, read `docs/START-HERE.md` then
   `docs/CONTEXT.md`. Before ending, update **both** and add a recap in
   `docs/sessions/` (see `docs/skills/session-memory/SKILL.md`). This is how the
@@ -189,3 +219,7 @@ contract test in the same commit — never delete a contract to make it pass.
 - Work reviewed by Codex goes to a review branch and waits. Never push a
   reviewed task straight to `main`.
 - Design, layout, or visual changes need maintainer approval before merging.
+- Leave a session handoff after **every** task: update `docs/START-HERE.md` and
+  `docs/CONTEXT.md`, add a `docs/sessions/` recap, and refresh
+  `docs/command-center/active-task.md` — see
+  `docs/skills/session-memory/SKILL.md`.

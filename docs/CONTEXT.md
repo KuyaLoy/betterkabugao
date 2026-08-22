@@ -7,33 +7,30 @@ the traps. This file is the dated decision log behind it.
 Living snapshot of BetterKabugao. Update both at the end of every working
 session (see `docs/skills/session-memory/SKILL.md`).
 
-## Current state (2026-08-21)
+## Current state (2026-08-23)
 
 - **Domain:** betterkabugao.org — Cloudflare Pages, deploys from `main`
   (build `npm run build`, output `dist`)
-- **Released to `main`:** v3.0.0 — the real multi-page portal, merged and
-  live. `main` HEAD is `441b766`. Production checks passed on the deploy: all
-  seven security headers sent, per-page titles and canonicals, BreadcrumbList
-  JSON-LD, ~9.9 KB of real HTML per barangay page, OSM tiles rendering, live
-  weather, no console or CSP errors.
-- **In flight:** `improvement/search-404-recovery`, now two layers. First,
-  `/search` and `/404` rebuilt as recovery screens: `?q=` query URLs, results
-  grouped by kind, starter suggestions, an empty state with a way out, and a real
-  search form plus six plain-anchor recovery links on the 404. Second, search
-  made site-wide: a native-`<dialog>` overlay opened from the masthead, from the
-  homepage hero field and by `/` (or Ctrl/Cmd+K), with live results, arrow-key
-  navigation, Enter to the shareable `/search?q=` page, and Escape returning
-  focus to the Search button. **Held for Codex QA; not to be merged to `main`
-  without it.**
+- **`main` HEAD:** `745b877` — the v3.0.0 multi-page portal plus the `/sitemap`
+  page (PR #1) plus the search/404 recovery screens and the site-wide search
+  overlay (**PR #2, merged 2026-08-20** after Codex QA — the old "in flight"
+  entry is resolved). 33 prerendered routes, live and verified in production.
 - **Visual rebuild (experimental):** `experiment/full-site-visual-rebuild-v2` —
-  the approved **"Kabugao in View"** photo-led redesign, Checkpoint 1
-  (foundations, header, footer, homepage, barangays directory with map/list
-  selection + mobile sheet, Poblacion detail, search integration). Committed
-  locally on the branch, **not pushed**. Approved for an **experimental
-  Cloudflare staging preview only — not `main`/production.** Robin pushes; Codex
-  reviews the staging URL before any further pages. Base `origin/main`
-  `745b877`. See `docs/command-center/active-task.md` (live checkpoint) and the
-  spec `docs/superpowers/specs/2026-08-21-full-site-visual-rebuild-v2-kabugao-in-view.md`.
+  the approved **"Kabugao in View"** photo-led redesign. **Checkpoint 1 is
+  pushed and APPROVED by Codex (2026-08-22)** at tip
+  `e5dc158fe3b75b406f0a9663d5a70a55f08bf1bf`; approved staging preview
+  `https://e19410fa.betterkabugao.pages.dev/`. Still experimental — **not
+  merged to `main`**, and Checkpoint 2 has not started (scope needs Robin +
+  Codex approval). Six correction rounds are ledgered in
+  `docs/command-center/release-tracker.md`; the narrative is in
+  `docs/sessions/2026-08-21-full-site-visual-rebuild-v2.md` and the
+  account-migration handoff
+  `docs/sessions/2026-08-23-claude-account-migration-handoff.md`. Spec:
+  `docs/superpowers/specs/2026-08-21-full-site-visual-rebuild-v2-kabugao-in-view.md`.
+- **Account migration:** the Claude account that built Checkpoint 1 is being
+  deleted; the 2026-08-23 handoff commit (docs only) transfers everything a new
+  Claude account needs. Codex reviews the handoff before the migration is
+  considered complete.
 - **BetterLGU Directory:** PR #208 open against `jmacj/better-lgu-directory` —
   Kabugao row updated to 🟢 Active with the domain and the three socials, PR body
   and checklist completed, and a comment answering the triage bot's four
@@ -71,13 +68,37 @@ session (see `docs/skills/session-memory/SKILL.md`).
   RMFB 15, ICT), each in local and `+63` form, with `tel:+63` links so overseas
   family can dial. 911 leads. The red bar on every page carries 911 plus the
   all eight offices in a marquee, and a popup with the full list.
-- **Quality:** 36 contract tests + 45 unit tests green; typecheck, lint,
-  build clean; no horizontal overflow at 320–1560; one `h1`, one `header`, one
-  `main` and zero inline styles (outside the Leaflet canvas) on every page at
-  every width.
+- **Quality (at the experimental tip `e5dc158`):** 39 contract tests + 49 unit
+  tests green; typecheck, lint, build clean (`PRERENDER_OK 33 pages`);
+  `npm run qa` (committed Playwright harness) **123/123** at
+  305/320/360/390/768/1280/1440 — zero horizontal overflow from 305px up, one
+  `h1`, one `header`, one `main` and zero inline styles (outside the Leaflet
+  canvas) on every page at every width.
 
 ## Key decisions log
 
+- **2026-08-23** Account-migration handoff written (docs-only commit on the
+  experimental branch): new `docs/command-center/release-tracker.md` and
+  `docs/sessions/2026-08-23-claude-account-migration-handoff.md`; START-HERE /
+  CLAUDE.md / CONTEXT / active-task / source-registry refreshed. Reason: the
+  building Claude account is being deleted; the repository must carry the
+  project's full working memory. Codex reviews the handoff before the old
+  account goes away.
+- **2026-08-22** **Checkpoint 1 approved by Codex** at `e5dc158` (preview
+  `e19410fa`). Merge to `main` remains unapproved; Checkpoint 2 needs a scope
+  approval first.
+- **2026-08-21 (rounds 4–6)** Live Windows-Chrome QA caught what headless QA
+  could not: `body { min-width: 320px }` forced horizontal overflow under
+  classic (~15px) scrollbars — a 320px window has a ~305px content area.
+  Removed the floor (fluid layout needs none), added a contract test forbidding
+  `min-width: 320px`, added a **305x568** viewport to the committed harness,
+  and gave `.kv-hero__search-text` single-line truncation (nowrap + ellipsis)
+  so the hero search control holds one line at 305px. A process rule came out
+  of round 5: commit `3352ee3` was accidentally built on `ae8ef20` (a
+  `git reset --hard` to a stale ref), silently dropping the round-4 fix —
+  restored on the correct parent in `e5dc158`. Standing rule: prepare commits
+  only on the fetched, SHA-verified origin tip; never reset to an unverified
+  ref; check the new commit's parent before pushing.
 - **2026-08-21 (round 3)** Cleared the final production **copy blocker** and two
   QA/UX fixes on `experiment/full-site-visual-rebuild-v2`. Neutralised the
   unqualified "capital of Apayao" everywhere (→ "the municipality of Kabugao,
@@ -311,33 +332,41 @@ session (see `docs/skills/session-memory/SKILL.md`).
 
 ## Next steps
 
-1. **React hydration error #418 on prerendered pages** — reported by Codex from
-   local browser QA; **open**. Did not reproduce against the built `dist` in the
-   sandbox across four routes with all console output captured. The clock's
-   server snapshot is `null` and `.utility__inner` is empty in the prerendered
-   HTML, so the utility strip is not the obvious cause. Needs Codex's exact
-   conditions — dev or built, which route, which browser, first load or after a
-   client navigation, and whether it survives with `StrictMode` removed —
-   because #418 is minified and names no element.
-2. **Codex QA on `improvement/search-404-recovery`**, then merge to `main`. The
-   one thing the sandbox cannot check is whether `form-action 'self'` actually
-   ships in the Cloudflare response headers.
-3. **Awaiting `jmacj`:** BetterLGU Directory PR #208.
-4. **Open design decision:** with JavaScript off, the `<noscript>` block renders
+1. **Codex reviews the account-migration handoff** (this commit); one
+   correction pass is budgeted before the old Claude account is deleted.
+2. **Robin + Codex approve a Checkpoint 2 scope**, then the new Claude account
+   builds it in review commits (recommendation in the 2026-08-23 handoff doc).
+   No merge to `main` until full-site parity and Codex approval.
+3. ~~React hydration error #418~~ — **explained during rebuild QA**: `vite
+   preview`'s SPA fallback serves the homepage HTML for every non-root URL, so
+   hydration mismatches on every other route. Served the way Cloudflare Pages
+   serves (clean URLs → the prerendered file, e.g. `scripts/qa/serve.mjs`),
+   every route has zero hydration errors. Reopen only if it reproduces on a
+   Cloudflare-served page.
+4. ~~Codex QA on `improvement/search-404-recovery`~~ — **done; merged to
+   `main` as PR #2 (2026-08-20)**.
+5. **Awaiting `jmacj`:** BetterLGU Directory PR #208 — status not checked since
+   2026-08-19; re-check.
+6. **Open design decision:** with JavaScript off, the `<noscript>` block renders
    below a complete page and unstyled, restating the footer's cost chips,
    disclaimer and `Built by` credit. Either trim it to the JavaScript
    explanation alone or give it styles — the facts inside are pinned by contract
    tests, so changing them is a deliberate act. Needs Robin's call.
-5. `_headers` / `_routes.json` review now that the deploy is multi-page.
-6. Collect verified Kabugao emergency hotline numbers — someone in Kabugao
+7. `_headers` / `_routes.json` review now that the deploy is multi-page.
+8. Collect verified Kabugao emergency hotline numbers — someone in Kabugao
    test-dialling them, or the LGU confirming them.
-7. Source project records from PhilGEPS / DILG FDP / COA / FOI before building
+9. Source project records from PhilGEPS / DILG FDP / COA / FOI before building
    any UI for them — and email `lfdad@blgf.gov.ph` about the BLGF licence first.
-8. Any future intake form needs Turnstile + rate limiting before launch.
-9. Licence decision: `package.json` still says ISC; the network standard is
-   MIT + CC BY 4.0, and the footer already states MIT · CC BY 4.0 — align them.
-10. Robin to delete `_to_delete/`, and `src/components/SiteSearch.tsx` if a
+10. Any future intake form needs Turnstile + rate limiting before launch.
+11. Licence decision: `package.json` still says ISC; the network standard is
+    MIT + CC BY 4.0. The pre-rebuild footer on `main` states MIT · CC BY 4.0;
+    the rebuilt footer's licence text should be settled in the same decision —
+    align all of them.
+12. Robin to delete `_to_delete/`, and `src/components/SiteSearch.tsx` if a
     `git rm` ever leaves it behind (the device bridge cannot remove files).
+13. **README.md refresh** (stale route table, `PRERENDER_OK 31`, pre-portal
+    "Project status" section) — safe to update; only build settings are
+    contract-pinned. Flagged in the 2026-08-23 handoff; needs a quick approval.
 
 ## People
 

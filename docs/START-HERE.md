@@ -5,7 +5,9 @@ this file completely before you touch anything else.** It tells you what the
 project is, what is already built, what comes next and in what order, and which
 mistakes have already cost us time.
 
-Last updated: **21 August 2026**. Update it at the end of every session — see
+Last updated: **23 August 2026** (account-migration handoff — the full transfer
+document is `docs/sessions/2026-08-23-claude-account-migration-handoff.md`).
+Update this file at the end of every session — see
 [§11](#11-before-you-finish-a-session).
 
 ## Reading order
@@ -55,18 +57,18 @@ the **BetterGov.ph / BetterLGU** volunteer network.
 
 | | |
 |---|---|
-| **Live on `betterkabugao.org`** | the full multi-page portal — 32 prerendered routes, interactive maps, emergency hotlines. Merged and deployed. |
-| **`main` HEAD** | `21f622b` — the public `/sitemap` page, merged via PR #1 (20 Aug 2026) |
-| **In flight** | `improvement/search-404-recovery` — `/search` and `/404` turned into recovery screens, then the site-wide search overlay (`/` shortcut, native `<dialog>`) on top. **Awaiting Codex QA; do not merge to `main` without it.** |
-| **Visual rebuild (experimental)** | `experiment/full-site-visual-rebuild-v2` — the approved **"Kabugao in View"** photo-led redesign, Checkpoint 1 (foundations, header, footer, homepage, barangays directory + map/list sheet, Poblacion detail, search integration). Committed locally, **not pushed**. For an **experimental Cloudflare staging preview only — not `main`.** Robin pushes; Codex reviews the staging URL before further pages. See `docs/command-center/active-task.md` and `docs/superpowers/specs/2026-08-21-full-site-visual-rebuild-v2-kabugao-in-view.md`. |
-| **BetterLGU Directory** | PR [#208](https://github.com/jmacj/better-lgu-directory/pull/208) is open — Kabugao row updated to 🟢 Active with the domain and socials, awaiting review by `jmacj` |
-| **Quality gate** | 36 contract tests + 45 unit tests green; lint, typecheck, build clean |
+| **Live on `betterkabugao.org`** | the full multi-page portal — **33 prerendered routes**, interactive maps, emergency hotlines, the public `/sitemap` page (PR #1) and the search/404 recovery screens + site-wide search overlay (PR #2). Merged and deployed. |
+| **`main` HEAD** | `745b877` — PR #2 (`improvement/search-404-recovery`) merged 20 Aug 2026 after Codex QA. **Untouched by the visual rebuild.** |
+| **Visual rebuild (experimental)** | `experiment/full-site-visual-rebuild-v2` — the approved **"Kabugao in View"** photo-led redesign. **Checkpoint 1 pushed and APPROVED by Codex (22 Aug 2026)** at tip `e5dc158fe3b75b406f0a9663d5a70a55f08bf1bf`; approved staging preview `https://e19410fa.betterkabugao.pages.dev/`. Still **not `main`/production**; **Checkpoint 2 not started** (scope needs Robin + Codex approval). Ledger: `docs/command-center/release-tracker.md`. Status: `docs/command-center/active-task.md`. Spec: `docs/superpowers/specs/2026-08-21-full-site-visual-rebuild-v2-kabugao-in-view.md`. |
+| **Account migration** | the Claude account that built Checkpoint 1 is being deleted. The transfer document a new account reads is `docs/sessions/2026-08-23-claude-account-migration-handoff.md` — roles, workflow, must-not-regress list, lessons, open questions. |
+| **BetterLGU Directory** | PR [#208](https://github.com/jmacj/better-lgu-directory/pull/208) — Kabugao row updated to 🟢 Active, awaiting review by `jmacj`. Status not re-checked since 19 Aug 2026. |
+| **Quality gate (at the experimental tip)** | 39 contract + 49 unit tests green; lint, typecheck, build clean (`PRERENDER_OK 33 pages`); `npm run qa` **123/123** at 305/320/360/390/768/1280/1440 |
 
 `c69101e` is 85 files changed / +6,128 / −509 against `main`, authored by
 KuyaLoy on 17 Aug 2026. The pushed tree was compared file by file against the
 locally verified build: **117 tracked files, zero mismatches.**
 
-### Verified on the deployed preview, not just locally
+### Verified on the deployed production site, not just locally (v3.0.0, 17 Aug 2026 — historical record)
 
 | Check | Result |
 |---|---|
@@ -99,7 +101,7 @@ Adding any dependency needs the maintainer's explicit approval.
 
 ## 3. What is already done
 
-### Routes — all 32 prerendered to static HTML
+### Routes — all 33 prerendered to static HTML
 
 | Page | Route | State |
 |---|---|---|
@@ -112,8 +114,13 @@ Adding any dependency needs the maintainer's explicit approval.
 | Transparency | `/transparency` | field schema only, **all values empty on purpose** |
 | Explore / Services | `/explore`, `/services` | placeholders marked "Planned" |
 | About | `/about` | funding, who builds it, how to send corrections |
-| Search | `/search` | zero-dependency scored index |
-| 404 | `*` → `dist/404.html` | a real 404; no catch-all swallows typos |
+| Search | `/search` | zero-dependency scored index; `?q=` URLs; plus the site-wide overlay (`/`, Ctrl/Cmd+K) |
+| Public sitemap | `/sitemap` | generated from `ALL_PATHS` + `BARANGAYS`, audited by test |
+| 404 | `*` → `dist/404.html` | a real 404 recovery screen; no catch-all swallows typos |
+
+On the experimental branch, the header/footer/homepage/barangays-directory
+surfaces of these routes carry the approved "Kabugao in View" design; the
+remaining pages keep their v3 look until Checkpoint 2 is approved.
 
 Each barangay page carries population, share of the municipality, rank, PSGC
 code, coordinates, classification, former name where one exists, schools,
@@ -224,8 +231,8 @@ There is also a licence gate: **BLGF restricts redistribution — email
 
 In rough order of value per hour, all of it uncontroversial:
 
-1. ~~**HTML `/sitemap` page**~~ — built on `feature/html-sitemap-seo-pass`,
-   pending Codex QA. 8 of the 15 network sites have one.
+1. ~~**HTML `/sitemap` page**~~ — **done**: merged to `main` as PR #1
+   (20 Aug 2026). 8 of the 15 network sites have one; now we do too.
 2. **Roadmap step 10, long-run trends** — Wikidata Q30053, CC0, no licence
    gate, no political sensitivity. Population 1918→2024, poverty, voters.
 3. **Roadmap step 12, services and offices** — needs the offices' cooperation,
@@ -311,11 +318,17 @@ set; these are the traps.
 npm install
 npm run dev            # Vite dev server; prerendering is not active here
 
-npm test               # 36 contract tests + 45 unit tests — must be green
+npm test               # pretest builds first; then 39 contract + 49 unit tests — must be green
 npm run typecheck
 npm run lint
-npm run build          # ends with "PRERENDER_OK 31 pages"
+npm run build          # ends with "PRERENDER_OK 33 pages"
+npm run qa             # committed Playwright harness (scripts/qa/) — builds only if dist/ is missing,
+                       # serves dist/ like Cloudflare Pages, checks 305–1440, exits non-zero on failure
 ```
+
+If Playwright's browser is missing on a machine: `npx playwright install
+chromium` once. QA numbers reported to anyone come **only** from `npm run qa`
+and its committed report (`docs/qa/checkpoint-1/qa-report.json`).
 
 `npm run build` is a four-stage pipeline: `seo:build` → `tsc -b` →
 `build:client` → `build:ssr` → `prerender`. **Do not simplify it to
@@ -365,7 +378,7 @@ render.
 
 - **Read `docs/skills/anti-slop/SKILL.md` before writing copy or markup.** It
   carries the redundancy table (what repeat is a defect, what repeat is
-  required) and an audit script that runs over all 32 built pages.
+  required) and an audit script that runs over all 33 built pages.
 - **Editing `src/styles.css` by string-splice deleted a whole block** while the
   markup kept referencing it. Build green, tests green, buttons rendering as
   20px of bare text. A contract test now cross-checks every rendered
@@ -456,7 +469,7 @@ render.
 - **`waitUntil: "networkidle"` never resolves in the build sandbox.** The
   Open-Meteo request cannot complete, so Playwright hangs for the full timeout.
   Use `domcontentloaded` plus a short explicit wait.
-- **`index.html` is the shell for all 32 prerendered pages, `<noscript>` block
+- **`index.html` is the shell for all 33 prerendered pages, `<noscript>` block
   included.** Anything written there is served on every page, so a line that was
   true of a single coming-soon page ("Coming soon — a volunteer-run civic
   portal") went live as a false claim under 32 fully rendered pages. The block
@@ -465,6 +478,39 @@ render.
   `<aside>`/`<h2>` — as `<main>`/`<h1>` it gave every page two `main` landmarks
   and two `h1`s. Contract tests now pin both. Verify with Playwright's
   `javaScriptEnabled: false`, not by reading the source.
+
+**From the "Kabugao in View" Checkpoint 1 rounds (21–22 Aug 2026)** — each of
+these survived a fully green suite and was caught by Codex's eyes on a real
+render; the long-form write-up is in
+`docs/sessions/2026-08-23-claude-account-migration-handoff.md`:
+
+- **Classic scrollbars shrink a 320px window to ~305px of content.** `body {
+  min-width: 320px }` therefore forced a horizontal scrollbar in real Windows
+  Chrome while headless (overlay-scrollbar) QA stayed green. No element may pin
+  a 320px min-width (contract-tested), and the harness tests 305x568.
+- **`<input type="search">` eats Escape to clear itself**, and stacked layers
+  (sheet + overlay) each listen for Escape. The overlay intercepts in the
+  capture phase and `stopPropagation()`s: one Escape, one layer, topmost first,
+  focus back to the exact trigger.
+- **Keyboard search paths bypass per-trigger cleanup.** `/` and Ctrl/Cmd+K
+  opened search while the mobile menu stayed open behind it — the menu now
+  collapses by subscribing to the overlay store, not per-trigger `onClick`.
+- **Leaflet's attribution only exists after hydration.** The ODbL needs it
+  always, so the server-rendered fallback carries a real
+  `openstreetmap.org/copyright` link — contract-tested against built output.
+- **Text over a photo needs a surface.** The transparent over-hero header made
+  white controls unreadable on mobile; ≤900px it now has a solid navy surface.
+  Same family: the sheet heading went dark-on-navy via `.section h2`
+  specificity, and the hero search text wrapped out of its fixed-height control
+  at 305px (fixed with nowrap + ellipsis).
+- **Never `git reset --hard` to an unverified ref.** A push block reset to
+  `origin/<branch>` while origin was stale, so the next commit was built on the
+  wrong parent and silently dropped a fix (`3352ee3`; restored in `e5dc158`).
+  Pin the fetched SHA, verify `git rev-parse HEAD`, and check the new commit's
+  parent before pushing.
+- **QA numbers come from the committed harness only** (`npm run qa`) — an
+  ad-hoc script once shipped a misleading report (an object spread clobbered a
+  failing key).
 
 ---
 
@@ -501,16 +547,22 @@ scripts/
   prerender.mjs               one HTML file per route
   build-brand.mjs             regenerates brand SVGs from geometry.json
   render-social-card.mjs      1200×630 share image
+  qa/serve.mjs                static server: clean URLs → prerendered files
+  qa/checkpoint1.mjs          committed Playwright QA harness (npm run qa)
 tests/
-  site-contracts.test.mjs     36 convention/security/data contracts
+  site-contracts.test.mjs     39 convention/security/data contracts
   brand-assets.test.mjs       brand geometry + output pinning
 public/
   _headers                    HSTS, CSP, nosniff, frame options
   fonts/                      Inter, vendored under the OFL
+  brand/                      generated logo/mark/social assets (never hand-edit)
+  hero/                       self-hosted PD hero variants (see source registry)
 docs/
   START-HERE.md               this file
   CONTEXT.md                  living snapshot + decision log
-  sessions/                   dated session recaps
+  command-center/             active task · release tracker · source registry
+  sessions/                   dated session recaps (2026-08-23 = the migration handoff)
+  qa/checkpoint-1/            committed QA report + screenshots
   research/                   data source inventory + tracker
   skills/                     frontend / security / session-memory playbooks
 design-research/              measured evidence + screenshots
