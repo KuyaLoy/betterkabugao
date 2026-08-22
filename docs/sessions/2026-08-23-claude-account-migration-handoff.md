@@ -1,5 +1,14 @@
 # 2026-08-23 — Claude account migration handoff
 
+> **STATUS: APPROVED.** Codex approved this account-migration handoff on
+> **2026-08-23**, having reviewed the corrected documentation at the approved
+> handoff content commit `7b121df2cb79f879fdf2722202127fbe9509cff5`. The
+> migration is complete. A new Claude account starts at the **first-day
+> checklist** at the end of this document. Checkpoint 1 remains approved at
+> implementation baseline `e5dc158`; Checkpoint 2 remains not started and not
+> approved; `main` remains untouched; the current remote HEAD must still be
+> fetched and verified before any work.
+
 ## Why this document exists
 
 The Claude account that built Checkpoint 1 of the "Kabugao in View" rebuild is
@@ -62,6 +71,7 @@ two peso figures allowed anywhere, shown on `/about` only).
 | Checkpoint 1 | **APPROVED by Codex (2026-08-22)** at that baseline |
 | **Approved preview** | `https://e19410fa.betterkabugao.pages.dev/` (Cloudflare Pages deployment of the baseline, status Success) |
 | **Handoff documentation commit** | `5f7375598fd42d5fd239374aece1fda38282c648` — docs only, on top of the baseline |
+| **Approved handoff content commit** | `7b121df2cb79f879fdf2722202127fbe9509cff5` — the corrected docs Codex reviewed; **handoff APPROVED 2026-08-23, migration complete** |
 | **Current remote HEAD** | never hardcoded in docs: `git fetch origin && git rev-parse origin/experiment/full-site-visual-rebuild-v2` is authoritative — later documentation-only corrections may follow `5f73755`. Always fetch and verify before any work. |
 | Checkpoint 2 | **not started** — scope needs Robin + Codex approval first |
 | Merge to `main` | **not approved, not performed** — Codex decides after full-site parity |

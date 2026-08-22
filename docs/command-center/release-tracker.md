@@ -5,7 +5,8 @@ deployment that matters, and the rules that govern movement between them.
 Update this file whenever a commit is pushed, a preview is reviewed, or a
 release decision is made.
 
-_Last updated: **23 August 2026** (account-migration handoff)._
+_Last updated: **23 August 2026** (account-migration handoff APPROVED by
+Codex; migration complete)._
 
 ## Release rules (standing)
 
@@ -62,6 +63,7 @@ of the origin branch — never resurrect or reset to it.
 | **Approved implementation baseline** | `e5dc158fe3b75b406f0a9663d5a70a55f08bf1bf` — the Codex-approved Checkpoint 1 code |
 | **Approved preview** | `https://e19410fa.betterkabugao.pages.dev/` (deployment of the baseline) |
 | **Handoff documentation commit** | `5f7375598fd42d5fd239374aece1fda38282c648` (docs only, 2026-08-23) |
+| **Approved handoff content commit** | `7b121df2cb79f879fdf2722202127fbe9509cff5` — the corrected handoff docs Codex reviewed and **APPROVED on 2026-08-23**; migration complete |
 | **Current remote HEAD** | never hardcoded in docs — `git fetch origin && git rev-parse origin/experiment/full-site-visual-rebuild-v2` is authoritative. Later documentation-only corrections may follow `5f73755`. |
 
 ### Documentation-only commits on the branch (no site-output change)
@@ -69,6 +71,8 @@ of the origin branch — never resurrect or reset to it.
 | Commit | Date (UTC) | What |
 |---|---|---|
 | `5f73755` | 2026-08-23 02:21 | account-migration handoff (7 doc files); auto-built preview is not a review artifact |
+| `7b121df` | 2026-08-23 | Codex-requested correction pass (5 doc files): baseline vs HEAD labels, identity line, `npm ci`. **Approved handoff content commit.** |
+| _(follows `7b121df`)_ | 2026-08-23 | status-stamp commit recording Codex's approval (5 doc files; its own SHA is deliberately not written here — fetch is authoritative) |
 
 Gates at the approved baseline: 39 contract + 49 unit tests; typecheck + lint
 clean; build `PRERENDER_OK 33 pages`; `npm run qa` 123/123 (report committed
@@ -82,14 +86,15 @@ at `docs/qa/checkpoint-1/qa-report.json`).
 | 2026-08-21 | Implementation re-scored at round 2 (AI-slop 1/10, distinctiveness 8/10) | Codex | active-task §2d |
 | 2026-08-20 | CSP `form-action` relaxed `'none'` → `'self'` | Codex (written) | CONTEXT.md decision log; contract test |
 | 2026-08-22 | **Checkpoint 1 approved** at `e5dc158` / preview `e19410fa` | Codex | this tracker; active-task |
-| pending | Account-migration handoff final approval (docs commit `5f73755` plus the correction pass after it) | Codex | active-task; this tracker |
+| 2026-08-23 | **Account-migration handoff APPROVED** at content commit `7b121df` — migration complete; the new Claude account follows the first-day checklist | Codex | active-task; this tracker |
 | pending | Checkpoint 2 scope | Robin + Codex | proposal in `docs/sessions/2026-08-23-claude-account-migration-handoff.md` |
 | not approved | Merge of the rebuild to `main` | Codex | — |
 
 ## Next movements (in order)
 
-1. Codex gives final handoff approval (docs commit `5f73755` plus the
-   documentation correction pass that followed it).
+1. ~~Codex gives final handoff approval~~ — **done, 2026-08-23** (content
+   commit `7b121df`). The new Claude account onboards via the first-day
+   checklist in `docs/sessions/2026-08-23-claude-account-migration-handoff.md`.
 2. Robin + Codex approve a Checkpoint 2 scope.
 3. Checkpoint 2 is built in review commits on an approved branch, previewed,
    and approved round by round.

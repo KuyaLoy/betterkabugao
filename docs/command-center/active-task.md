@@ -1,10 +1,10 @@
-# ACTIVE TASK — account-migration handoff (Checkpoint 1 is APPROVED)
+# ACTIVE TASK — account migration COMPLETE (handoff approved by Codex)
 
 > Any session resuming work reads this file first, then
 > `docs/command-center/release-tracker.md`, then the latest file in
 > `docs/sessions/`. Update this file after each milestone.
 
-_Last updated: **2026-08-23** (account-migration handoff)._
+_Last updated: **2026-08-23** (handoff APPROVED by Codex; migration complete)._
 
 ---
 
@@ -16,7 +16,8 @@ _Last updated: **2026-08-23** (account-migration handoff)._
 | **Approved implementation baseline** | `e5dc158fe3b75b406f0a9663d5a70a55f08bf1bf` — the Codex-approved Checkpoint 1 code |
 | Checkpoint 1 | **APPROVED by Codex, 2026-08-22** (at the baseline above) |
 | **Approved preview** | `https://e19410fa.betterkabugao.pages.dev/` (deployment of the baseline) |
-| **Handoff documentation commit** | `5f7375598fd42d5fd239374aece1fda38282c648` — docs only, on the baseline; awaiting Codex final handoff approval |
+| **Handoff documentation commit** | `5f7375598fd42d5fd239374aece1fda38282c648` — docs only, on the baseline |
+| **Approved handoff content commit** | `7b121df2cb79f879fdf2722202127fbe9509cff5` — the corrected handoff docs Codex reviewed. **Account-migration handoff APPROVED by Codex on 2026-08-23; migration complete.** |
 | **Current remote HEAD** | never hardcoded here — `git fetch origin && git rev-parse origin/experiment/full-site-visual-rebuild-v2` is authoritative; later documentation-only corrections may follow `5f73755` |
 | `main` | `745b8779dd711cc20d478dee82f01101c9ed2c74` — **untouched**; no merge approved |
 | Gates at the approved baseline | 39 contract + 49 unit; typecheck + lint clean; build `PRERENDER_OK 33 pages`; `npm run qa` 123/123, exit 0 |
@@ -38,16 +39,17 @@ conversations. Deliverables: updated `docs/START-HERE.md`, `CLAUDE.md`,
 `docs/command-center/release-tracker.md` and
 `docs/sessions/2026-08-23-claude-account-migration-handoff.md`.
 
-Status: pushed as documentation commit
-`5f7375598fd42d5fd239374aece1fda38282c648`. Codex's review returned one
-documentation-state correction pass (approved-baseline vs current-HEAD
-labels, the identity line, `npm ci`), which has been applied on top of it.
-**Awaiting Codex final handoff approval.**
+Status: **APPROVED by Codex on 2026-08-23** at the approved handoff content
+commit `7b121df2cb79f879fdf2722202127fbe9509cff5` (the handoff landed as
+`5f73755`, followed by one Codex-requested documentation correction pass).
+**The migration is complete.** The new Claude account starts with the
+first-day checklist at the end of
+`docs/sessions/2026-08-23-claude-account-migration-handoff.md`.
 
 ## 2. What happens next (in order — none of it before approval)
 
-1. Codex reviews the handoff docs; the old account answers one correction pass
-   if needed.
+1. ~~Codex reviews the handoff docs~~ — **done: APPROVED 2026-08-23** (content
+   commit `7b121df`).
 2. The new Claude account starts with the first-day checklist at the end of
    `docs/sessions/2026-08-23-claude-account-migration-handoff.md`.
 3. Robin + Codex approve a **Checkpoint 2 scope** (a recommendation is in the

@@ -31,11 +31,15 @@ session (see `docs/skills/session-memory/SKILL.md`).
   account-migration handoff
   `docs/sessions/2026-08-23-claude-account-migration-handoff.md`. Spec:
   `docs/superpowers/specs/2026-08-21-full-site-visual-rebuild-v2-kabugao-in-view.md`.
-- **Account migration:** the Claude account that built Checkpoint 1 is being
-  deleted; handoff documentation commit `5f73755` (docs only) transfers
-  everything a new Claude account needs, and Codex's one requested
-  documentation correction pass has been applied after it. The migration is
-  complete only when Codex gives final handoff approval.
+- **Account migration: COMPLETE.** Handoff documentation commit `5f73755`
+  plus one Codex-requested correction pass were reviewed at the approved
+  handoff content commit `7b121df2cb79f879fdf2722202127fbe9509cff5`, and the
+  **handoff was APPROVED by Codex on 2026-08-23**. The new Claude account
+  must follow the first-day checklist at the end of
+  `docs/sessions/2026-08-23-claude-account-migration-handoff.md`. Checkpoint 1
+  remains approved at baseline `e5dc158`; Checkpoint 2 remains not started and
+  not approved; `main` remains untouched; the current remote HEAD is still
+  fetched and verified before any work.
 - **BetterLGU Directory:** PR #208 open against `jmacj/better-lgu-directory` —
   Kabugao row updated to 🟢 Active with the domain and the three socials, PR body
   and checklist completed, and a comment answering the triage bot's four
@@ -92,7 +96,8 @@ session (see `docs/skills/session-memory/SKILL.md`).
   approved implementation baseline (`e5dc158`) distinctly from the current
   remote HEAD (fetch is authoritative), remove an unexplained identity, use
   `npm ci` in first-day instructions — applied in the commit after `5f73755`.
-  The migration completes only on Codex's final handoff approval.
+  **Codex approved the handoff on 2026-08-23** at content commit `7b121df`;
+  the migration is complete.
 - **2026-08-22** **Checkpoint 1 approved by Codex** at `e5dc158` (preview
   `e19410fa`). Merge to `main` remains unapproved; Checkpoint 2 needs a scope
   approval first.
@@ -341,8 +346,9 @@ session (see `docs/skills/session-memory/SKILL.md`).
 
 ## Next steps
 
-1. **Codex reviews the account-migration handoff** (this commit); one
-   correction pass is budgeted before the old Claude account is deleted.
+1. ~~Codex reviews the account-migration handoff~~ — **done: APPROVED
+   2026-08-23** at content commit `7b121df`. The new Claude account onboards
+   via the handoff document's first-day checklist.
 2. **Robin + Codex approve a Checkpoint 2 scope**, then the new Claude account
    builds it in review commits (recommendation in the 2026-08-23 handoff doc).
    No merge to `main` until full-site parity and Codex approval.
