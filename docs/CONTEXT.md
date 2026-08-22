@@ -17,20 +17,25 @@ session (see `docs/skills/session-memory/SKILL.md`).
   entry is resolved). 33 prerendered routes, live and verified in production.
 - **Visual rebuild (experimental):** `experiment/full-site-visual-rebuild-v2` —
   the approved **"Kabugao in View"** photo-led redesign. **Checkpoint 1 is
-  pushed and APPROVED by Codex (2026-08-22)** at tip
-  `e5dc158fe3b75b406f0a9663d5a70a55f08bf1bf`; approved staging preview
-  `https://e19410fa.betterkabugao.pages.dev/`. Still experimental — **not
-  merged to `main`**, and Checkpoint 2 has not started (scope needs Robin +
-  Codex approval). Six correction rounds are ledgered in
+  APPROVED by Codex (2026-08-22)** at the **approved implementation baseline**
+  `e5dc158fe3b75b406f0a9663d5a70a55f08bf1bf`; **approved preview**
+  `https://e19410fa.betterkabugao.pages.dev/`. The branch has since received
+  the documentation-only handoff commit
+  `5f7375598fd42d5fd239374aece1fda38282c648`; the **current remote HEAD** is
+  read with `git fetch origin && git rev-parse
+  origin/experiment/full-site-visual-rebuild-v2` — never from a SHA written in
+  these docs. Still experimental — **not merged to `main`**, and Checkpoint 2
+  has not started (scope needs Robin + Codex approval). Six correction rounds are ledgered in
   `docs/command-center/release-tracker.md`; the narrative is in
   `docs/sessions/2026-08-21-full-site-visual-rebuild-v2.md` and the
   account-migration handoff
   `docs/sessions/2026-08-23-claude-account-migration-handoff.md`. Spec:
   `docs/superpowers/specs/2026-08-21-full-site-visual-rebuild-v2-kabugao-in-view.md`.
 - **Account migration:** the Claude account that built Checkpoint 1 is being
-  deleted; the 2026-08-23 handoff commit (docs only) transfers everything a new
-  Claude account needs. Codex reviews the handoff before the migration is
-  considered complete.
+  deleted; handoff documentation commit `5f73755` (docs only) transfers
+  everything a new Claude account needs, and Codex's one requested
+  documentation correction pass has been applied after it. The migration is
+  complete only when Codex gives final handoff approval.
 - **BetterLGU Directory:** PR #208 open against `jmacj/better-lgu-directory` —
   Kabugao row updated to 🟢 Active with the domain and the three socials, PR body
   and checklist completed, and a comment answering the triage bot's four
@@ -68,7 +73,7 @@ session (see `docs/skills/session-memory/SKILL.md`).
   RMFB 15, ICT), each in local and `+63` form, with `tel:+63` links so overseas
   family can dial. 911 leads. The red bar on every page carries 911 plus the
   all eight offices in a marquee, and a popup with the full list.
-- **Quality (at the experimental tip `e5dc158`):** 39 contract tests + 49 unit
+- **Quality (at the approved implementation baseline `e5dc158`):** 39 contract tests + 49 unit
   tests green; typecheck, lint, build clean (`PRERENDER_OK 33 pages`);
   `npm run qa` (committed Playwright harness) **123/123** at
   305/320/360/390/768/1280/1440 — zero horizontal overflow from 305px up, one
@@ -77,13 +82,17 @@ session (see `docs/skills/session-memory/SKILL.md`).
 
 ## Key decisions log
 
-- **2026-08-23** Account-migration handoff written (docs-only commit on the
-  experimental branch): new `docs/command-center/release-tracker.md` and
+- **2026-08-23** Account-migration handoff written (docs-only): new
+  `docs/command-center/release-tracker.md` and
   `docs/sessions/2026-08-23-claude-account-migration-handoff.md`; START-HERE /
   CLAUDE.md / CONTEXT / active-task / source-registry refreshed. Reason: the
   building Claude account is being deleted; the repository must carry the
-  project's full working memory. Codex reviews the handoff before the old
-  account goes away.
+  project's full working memory. Landed as documentation commit `5f73755`.
+  Codex's review returned one documentation-state correction pass — label the
+  approved implementation baseline (`e5dc158`) distinctly from the current
+  remote HEAD (fetch is authoritative), remove an unexplained identity, use
+  `npm ci` in first-day instructions — applied in the commit after `5f73755`.
+  The migration completes only on Codex's final handoff approval.
 - **2026-08-22** **Checkpoint 1 approved by Codex** at `e5dc158` (preview
   `e19410fa`). Merge to `main` remains unapproved; Checkpoint 2 needs a scope
   approval first.
@@ -370,6 +379,8 @@ session (see `docs/skills/session-memory/SKILL.md`).
 
 ## People
 
-- Maintainer / repo owner: KuyaLoy (Safdar)
-- Developer and initiator: **Robin Tapiru** — credited in the footer
+- GitHub repository account: KuyaLoy
+- Product owner, civic source owner, developer and initiator: **Robin
+  Tapiru** — credited in the footer. (The "maintainer" in these docs is Robin.)
+- Commander / final QA: Codex — approves every checkpoint and any merge
 - Community: BetterGov.ph · directory at lgu.bettergov.ph

@@ -36,8 +36,10 @@ the **BetterGov.ph / BetterLGU** volunteer network.
 
 - Live domain: **betterkabugao.org** (Cloudflare Pages, deploys `main`)
 - Repository: `github.com/KuyaLoy/betterkabugao`
-- Maintainer / repo owner: **KuyaLoy (Safdar)**
-- Developer and initiator: **Robin Tapiru** — credited in the footer
+- GitHub repository account: **KuyaLoy**
+- Product owner, civic source owner, developer and initiator: **Robin
+  Tapiru** — credited in the footer. (The "maintainer" referred to throughout
+  these docs is Robin.)
 - Cost: **₱0 to the people**; ₱670 domain paid personally by the developer
 
 ### Two things that are never negotiable
@@ -59,10 +61,10 @@ the **BetterGov.ph / BetterLGU** volunteer network.
 |---|---|
 | **Live on `betterkabugao.org`** | the full multi-page portal — **33 prerendered routes**, interactive maps, emergency hotlines, the public `/sitemap` page (PR #1) and the search/404 recovery screens + site-wide search overlay (PR #2). Merged and deployed. |
 | **`main` HEAD** | `745b877` — PR #2 (`improvement/search-404-recovery`) merged 20 Aug 2026 after Codex QA. **Untouched by the visual rebuild.** |
-| **Visual rebuild (experimental)** | `experiment/full-site-visual-rebuild-v2` — the approved **"Kabugao in View"** photo-led redesign. **Checkpoint 1 pushed and APPROVED by Codex (22 Aug 2026)** at tip `e5dc158fe3b75b406f0a9663d5a70a55f08bf1bf`; approved staging preview `https://e19410fa.betterkabugao.pages.dev/`. Still **not `main`/production**; **Checkpoint 2 not started** (scope needs Robin + Codex approval). Ledger: `docs/command-center/release-tracker.md`. Status: `docs/command-center/active-task.md`. Spec: `docs/superpowers/specs/2026-08-21-full-site-visual-rebuild-v2-kabugao-in-view.md`. |
-| **Account migration** | the Claude account that built Checkpoint 1 is being deleted. The transfer document a new account reads is `docs/sessions/2026-08-23-claude-account-migration-handoff.md` — roles, workflow, must-not-regress list, lessons, open questions. |
+| **Visual rebuild (experimental)** | `experiment/full-site-visual-rebuild-v2` — the approved **"Kabugao in View"** photo-led redesign. **Checkpoint 1 APPROVED by Codex (22 Aug 2026)** at the **approved implementation baseline** `e5dc158fe3b75b406f0a9663d5a70a55f08bf1bf`; **approved preview** `https://e19410fa.betterkabugao.pages.dev/`. The branch has since received the documentation-only handoff commit `5f7375598fd42d5fd239374aece1fda38282c648`; the **current remote HEAD** is whatever `git fetch origin && git rev-parse origin/experiment/full-site-visual-rebuild-v2` returns — always fetch and verify before work, never trust a SHA written in a doc. Still **not `main`/production**; **Checkpoint 2 not started** (scope needs Robin + Codex approval). Ledger: `docs/command-center/release-tracker.md`. Status: `docs/command-center/active-task.md`. Spec: `docs/superpowers/specs/2026-08-21-full-site-visual-rebuild-v2-kabugao-in-view.md`. |
+| **Account migration** | the Claude account that built Checkpoint 1 is being deleted. The transfer document a new account reads is `docs/sessions/2026-08-23-claude-account-migration-handoff.md` (pushed as documentation commit `5f73755`; awaiting Codex final handoff approval) — roles, workflow, must-not-regress list, lessons, open questions. |
 | **BetterLGU Directory** | PR [#208](https://github.com/jmacj/better-lgu-directory/pull/208) — Kabugao row updated to 🟢 Active, awaiting review by `jmacj`. Status not re-checked since 19 Aug 2026. |
-| **Quality gate (at the experimental tip)** | 39 contract + 49 unit tests green; lint, typecheck, build clean (`PRERENDER_OK 33 pages`); `npm run qa` **123/123** at 305/320/360/390/768/1280/1440 |
+| **Quality gate (at the approved implementation baseline `e5dc158`)** | 39 contract + 49 unit tests green; lint, typecheck, build clean (`PRERENDER_OK 33 pages`); `npm run qa` **123/123** at 305/320/360/390/768/1280/1440 |
 
 `c69101e` is 85 files changed / +6,128 / −509 against `main`, authored by
 KuyaLoy on 17 Aug 2026. The pushed tree was compared file by file against the

@@ -58,12 +58,14 @@ two peso figures allowed anywhere, shown on `/about` only).
 |---|---|
 | Production | `main` @ `745b8779dd711cc20d478dee82f01101c9ed2c74` — **untouched by the rebuild**; live at betterkabugao.org |
 | Experimental branch | `experiment/full-site-visual-rebuild-v2`, cut clean from that same `origin/main` commit |
-| Branch tip (origin) | `e5dc158fe3b75b406f0a9663d5a70a55f08bf1bf` |
-| Checkpoint 1 | **APPROVED by Codex (2026-08-22)** at that tip |
-| Approved preview | `https://e19410fa.betterkabugao.pages.dev/` (Cloudflare Pages preview deployment of `e5dc158`, status Success) |
+| **Approved implementation baseline** | `e5dc158fe3b75b406f0a9663d5a70a55f08bf1bf` — the Codex-approved Checkpoint 1 code |
+| Checkpoint 1 | **APPROVED by Codex (2026-08-22)** at that baseline |
+| **Approved preview** | `https://e19410fa.betterkabugao.pages.dev/` (Cloudflare Pages deployment of the baseline, status Success) |
+| **Handoff documentation commit** | `5f7375598fd42d5fd239374aece1fda38282c648` — docs only, on top of the baseline |
+| **Current remote HEAD** | never hardcoded in docs: `git fetch origin && git rev-parse origin/experiment/full-site-visual-rebuild-v2` is authoritative — later documentation-only corrections may follow `5f73755`. Always fetch and verify before any work. |
 | Checkpoint 2 | **not started** — scope needs Robin + Codex approval first |
 | Merge to `main` | **not approved, not performed** — Codex decides after full-site parity |
-| Gates at the tip | 39 contract + 49 unit tests pass; typecheck clean; lint clean; build `PRERENDER_OK 33 pages`; `npm run qa` **123/123 checks, exit 0** (committed report `docs/qa/checkpoint-1/qa-report.json`) |
+| Gates at the approved baseline | 39 contract + 49 unit tests pass; typecheck clean; lint clean; build `PRERENDER_OK 33 pages`; `npm run qa` **123/123 checks, exit 0** (committed report `docs/qa/checkpoint-1/qa-report.json`) |
 
 ## How work happens here (non-negotiable workflow)
 
@@ -110,7 +112,8 @@ kit. New dependencies need maintainer approval, stated in the PR/commit.
 ### Commands and gates
 
 ```bash
-npm install            # once; also fetches Playwright (dev dep)
+npm ci                 # reproducible install from the committed package-lock.json
+                       # (also fetches Playwright, a dev dependency)
 npm run dev            # Vite dev server (no prerendering here)
 
 npm test               # pretest runs the full build, then 39 contract + 49 unit
@@ -441,9 +444,14 @@ styling call · the hazard-map stack question (PMTiles vs Leaflet, START-HERE §
 
 1. Read `docs/START-HERE.md`, `CLAUDE.md`, `docs/CONTEXT.md`, this file, and
    `docs/command-center/` (active task, release tracker, source registry).
-2. `git fetch` and verify the branch tips against the release tracker.
-3. `npm install && npm test && npm run typecheck && npm run lint && npm run qa`
-   — confirm 39 + 49, clean, clean, 123/123 before changing anything.
+2. `git fetch origin` and read the current remote HEAD from
+   `git rev-parse origin/experiment/full-site-visual-rebuild-v2` — that output
+   is authoritative, not any SHA written in these docs. Cross-check the
+   labeled commits (approved baseline, handoff commit) against the release
+   tracker.
+3. `npm ci && npm test && npm run typecheck && npm run lint && npm run qa`
+   — confirm 39 + 49, clean, clean, 123/123 before changing anything
+   (one-time per machine: `npx playwright install chromium`).
 4. Open the approved preview and the production site; look at both at 305/320/
    390/768/1440.
 5. Ask Robin the open questions above. Propose the Checkpoint 2 scope to Codex

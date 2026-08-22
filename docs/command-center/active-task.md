@@ -13,11 +13,13 @@ _Last updated: **2026-08-23** (account-migration handoff)._
 | | |
 |---|---|
 | Branch | `experiment/full-site-visual-rebuild-v2` |
-| Origin tip | `e5dc158fe3b75b406f0a9663d5a70a55f08bf1bf` |
-| Checkpoint 1 | **APPROVED by Codex, 2026-08-22** |
-| Approved preview | `https://e19410fa.betterkabugao.pages.dev/` |
+| **Approved implementation baseline** | `e5dc158fe3b75b406f0a9663d5a70a55f08bf1bf` — the Codex-approved Checkpoint 1 code |
+| Checkpoint 1 | **APPROVED by Codex, 2026-08-22** (at the baseline above) |
+| **Approved preview** | `https://e19410fa.betterkabugao.pages.dev/` (deployment of the baseline) |
+| **Handoff documentation commit** | `5f7375598fd42d5fd239374aece1fda38282c648` — docs only, on the baseline; awaiting Codex final handoff approval |
+| **Current remote HEAD** | never hardcoded here — `git fetch origin && git rev-parse origin/experiment/full-site-visual-rebuild-v2` is authoritative; later documentation-only corrections may follow `5f73755` |
 | `main` | `745b8779dd711cc20d478dee82f01101c9ed2c74` — **untouched**; no merge approved |
-| Gates at the tip | 39 contract + 49 unit; typecheck + lint clean; build `PRERENDER_OK 33 pages`; `npm run qa` 123/123, exit 0 |
+| Gates at the approved baseline | 39 contract + 49 unit; typecheck + lint clean; build `PRERENDER_OK 33 pages`; `npm run qa` 123/123, exit 0 |
 | Checkpoint 2 | **not started** — scope needs Robin + Codex approval |
 
 The full commit-by-commit history of Checkpoint 1 (six correction rounds,
@@ -36,9 +38,11 @@ conversations. Deliverables: updated `docs/START-HERE.md`, `CLAUDE.md`,
 `docs/command-center/release-tracker.md` and
 `docs/sessions/2026-08-23-claude-account-migration-handoff.md`.
 
-Status: written, gates run, committed on the experimental branch, **awaiting
-Codex's handoff review** (one correction pass is budgeted before the old
-account is deleted).
+Status: pushed as documentation commit
+`5f7375598fd42d5fd239374aece1fda38282c648`. Codex's review returned one
+documentation-state correction pass (approved-baseline vs current-HEAD
+labels, the identity line, `npm ci`), which has been applied on top of it.
+**Awaiting Codex final handoff approval.**
 
 ## 2. What happens next (in order — none of it before approval)
 
@@ -70,9 +74,9 @@ account is deleted).
 
 ## PINNED APPROVED DECISIONS (do not relitigate)
 
-**Direction:** "Kabugao in View". **Status:** Checkpoint 1 approved at
-`e5dc158` on the experimental Cloudflare staging preview — still NOT
-main/production. Codex reviews every further checkpoint on the staging URL
+**Direction:** "Kabugao in View". **Status:** Checkpoint 1 approved at the
+implementation baseline `e5dc158` via its staging preview (`e19410fa`) — still
+NOT main/production. Codex reviews every further checkpoint on the staging URL
 before work continues.
 
 **Scope (Checkpoint 1, delivered):** shared foundations, header, footer,
