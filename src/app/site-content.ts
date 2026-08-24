@@ -152,8 +152,8 @@ export const siteContent = {
   developer: { name: "Robin Tapiru", role: "Developer and initiator" },
 
   disclaimer:
-    "BetterKabugao is an independent, volunteer-run civic project. It is not the official website of the Municipality of Kabugao.",
-  sourceNote: "All public information will be sourced from official government portals.",
+    "BetterKabugao is an independent, volunteer-run civic project for Kabugao, Apayao, and part of the BetterGov.ph volunteer network. It is neither affiliated with nor endorsed by the Municipality of Kabugao, and it is not the municipality's official website.",
+  sourceNote: "Published public information is sourced from official government portals.",
   license: "MIT · Content CC BY 4.0",
   version: "3.0.0",
 } as const;

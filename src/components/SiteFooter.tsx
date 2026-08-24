@@ -6,8 +6,10 @@ import { siteContent } from "../app/site-content";
  *
  * Dark surface, so it uses the inverse (light) repository logo. Cost figures
  * (₱0 to the public, ₱670 to build) live on /about only now — never in the
- * global footer — so this carries the independence disclaimer, the BetterGov
- * network note, a short set of destinations, and the build credit.
+ * global footer. The brand column carries the consolidated independence and
+ * BetterGov-network disclaimer once; the bottom row states where published
+ * information is sourced, plus the build credit. A short set of destinations
+ * sits between them.
  */
 export function SiteFooter() {
   const { links, developer } = siteContent;
@@ -23,11 +25,7 @@ export function SiteFooter() {
             width="469"
             height="160"
           />
-          <p className="footer__about">
-            An independent, volunteer-run civic project for Kabugao, Apayao. Not affiliated with,
-            endorsed by, or speaking for the Municipality of Kabugao. Part of the BetterGov.ph
-            volunteer network.
-          </p>
+          <p className="footer__about">{siteContent.disclaimer}</p>
         </div>
 
         <nav className="footer__col" aria-label="Site">
@@ -53,9 +51,7 @@ export function SiteFooter() {
       </div>
 
       <div className="shell footer__bottom">
-        <p className="footer__disclaimer">
-          {siteContent.disclaimer} {siteContent.sourceNote}
-        </p>
+        <p className="footer__disclaimer">{siteContent.sourceNote}</p>
         <p className="footer__built">
           Built by <b>{developer.name}</b> · {siteContent.license} · v{siteContent.version}
         </p>

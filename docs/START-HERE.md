@@ -5,10 +5,13 @@ this file completely before you touch anything else.** It tells you what the
 project is, what is already built, what comes next and in what order, and which
 mistakes have already cost us time.
 
-Last updated: **24 August 2026** (Checkpoint 2A — Government hub + Officials —
-pushed at `cf1ee7c`, Cloudflare preview live, Codex approved the code and visual
-direction; recap in
-`docs/sessions/2026-08-24-checkpoint-2a-government-officials.md`).
+Last updated: **24 August 2026** (footer cleanup — the two repetitive footer
+disclaimer paragraphs consolidated so the independence + BetterGov-network
+disclaimer appears once; **Codex-approved with one copy edit**, committed on the
+branch, push pending; recap in
+`docs/sessions/2026-08-24-footer-disclaimer-cleanup.md`. Earlier the same day:
+Checkpoint 2A — Government hub + Officials — pushed at `cf1ee7c`, Codex-approved;
+its docs/CSS cleanup landed at `657fbb2`).
 Update this file at the end of every session — see
 [§11](#11-before-you-finish-a-session).
 
@@ -65,6 +68,7 @@ the **BetterGov.ph / BetterLGU** volunteer network.
 | **`main` HEAD** | `745b877` — PR #2 (`improvement/search-404-recovery`) merged 20 Aug 2026 after Codex QA. **Untouched by the visual rebuild.** |
 | **Visual rebuild (experimental)** | `experiment/full-site-visual-rebuild-v2` — the approved **"Kabugao in View"** photo-led redesign. **Checkpoint 1 APPROVED by Codex (22 Aug 2026)** at the **approved implementation baseline** `e5dc158fe3b75b406f0a9663d5a70a55f08bf1bf`; **approved preview** `https://e19410fa.betterkabugao.pages.dev/`. The branch has since received the documentation-only handoff commit `5f7375598fd42d5fd239374aece1fda38282c648`; the **current remote HEAD** is whatever `git fetch origin && git rev-parse origin/experiment/full-site-visual-rebuild-v2` returns — always fetch and verify before work, never trust a SHA written in a doc. Still **not `main`/production**. **Checkpoint 2A (Government hub + Officials) is pushed and Codex-approved on this branch — see the next row.** Ledger: `docs/command-center/release-tracker.md`. Status: `docs/command-center/active-task.md`. Spec: `docs/superpowers/specs/2026-08-21-full-site-visual-rebuild-v2-kabugao-in-view.md`. |
 | **Checkpoint 2A (pushed, approved)** | `/government` + `/government/officials` brought into "Kabugao in View" (additive `kv` PageHeader variant, editorial wayfinding list, scannable officials roster). **Pushed at `cf1ee7cc4a29114d5819557f81b762e3bcd1404f`; Cloudflare preview https://69d4e1d9.betterkabugao.pages.dev/ ; Codex APPROVED the code and visual direction (2026-08-24).** Gates: 39 contract + 50 unit; typecheck + lint clean; `PRERENDER_OK 33 pages`; `npm run qa` **175/175**. A small docs/CSS cleanup pass followed. No other route touched; weather/clock still unmounted; legacy CSS not pruned (deferred). Recap: `docs/sessions/2026-08-24-checkpoint-2a-government-officials.md`. |
+| **Footer cleanup (standalone)** | The global footer's two repetitive disclaimer paragraphs consolidated into one. The brand column now carries the independence + BetterGov-network disclaimer once (`siteContent.disclaimer`); the bottom row states only where published information is sourced (`siteContent.sourceNote`). Author, licence, version and the Find/Network links are unchanged; **no "Barangay officials" link added** — no verified roster page exists (see §5). The pinned disclaimer contract in `tests/site-contracts.test.mjs` was updated to the new wording in the same change. Gates: 39 contract + 50 unit; typecheck + lint clean; `PRERENDER_OK 33 pages`; `npm run qa` **175/175**. **Codex-approved with one copy edit (2026-08-24)**; committed on the branch; push pending (the build session cannot push, so Robin pushes from the authorized PC). Recap: `docs/sessions/2026-08-24-footer-disclaimer-cleanup.md`. |
 | **Account migration** | **COMPLETE — handoff APPROVED by Codex on 2026-08-23** at approved handoff content commit `7b121df2cb79f879fdf2722202127fbe9509cff5`. The transfer document a new Claude account reads is `docs/sessions/2026-08-23-claude-account-migration-handoff.md` — roles, workflow, must-not-regress list, lessons, open questions — and it must follow that document's first-day checklist before doing anything else. |
 | **BetterLGU Directory** | PR [#208](https://github.com/jmacj/better-lgu-directory/pull/208) — Kabugao row updated to 🟢 Active, awaiting review by `jmacj`. Status not re-checked since 19 Aug 2026. |
 | **Quality gate (at the approved implementation baseline `e5dc158`)** | 39 contract + 49 unit tests green; lint, typecheck, build clean (`PRERENDER_OK 33 pages`); `npm run qa` **123/123** at 305/320/360/390/768/1280/1440 |

@@ -116,7 +116,7 @@ test("site content states only verified, sourced facts", () => {
   assert.match(content, /Robin Tapiru/);
   assert.match(content, /₱670/);
   assert.match(content, /No public funds/);
-  assert.match(content, /not the official website of the Municipality of Kabugao/);
+  assert.match(content, /neither affiliated with nor endorsed by the Municipality of Kabugao, and it is not the municipality['’]s official website/);
   // the tracker schema must ship without any values
   assert.match(content, /Public project records are being prepared/);
 });

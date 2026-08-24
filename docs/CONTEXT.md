@@ -50,6 +50,20 @@ session (see `docs/skills/session-memory/SKILL.md`).
   path; CP2A CSS tokens + letter-spacing). No other route was touched;
   weather/clock stay unmounted; the now-unused legacy CSS was left in place
   (pruning is a separate approved task).
+- **Footer cleanup (standalone — Codex-approved 2026-08-24 with one copy edit,
+  committed on the branch):** the global
+  footer's two repetitive disclaimer paragraphs consolidated into one. The
+  brand column carries the independence + BetterGov-network disclaimer once
+  (`siteContent.disclaimer`, reworded to a single consolidated sentence); the
+  bottom row states only where published information is sourced
+  (`siteContent.sourceNote`). Author, licence, version and the Find/Network
+  links are unchanged, and **no "Barangay officials" link was added** — no
+  verified roster page exists. The pinned disclaimer contract was updated to
+  the new wording in the same change. Gates: 39 contract + 50 unit; typecheck +
+  lint clean; `PRERENDER_OK 33 pages`; `npm run qa` 175/175. **Checkpoint 2B
+  (barangay officials) stays blocked** pending an official DILG roster — no
+  names were added or guessed. Recap:
+  `docs/sessions/2026-08-24-footer-disclaimer-cleanup.md`.
 - **BetterLGU Directory:** PR #208 open against `jmacj/better-lgu-directory` —
   Kabugao row updated to 🟢 Active with the domain and the three socials, PR body
   and checklist completed, and a comment answering the triage bot's four
@@ -96,6 +110,37 @@ session (see `docs/skills/session-memory/SKILL.md`).
 
 ## Key decisions log
 
+- **2026-08-24** **Footer cleanup (standalone correction).** The global footer
+  stated the independence disclaimer twice — once in the brand column's
+  `.footer__about` paragraph and again in the bottom `.footer__disclaimer`
+  row — which the anti-slop skill flags as a fact said in two places. Removed
+  the repeat: the brand column now carries a single consolidated sentence
+  (independent, volunteer-run, for Kabugao/Apayao, part of the BetterGov.ph
+  network, and "neither affiliated with nor endorsed by the Municipality of
+  Kabugao, and it is not the municipality's official website"); the bottom row
+  carries only the source line
+  ("Published public information is sourced from official government portals.").
+  Both are wired from `site-content.ts` (`disclaimer` and `sourceNote`) so the
+  copy has one home and no footer content field is left dead — `.footer__about`,
+  previously hardcoded, now renders `siteContent.disclaimer`. Because the pinned
+  disclaimer wording changed on purpose, the matching assertion in
+  `tests/site-contracts.test.mjs` ("site content states only verified, sourced
+  facts") was updated in the same change; the disclaimer is still asserted
+  present, in the new wording. `index.html`'s `<noscript>` "not the official
+  website" line was left untouched (out of scope; its own contract still
+  passes). Author/licence/version and the Find/Network links are unchanged;
+  **no "Barangay officials" footer link was added and no barangay names were
+  introduced — Checkpoint 2B stays blocked pending an official DILG roster.**
+  Gates green (39 contract + 50 unit; typecheck + lint clean; `PRERENDER_OK 33
+  pages`; `npm run qa` 175/175); the footer was looked at on the built homepage
+  at 1440 / 390 / 305 — the disclaimer renders once and there is no horizontal
+  overflow. **Codex approved the footer cleanup on 2026-08-24 with one copy
+  edit** — the consolidated disclaimer wording above is Codex's approved version
+  (a firmer "neither affiliated with nor endorsed by … and it is not the
+  municipality's official website"). Committed on the experimental branch; the
+  origin SHA and Cloudflare preview follow from the push (fetch stays
+  authoritative for HEAD). Recap:
+  `docs/sessions/2026-08-24-footer-disclaimer-cleanup.md`.
 - **2026-08-24** **Checkpoint 2A — Government hub + Officials** built on
   `experiment/full-site-visual-rebuild-v2` (parent `69a74d1…604005`), after
   Codex approved the scope and rulings. Brought `/government` and

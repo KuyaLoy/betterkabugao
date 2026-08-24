@@ -1,12 +1,15 @@
-# ACTIVE TASK — Checkpoint 2A pushed and approved (Government hub + Officials)
+# ACTIVE TASK — Footer cleanup prepared; Checkpoint 2A approved; 2B blocked
 
 > Any session resuming work reads this file first, then
 > `docs/command-center/release-tracker.md`, then the latest file in
 > `docs/sessions/`. Update this file after each milestone.
 
-_Last updated: **2026-08-24** (Checkpoint 2A pushed at `cf1ee7c`, Cloudflare
-preview live, Codex approved the code and visual direction; a small docs/CSS
-cleanup pass followed)._
+_Last updated: **2026-08-24** (footer cleanup — the two repetitive footer
+disclaimer paragraphs consolidated so the disclaimer appears once;
+**Codex-approved with one copy edit**, committed on the branch, push pending.
+Checkpoint 2A was pushed at `cf1ee7c` and Codex-approved; its docs/CSS cleanup
+landed at `657fbb2`. Checkpoint 2B — barangay officials — is blocked pending an
+official DILG roster)._
 
 ---
 
@@ -71,10 +74,24 @@ on the same experimental branch.
 1. ~~Robin pushes Checkpoint 2A~~ — **done: pushed at `cf1ee7c` (2026-08-24).**
 2. ~~Cloudflare preview~~ — **done: https://69d4e1d9.betterkabugao.pages.dev/**
 3. ~~Codex reviews the code + preview~~ — **done: APPROVED (2026-08-24).**
-4. A small docs/CSS cleanup pass (record push/preview/approval; README report
-   path; CP2A CSS tokens + letter-spacing) lands on the same branch.
-5. The next checkpoint scope (2B) is agreed with Robin + Codex when ready.
-   **No merge to `main` until full-site parity and Codex's explicit approval.**
+4. ~~A small docs/CSS cleanup pass~~ — **done: landed at `657fbb2` (2026-08-24).**
+5. **Footer cleanup (standalone) — Codex-approved, committed, push pending.**
+   The two repetitive footer disclaimer paragraphs were consolidated into one;
+   the brand column carries the independence + BetterGov-network disclaimer once
+   and the bottom row now carries only the source line. **Codex approved on
+   2026-08-24 with one copy edit** (a firmer consolidated disclaimer), which is
+   applied. No "Barangay officials" footer link and no barangay names were
+   added. Gates green (39 contract + 50 unit; typecheck + lint clean;
+   `PRERENDER_OK 33 pages`; `npm run qa` 175/175). Committed on the branch; the
+   build session cannot push, so Robin pushes from the authorized PC. Recap:
+   `docs/sessions/2026-08-24-footer-disclaimer-cleanup.md`.
+6. **Checkpoint 2B (barangay officials) is BLOCKED** pending an official DILG
+   barangay-officials roster. The source gate failed earlier (no citable
+   government source retrievable), so no dataset, page or names were added —
+   only the footer cleanup shipped from that request. See START-HERE §5.
+7. The 2B scope resumes once Robin + Codex supply an official roster, then the
+   next checkpoint is agreed. **No merge to `main` until full-site parity and
+   Codex's explicit approval.**
 
 ## 3. Standing constraints
 

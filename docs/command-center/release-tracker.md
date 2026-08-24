@@ -5,9 +5,11 @@ deployment that matters, and the rules that govern movement between them.
 Update this file whenever a commit is pushed, a preview is reviewed, or a
 release decision is made.
 
-_Last updated: **24 August 2026** (Checkpoint 2A — Government hub + Officials —
-pushed at `cf1ee7c`, Cloudflare preview live, Codex approved the code and visual
-direction; a small docs/CSS cleanup pass followed)._
+_Last updated: **24 August 2026** (footer cleanup — the two repetitive footer
+disclaimer paragraphs consolidated so the disclaimer appears once; prepared on
+the current branch tip, not yet pushed. Checkpoint 2A — Government hub +
+Officials — was pushed at `cf1ee7c` and Codex-approved; its docs/CSS cleanup
+landed at `657fbb2`)._
 
 ## Release rules (standing)
 
@@ -97,6 +99,32 @@ docs/CSS cleanup pass followed on the same branch.
 | Pushed commit | `cf1ee7cc4a29114d5819557f81b762e3bcd1404f` (pushed 2026-08-24; a small docs/CSS cleanup commit follows on the same branch) |
 | Preview | https://69d4e1d9.betterkabugao.pages.dev/ (Cloudflare deploy succeeded) |
 
+## Experimental — Footer cleanup (standalone correction)
+
+A small standalone correction on the same experimental branch: the global
+footer stated the independence disclaimer twice (the brand column's
+`.footer__about` paragraph and the bottom `.footer__disclaimer` row).
+Consolidated so it appears once — the brand column carries the independence +
+BetterGov-network disclaimer (`siteContent.disclaimer`, Codex's approved
+consolidated wording) and the bottom row carries only the source line
+(`siteContent.sourceNote`). **Codex approved with one copy edit (2026-08-24);
+committed on the branch. Push pending** — the build session cannot push, so the
+origin SHA and preview come from Robin's push.
+
+| | |
+|---|---|
+| Scope | footer copy consolidation only — no layout change, no new classes, no other route |
+| Changed — code | `src/components/SiteFooter.tsx`, `src/app/site-content.ts` (`disclaimer` + `sourceNote` wording) |
+| Changed — tests | `tests/site-contracts.test.mjs` — the pinned disclaimer assertion updated to the new wording in the same change (never deleted) |
+| Changed — docs | this file, `active-task.md`, `START-HERE.md`, `CONTEXT.md`, `docs/sessions/2026-08-24-footer-disclaimer-cleanup.md` |
+| Not changed | author, licence, version, Find/Network links; **no "Barangay officials" link added**; no barangay names; `index.html` `<noscript>` untouched |
+| Gates | 39 contract + 50 unit; typecheck + lint clean; `PRERENDER_OK 33 pages`; `npm run qa` **175/175, exit 0** |
+| Prepared on parent | current origin tip `657fbb2` (fetch-verified) |
+| Preview | pending push |
+
+Checkpoint 2B (barangay officials) remains **blocked** pending an official DILG
+roster — no names added or guessed.
+
 ## Approval log
 
 | Date | What | Who | Record |
@@ -108,6 +136,7 @@ docs/CSS cleanup pass followed on the same branch.
 | 2026-08-23 | **Account-migration handoff APPROVED** at content commit `7b121df` — migration complete; the new Claude account follows the first-day checklist | Codex | active-task; this tracker |
 | 2026-08-24 | **Checkpoint 2A scope APPROVED for implementation** (`/government` + `/government/officials`) with rulings | Codex | active-task; `docs/sessions/2026-08-24-checkpoint-2a-government-officials.md` |
 | 2026-08-24 | **Checkpoint 2A APPROVED** (code + visual direction) at `cf1ee7c` / preview `69d4e1d9` | Codex | this tracker; active-task |
+| 2026-08-24 | **Footer cleanup APPROVED with one copy edit** (consolidated disclaimer wording) on `experiment/full-site-visual-rebuild-v2` | Codex | this tracker; `docs/sessions/2026-08-24-footer-disclaimer-cleanup.md` |
 | pending | Later checkpoint scopes (2B onward) | Robin + Codex | — |
 | not approved | Merge of the rebuild to `main` | Codex | — |
 
@@ -117,6 +146,7 @@ docs/CSS cleanup pass followed on the same branch.
 2. ~~Build Checkpoint 2A~~ — **done; gates green.**
 3. ~~Robin pushes the CP2A commit~~ — **done: `cf1ee7c` (2026-08-24).**
 4. ~~Cloudflare preview + Codex review~~ — **done: preview https://69d4e1d9.betterkabugao.pages.dev/ ; Codex APPROVED the code and visual direction.**
-5. Final docs/CSS cleanup pass lands on the same branch (this update).
-6. Agree the next checkpoint scope (2B) with Robin + Codex when ready.
-7. Merge to `main` is proposed only at full-site parity — Codex's call.
+5. ~~Final docs/CSS cleanup pass lands on the same branch~~ — **done: `657fbb2` (2026-08-24).**
+6. Footer cleanup (standalone) prepared on the branch tip — **Robin pushes; Cloudflare auto-builds the preview; Codex reviews.**
+7. Checkpoint 2B (barangay officials) is **blocked** pending an official DILG roster; the scope resumes once Robin + Codex supply one.
+8. Merge to `main` is proposed only at full-site parity — Codex's call.
