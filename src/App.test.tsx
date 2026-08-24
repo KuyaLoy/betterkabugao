@@ -176,6 +176,20 @@ describe("officials page", () => {
   });
 });
 
+describe("government hub", () => {
+  it("guides into the three government destinations as real links, with one h1", () => {
+    renderAt("/government");
+    const main = screen.getByRole("main");
+    for (const href of ["/government/officials", "/government/barangays", "/transparency"]) {
+      const link = within(main)
+        .getAllByRole("link")
+        .find((a) => a.getAttribute("href") === href);
+      expect(link, `missing wayfinding link to ${href}`).toBeTruthy();
+    }
+    expect(within(main).getAllByRole("heading", { level: 1 })).toHaveLength(1);
+  });
+});
+
 describe("search", () => {
   const field = () => screen.getByLabelText(/Search everything published here/i);
   // The header and footer repeat destinations like Home, Sitemap and the

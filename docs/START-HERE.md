@@ -5,8 +5,9 @@ this file completely before you touch anything else.** It tells you what the
 project is, what is already built, what comes next and in what order, and which
 mistakes have already cost us time.
 
-Last updated: **23 August 2026** (account-migration handoff — the full transfer
-document is `docs/sessions/2026-08-23-claude-account-migration-handoff.md`).
+Last updated: **24 August 2026** (Checkpoint 2A — Government hub + Officials —
+built, gate-green, awaiting Robin's push + Codex review; recap in
+`docs/sessions/2026-08-24-checkpoint-2a-government-officials.md`).
 Update this file at the end of every session — see
 [§11](#11-before-you-finish-a-session).
 
@@ -61,7 +62,8 @@ the **BetterGov.ph / BetterLGU** volunteer network.
 |---|---|
 | **Live on `betterkabugao.org`** | the full multi-page portal — **33 prerendered routes**, interactive maps, emergency hotlines, the public `/sitemap` page (PR #1) and the search/404 recovery screens + site-wide search overlay (PR #2). Merged and deployed. |
 | **`main` HEAD** | `745b877` — PR #2 (`improvement/search-404-recovery`) merged 20 Aug 2026 after Codex QA. **Untouched by the visual rebuild.** |
-| **Visual rebuild (experimental)** | `experiment/full-site-visual-rebuild-v2` — the approved **"Kabugao in View"** photo-led redesign. **Checkpoint 1 APPROVED by Codex (22 Aug 2026)** at the **approved implementation baseline** `e5dc158fe3b75b406f0a9663d5a70a55f08bf1bf`; **approved preview** `https://e19410fa.betterkabugao.pages.dev/`. The branch has since received the documentation-only handoff commit `5f7375598fd42d5fd239374aece1fda38282c648`; the **current remote HEAD** is whatever `git fetch origin && git rev-parse origin/experiment/full-site-visual-rebuild-v2` returns — always fetch and verify before work, never trust a SHA written in a doc. Still **not `main`/production**; **Checkpoint 2 not started** (scope needs Robin + Codex approval). Ledger: `docs/command-center/release-tracker.md`. Status: `docs/command-center/active-task.md`. Spec: `docs/superpowers/specs/2026-08-21-full-site-visual-rebuild-v2-kabugao-in-view.md`. |
+| **Visual rebuild (experimental)** | `experiment/full-site-visual-rebuild-v2` — the approved **"Kabugao in View"** photo-led redesign. **Checkpoint 1 APPROVED by Codex (22 Aug 2026)** at the **approved implementation baseline** `e5dc158fe3b75b406f0a9663d5a70a55f08bf1bf`; **approved preview** `https://e19410fa.betterkabugao.pages.dev/`. The branch has since received the documentation-only handoff commit `5f7375598fd42d5fd239374aece1fda38282c648`; the **current remote HEAD** is whatever `git fetch origin && git rev-parse origin/experiment/full-site-visual-rebuild-v2` returns — always fetch and verify before work, never trust a SHA written in a doc. Still **not `main`/production**. **Checkpoint 2A (Government hub + Officials) is built and gate-green on this branch — see the next row.** Ledger: `docs/command-center/release-tracker.md`. Status: `docs/command-center/active-task.md`. Spec: `docs/superpowers/specs/2026-08-21-full-site-visual-rebuild-v2-kabugao-in-view.md`. |
+| **Checkpoint 2A (in review)** | `/government` + `/government/officials` brought into "Kabugao in View" (additive `kv` PageHeader variant, editorial wayfinding list, scannable officials roster). One focused commit prepared on parent `69a74d1…604005`; gates green (39 contract + 50 unit; typecheck + lint clean; `PRERENDER_OK 33 pages`; `npm run qa` **175/175**). **Not yet pushed** — awaiting Robin's push, the Cloudflare preview, and Codex review. No other route touched; weather/clock still unmounted; legacy CSS not pruned (deferred). Recap: `docs/sessions/2026-08-24-checkpoint-2a-government-officials.md`. |
 | **Account migration** | **COMPLETE — handoff APPROVED by Codex on 2026-08-23** at approved handoff content commit `7b121df2cb79f879fdf2722202127fbe9509cff5`. The transfer document a new Claude account reads is `docs/sessions/2026-08-23-claude-account-migration-handoff.md` — roles, workflow, must-not-regress list, lessons, open questions — and it must follow that document's first-day checklist before doing anything else. |
 | **BetterLGU Directory** | PR [#208](https://github.com/jmacj/better-lgu-directory/pull/208) — Kabugao row updated to 🟢 Active, awaiting review by `jmacj`. Status not re-checked since 19 Aug 2026. |
 | **Quality gate (at the approved implementation baseline `e5dc158`)** | 39 contract + 49 unit tests green; lint, typecheck, build clean (`PRERENDER_OK 33 pages`); `npm run qa` **123/123** at 305/320/360/390/768/1280/1440 |
@@ -121,8 +123,9 @@ Adding any dependency needs the maintainer's explicit approval.
 | 404 | `*` → `dist/404.html` | a real 404 recovery screen; no catch-all swallows typos |
 
 On the experimental branch, the header/footer/homepage/barangays-directory
-surfaces of these routes carry the approved "Kabugao in View" design; the
-remaining pages keep their v3 look until Checkpoint 2 is approved.
+carry the approved "Kabugao in View" design, and — pending Codex review of
+Checkpoint 2A — so do `/government` and `/government/officials`. The remaining
+routes keep their v3 look until a later checkpoint is approved.
 
 Each barangay page carries population, share of the municipality, rank, PSGC
 code, coordinates, classification, former name where one exists, schools,

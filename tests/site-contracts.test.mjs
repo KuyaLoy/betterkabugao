@@ -451,6 +451,8 @@ test("every class a component renders has a rule in the stylesheet", () => {
     "src/pages/BarangaysPage.tsx",
     "src/pages/HomePage.tsx",
     "src/pages/SitemapPage.tsx",
+    "src/pages/SimplePages.tsx",
+    "src/pages/OfficialsPage.tsx",
     "src/components/SearchPanel.tsx",
   ];
 

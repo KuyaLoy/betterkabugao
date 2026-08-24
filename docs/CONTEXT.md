@@ -7,7 +7,7 @@ the traps. This file is the dated decision log behind it.
 Living snapshot of BetterKabugao. Update both at the end of every working
 session (see `docs/skills/session-memory/SKILL.md`).
 
-## Current state (2026-08-23)
+## Current state (2026-08-24)
 
 - **Domain:** betterkabugao.org — Cloudflare Pages, deploys from `main`
   (build `npm run build`, output `dist`)
@@ -37,9 +37,17 @@ session (see `docs/skills/session-memory/SKILL.md`).
   **handoff was APPROVED by Codex on 2026-08-23**. The new Claude account
   must follow the first-day checklist at the end of
   `docs/sessions/2026-08-23-claude-account-migration-handoff.md`. Checkpoint 1
-  remains approved at baseline `e5dc158`; Checkpoint 2 remains not started and
-  not approved; `main` remains untouched; the current remote HEAD is still
-  fetched and verified before any work.
+  remains approved at baseline `e5dc158`; `main` remains untouched; the current
+  remote HEAD is still fetched and verified before any work.
+- **Checkpoint 2A (Government hub + Officials): BUILT, awaiting review.** Codex
+  approved the 2A scope on 2026-08-24; `/government` and `/government/officials`
+  were brought into "Kabugao in View" (an additive `kv` PageHeader variant, an
+  editorial wayfinding list, and a scannable officials roster) in one focused
+  commit prepared on parent `69a74d1…604005`. Gates green (39 contract + 50
+  unit; typecheck + lint clean; `PRERENDER_OK 33 pages`; `npm run qa` 175/175).
+  Not yet pushed — awaiting Robin's push, the Cloudflare preview, and Codex
+  review. No other route was touched; weather/clock stay unmounted; the now-unused
+  legacy CSS was left in place (pruning is a separate approved task).
 - **BetterLGU Directory:** PR #208 open against `jmacj/better-lgu-directory` —
   Kabugao row updated to 🟢 Active with the domain and the three socials, PR body
   and checklist completed, and a comment answering the triage bot's four
@@ -47,7 +55,7 @@ session (see `docs/skills/session-memory/SKILL.md`).
 - **Merged:** the public `/sitemap` page (PR #1, `21f622b`). 33 prerendered
   routes, 32 sitemap.xml URLs.
 - **What is live:** v3.0.0 — the real multi-page portal.
-  **32 routes prerendered to static HTML**, each with its own title,
+  **33 prerendered pages (32 sitemap URLs; /404 excluded)**, each with its own title,
   description, canonical, OG tags and `BreadcrumbList` JSON-LD. Real homepage
   (no longer coming-soon), `/government` hub, `/government/officials`,
   `/government/barangays` with a live filter, and **one page per barangay** at
@@ -86,6 +94,28 @@ session (see `docs/skills/session-memory/SKILL.md`).
 
 ## Key decisions log
 
+- **2026-08-24** **Checkpoint 2A — Government hub + Officials** built on
+  `experiment/full-site-visual-rebuild-v2` (parent `69a74d1…604005`), after
+  Codex approved the scope and rulings. Brought `/government` and
+  `/government/officials` into "Kabugao in View": one *additive* `PageHeader`
+  variant (`variant="kv"` — solid navy, gold-rule eyebrow) used only by these
+  two routes (existing variants and other pages unchanged; page-header markup
+  not duplicated); the hub's three-card grid replaced by an editorial
+  wayfinding list (real crawlable links; status labels Available / Available /
+  In preparation; one page-entry animation + hover/focus cue, off under reduced
+  motion); the officials card grid replaced by a scannable roster (executive
+  tier with a gold rail — one coherent treatment, not floating cards — then the
+  Sangguniang Bayan), preserving exact names, positions, term, the eLGU source
+  + retrieval date, and both notices. The same commit added `SimplePages.tsx` +
+  `OfficialsPage.tsx` to the className↔stylesheet cross-check, added a hub unit
+  test, and extended the committed QA harness to both routes (175/175); and
+  corrected two stale docs (the `frontend-standards` "capital of Apayao"
+  pinned-fact wording; route-count wording → "33 prerendered pages / 32 sitemap
+  URLs"). Weather/clock left unmounted; the now-unused legacy CSS
+  (`.nav-card` / `.card-grid` / `.official*`) left in place (pruning is the
+  separate approved cleanup task). Gates green; **not yet pushed** — awaiting
+  Robin's push, the Cloudflare preview, and Codex review. Full recap:
+  `docs/sessions/2026-08-24-checkpoint-2a-government-officials.md`.
 - **2026-08-23** Account-migration handoff written (docs-only): new
   `docs/command-center/release-tracker.md` and
   `docs/sessions/2026-08-23-claude-account-migration-handoff.md`; START-HERE /
@@ -349,8 +379,10 @@ session (see `docs/skills/session-memory/SKILL.md`).
 1. ~~Codex reviews the account-migration handoff~~ — **done: APPROVED
    2026-08-23** at content commit `7b121df`. The new Claude account onboards
    via the handoff document's first-day checklist.
-2. **Robin + Codex approve a Checkpoint 2 scope**, then the new Claude account
-   builds it in review commits (recommendation in the 2026-08-23 handoff doc).
+2. **Checkpoint 2A (Government hub + Officials): built, awaiting review.** Codex
+   approved the 2A scope 2026-08-24; the single commit is prepared on parent
+   `69a74d1…604005` and gate-green — awaiting Robin's push, the Cloudflare
+   preview, and Codex review. Afterward Robin + Codex agree the next scope (2B).
    No merge to `main` until full-site parity and Codex approval.
 3. ~~React hydration error #418~~ — **explained during rebuild QA**: `vite
    preview`'s SPA fallback serves the homepage HTML for every non-root URL, so
@@ -379,9 +411,10 @@ session (see `docs/skills/session-memory/SKILL.md`).
     align all of them.
 12. Robin to delete `_to_delete/`, and `src/components/SiteSearch.tsx` if a
     `git rm` ever leaves it behind (the device bridge cannot remove files).
-13. **README.md refresh** (stale route table, `PRERENDER_OK 31`, pre-portal
-    "Project status" section) — safe to update; only build settings are
-    contract-pinned. Flagged in the 2026-08-23 handoff; needs a quick approval.
+13. **README.md refresh** — the stale `PRERENDER_OK` count was corrected to
+    "33 pages" in Checkpoint 2A; the route table and the pre-portal "Project
+    status" section are still stale and want a fuller refresh (safe — only
+    build settings are contract-pinned).
 
 ## People
 

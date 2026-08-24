@@ -6,13 +6,14 @@ import { BARANGAYS } from "../data/barangays";
 import { EXECUTIVE, OFFICIALS_TERM } from "../data/officials";
 import { RECOVERY_LINKS, metaFor } from "../lib/seo";
 
-/** /government — hub page with real content, never a redirect. */
+/** /government — hub page: an editorial wayfinding list into the real
+ *  government destinations, never a redirect and never a card wall. */
 export function GovernmentPage() {
   const meta = metaFor("/government");
   return (
     <>
       <PageHeader
-        variant="hero"
+        variant="kv"
         eyebrow="Kabugao, Apayao"
         title="Government of Kabugao"
         description="Who governs Kabugao, and the 21 barangays that make it up."
@@ -20,29 +21,57 @@ export function GovernmentPage() {
       />
       <section className="section">
         <div className="shell">
-          <div className="card-grid">
-            <Link className="nav-card" to="/government/officials">
-              <span className="nav-card__kicker">Available now</span>
-              <h3>Elected officials</h3>
-              <p>
-                Mayor {EXECUTIVE[0].name.split(" ").slice(-1)}, the vice mayor and the eight elected
-                Sangguniang Bayan members for {OFFICIALS_TERM}.
-              </p>
-              <span className="nav-card__go" aria-hidden="true">→</span>
-            </Link>
-            <Link className="nav-card" to="/government/barangays">
-              <span className="nav-card__kicker">Available now</span>
-              <h3>All {BARANGAYS.length} barangays</h3>
-              <p>Population, PSGC code, coordinates, schools and directions — each with its own page.</p>
-              <span className="nav-card__go" aria-hidden="true">→</span>
-            </Link>
-            <Link className="nav-card" to="/transparency">
-              <span className="nav-card__kicker">In progress</span>
-              <h3>Transparency</h3>
-              <p>Public records for Kabugao, in preparation — every figure traced to its official source before it is published.</p>
-              <span className="nav-card__go" aria-hidden="true">→</span>
-            </Link>
-          </div>
+          <p className="kv-intro">
+            Start with the people and the places that make up the municipal government. Each section
+            opens its own page; records still being prepared are labelled so.
+          </p>
+          <ul className="kv-guide">
+            <li className="kv-guide__item">
+              <Link className="kv-guide__link" to="/government/officials">
+                <span className="kv-guide__main">
+                  <span className="kv-guide__title">Elected officials</span>
+                  <span className="kv-guide__desc">
+                    Mayor {EXECUTIVE[0].name.split(" ").slice(-1)}, the vice mayor and the eight elected
+                    Sangguniang Bayan members for {OFFICIALS_TERM}.
+                  </span>
+                </span>
+                <span className="kv-guide__meta">
+                  <span className="kv-guide__status kv-guide__status--live">Available</span>
+                  <span className="kv-guide__go" aria-hidden="true">→</span>
+                </span>
+              </Link>
+            </li>
+            <li className="kv-guide__item">
+              <Link className="kv-guide__link" to="/government/barangays">
+                <span className="kv-guide__main">
+                  <span className="kv-guide__title">All {BARANGAYS.length} barangays</span>
+                  <span className="kv-guide__desc">
+                    Population, PSGC code, coordinates, schools and directions — each barangay with its
+                    own page and map.
+                  </span>
+                </span>
+                <span className="kv-guide__meta">
+                  <span className="kv-guide__status kv-guide__status--live">Available</span>
+                  <span className="kv-guide__go" aria-hidden="true">→</span>
+                </span>
+              </Link>
+            </li>
+            <li className="kv-guide__item">
+              <Link className="kv-guide__link" to="/transparency">
+                <span className="kv-guide__main">
+                  <span className="kv-guide__title">Transparency</span>
+                  <span className="kv-guide__desc">
+                    Public records for Kabugao, in preparation — every figure traced to its official
+                    source before it is published.
+                  </span>
+                </span>
+                <span className="kv-guide__meta">
+                  <span className="kv-guide__status kv-guide__status--soon">In preparation</span>
+                  <span className="kv-guide__go" aria-hidden="true">→</span>
+                </span>
+              </Link>
+            </li>
+          </ul>
         </div>
       </section>
     </>

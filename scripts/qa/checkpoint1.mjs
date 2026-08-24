@@ -6,7 +6,9 @@
  *
  * Every required condition is a boolean check. The process EXITS NON-ZERO if any
  * required check fails — a failed measurement can never be reported as passed.
- * A pass/fail report is written to docs/qa/checkpoint-1/qa-report.json.
+ * A pass/fail report is written to docs/qa/checkpoint-2a/qa-report.json
+ * (Checkpoint 2A). The Checkpoint 1 report at docs/qa/checkpoint-1/qa-report.json
+ * is left as-is.
  *
  * Served the way Cloudflare Pages serves (clean URLs -> prerendered files) via
  * scripts/qa/serve.mjs, NOT vite preview's SPA fallback. External OSM tiles are
@@ -24,6 +26,9 @@ import { startServer } from "./serve.mjs";
 
 const OUT = fileURLToPath(new URL("../../docs/qa/checkpoint-1/", import.meta.url));
 mkdirSync(OUT, { recursive: true });
+// Checkpoint 2A route screenshots live in their own repository-relative folder.
+const OUT_2A = fileURLToPath(new URL("../../docs/qa/checkpoint-2a/", import.meta.url));
+mkdirSync(OUT_2A, { recursive: true });
 
 const SIZES = [
   // 305 = a 320px Windows window minus a ~15px classic (non-overlay) scrollbar.
@@ -43,6 +48,13 @@ const ROUTES = [
   ["/government/barangays", "barangays"],
   ["/government/barangays/poblacion", "poblacion"],
 ];
+// Checkpoint 2A routes have no map, so they join the layout matrix only — never
+// the map / no-JS / OSM-attribution sections below, which assume a map is present.
+const ROUTES_2A = [
+  ["/government", "government"],
+  ["/government/officials", "officials"],
+];
+const LAYOUT_ROUTES = [...ROUTES, ...ROUTES_2A];
 const EXPECTED_ERR = /tile\.openstreetmap\.org|openstreetmap|open-meteo|Failed to load resource|net::ERR|ERR_|favicon/i;
 
 const checks = [];
@@ -98,7 +110,7 @@ async function main() {
     const errs = [];
     page.on("console", (m) => { if (m.type() === "error" && !EXPECTED_ERR.test(m.text())) errs.push(m.text()); });
     page.on("pageerror", (e) => { if (!EXPECTED_ERR.test(e.message)) errs.push("PAGEERROR: " + e.message); });
-    for (const [path, name] of ROUTES) {
+    for (const [path, name] of LAYOUT_ROUTES) {
       await stable(page, base, path);
       const m = await page.evaluate(() => ({
         overflow: Math.ceil(document.documentElement.scrollWidth) - window.innerWidth,
@@ -150,6 +162,75 @@ async function main() {
     const url = await page.evaluate(() => location.pathname);
     record(`plain click on a directory link navigates`, /^\/government\/barangays\/[^/]+$/.test(url) && url !== "/government/barangays", `url=${url}`);
     await ctx.close();
+  }
+
+  // 3b. Checkpoint 2A — Government hub wayfinding + Officials roster + kv header
+  {
+    const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+    const page = await ctx.newPage();
+
+    await stable(page, base, "/government");
+    const hub = await page.evaluate(() => {
+      const main = document.querySelector("main");
+      const wanted = ["/government/officials", "/government/barangays", "/transparency"];
+      const links = [...main.querySelectorAll("a.kv-guide__link")];
+      const hrefs = links.map((a) => a.getAttribute("href"));
+      return {
+        h1: document.querySelectorAll("h1").length,
+        count: links.length,
+        allWanted: wanted.every((w) => hrefs.includes(w)),
+        realAnchors: links.every((a) => a.tagName === "A" && !!a.getAttribute("href")),
+        kvHeader: !!document.querySelector(".page-head--kv"),
+        cards: main.querySelectorAll(".nav-card, .card-grid").length,
+      };
+    });
+    record(`[hub] one <h1>`, hub.h1 === 1, `h1=${hub.h1}`);
+    record(`[hub] three real crawlable destination links`, hub.count === 3 && hub.allWanted && hub.realAnchors, `count=${hub.count} allWanted=${hub.allWanted}`);
+    record(`[hub] kv interior header, not the old card grid`, hub.kvHeader && hub.cards === 0, `cards=${hub.cards}`);
+
+    let hubRing = null;
+    for (let i = 0; i < 12 && !hubRing; i++) {
+      await page.keyboard.press("Tab");
+      hubRing = await page.evaluate(() => {
+        const el = document.activeElement;
+        if (!el || !el.classList || !el.classList.contains("kv-guide__link")) return null;
+        const cs = getComputedStyle(el);
+        return cs.outlineStyle !== "none" && parseFloat(cs.outlineWidth) > 0 ? cs.outline : null;
+      });
+    }
+    record(`[hub] wayfinding link shows a visible keyboard focus ring`, !!hubRing, hubRing || "none");
+
+    await stable(page, base, "/government/officials");
+    const off = await page.evaluate(() => {
+      const main = document.querySelector("main");
+      const names = [...main.querySelectorAll(".kv-roster__name")].map((n) => n.textContent.trim());
+      const sb = [...main.querySelectorAll(".kv-roster__post")].filter((p) => /Sangguniang Bayan Member/.test(p.textContent)).length;
+      const src = [...main.querySelectorAll("a")].some((a) => /elgu-kabugao-apayao-news\.e\.gov\.ph\/officials/.test(a.getAttribute("href") || ""));
+      return {
+        h1: document.querySelectorAll("h1").length,
+        exec: names.includes("Bensmar B. Ligwang") && names.includes("Frederick C. Amid"),
+        sb,
+        src,
+        kvHeader: !!document.querySelector(".page-head--kv"),
+        cards: main.querySelectorAll(".official, .official-grid").length,
+      };
+    });
+    record(`[officials] one <h1>`, off.h1 === 1, `h1=${off.h1}`);
+    record(`[officials] executive names present in the roster`, off.exec);
+    record(`[officials] eight Sangguniang Bayan members`, off.sb === 8, `sb=${off.sb}`);
+    record(`[officials] eLGU source link kept next to the roster`, off.src);
+    record(`[officials] kv interior header + roster, not the old cards`, off.kvHeader && off.cards === 0, `cards=${off.cards}`);
+    await ctx.close();
+  }
+
+  // 3c. Reduced motion: the hub wayfinding entry animation is disabled
+  {
+    const rm = await browser.newContext({ viewport: { width: 1280, height: 900 }, reducedMotion: "reduce" });
+    const p = await rm.newPage();
+    await stable(p, base, "/government");
+    const anim = await p.evaluate(() => getComputedStyle(document.querySelector(".kv-guide__item")).animationName);
+    record(`[hub] reduced-motion disables the wayfinding entry animation`, anim === "none", `animationName=${anim}`);
+    await rm.close();
   }
 
   // 4. Search Escape (desktop + mobile): close, clear, refocus trigger
@@ -482,6 +563,17 @@ async function main() {
     await ctx.close();
   }
 
+  // Screenshots for Checkpoint 2A routes → docs/qa/checkpoint-2a/ (non-failing) — 1440/768/390/305
+  for (const [w, h] of [[1440, 900], [768, 900], [390, 844], [305, 568]]) {
+    const ctx = await browser.newContext({ viewport: { width: w, height: h } });
+    const page = await ctx.newPage();
+    for (const [path, name] of ROUTES_2A) {
+      await stable(page, base, path);
+      await page.screenshot({ path: `${OUT_2A}/${name}-${w}.png`, fullPage: true });
+    }
+    await ctx.close();
+  }
+
   await browser.close();
   server.close();
 
@@ -496,7 +588,7 @@ async function main() {
     failures: failed.map((c) => ({ name: c.name, detail: c.detail })),
     checks,
   };
-  writeFileSync(`${OUT}/qa-report.json`, JSON.stringify(report, null, 2));
+  writeFileSync(`${OUT_2A}/qa-report.json`, JSON.stringify(report, null, 2));
   console.log(`\n===== ${report.overallPass ? "ALL PASS" : "FAILURES PRESENT"} — ${report.passed}/${report.totalChecks} checks =====`);
   if (failed.length) failed.forEach((c) => console.log(`  - ${c.name} (${c.detail})`));
   process.exit(report.overallPass ? 0 : 1);

@@ -5,8 +5,9 @@ deployment that matters, and the rules that govern movement between them.
 Update this file whenever a commit is pushed, a preview is reviewed, or a
 release decision is made.
 
-_Last updated: **23 August 2026** (account-migration handoff APPROVED by
-Codex; migration complete)._
+_Last updated: **24 August 2026** (Checkpoint 2A — Government hub + Officials —
+implemented on the experimental branch; gates green; awaiting Robin's push, the
+Cloudflare preview, and Codex review)._
 
 ## Release rules (standing)
 
@@ -78,6 +79,23 @@ Gates at the approved baseline: 39 contract + 49 unit tests; typecheck + lint
 clean; build `PRERENDER_OK 33 pages`; `npm run qa` 123/123 (report committed
 at `docs/qa/checkpoint-1/qa-report.json`).
 
+## Experimental — Checkpoint 2A ("Kabugao in View": Government hub + Officials)
+
+One focused commit brings `/government` and `/government/officials` into the CP1
+direction; no other route is touched. **Built and gate-green in a clean clone;
+not yet pushed** — awaiting Robin's push, the Cloudflare preview, and Codex review.
+
+| | |
+|---|---|
+| Scope | `/government` (editorial wayfinding list) + `/government/officials` (scannable roster) |
+| Parent SHA | `69a74d1436509aeb0f97ce22b0c81a7cf1604005` (current experimental tip) |
+| Changed — code | `src/components/PageHeader.tsx` (additive `kv` variant), `src/pages/SimplePages.tsx` (GovernmentPage), `src/pages/OfficialsPage.tsx`, `src/styles.css` (CP2A layer) |
+| Changed — tests/QA | `tests/site-contracts.test.mjs` (cross-check + 2 files), `src/App.test.tsx` (hub test), `scripts/qa/checkpoint1.mjs` (+ both routes; report now written to `docs/qa/checkpoint-2a/`), `docs/qa/checkpoint-2a/` (qa-report.json + screenshots + qa-note.md). The CP1 report `docs/qa/checkpoint-1/qa-report.json` is left unchanged. |
+| Changed — docs | this file, `active-task.md`, `START-HERE.md`, `CONTEXT.md`, `docs/skills/frontend-standards/SKILL.md`, `README.md`, `docs/sessions/2026-08-24-checkpoint-2a-government-officials.md` |
+| Gates | 39 contract + 50 unit; typecheck + lint clean; `PRERENDER_OK 33 pages`; `npm run qa` **175/175, exit 0** |
+| Commit SHA | produced when Robin commits on the authorized PC — record here after the push (the sandbox has no push credentials) |
+| Preview | recorded after Robin pushes and Cloudflare builds |
+
 ## Approval log
 
 | Date | What | Who | Record |
@@ -87,15 +105,18 @@ at `docs/qa/checkpoint-1/qa-report.json`).
 | 2026-08-20 | CSP `form-action` relaxed `'none'` → `'self'` | Codex (written) | CONTEXT.md decision log; contract test |
 | 2026-08-22 | **Checkpoint 1 approved** at `e5dc158` / preview `e19410fa` | Codex | this tracker; active-task |
 | 2026-08-23 | **Account-migration handoff APPROVED** at content commit `7b121df` — migration complete; the new Claude account follows the first-day checklist | Codex | active-task; this tracker |
-| pending | Checkpoint 2 scope | Robin + Codex | proposal in `docs/sessions/2026-08-23-claude-account-migration-handoff.md` |
+| 2026-08-24 | **Checkpoint 2A scope APPROVED for implementation** (`/government` + `/government/officials`) with rulings | Codex | active-task; `docs/sessions/2026-08-24-checkpoint-2a-government-officials.md` |
+| pending | Checkpoint 2A review (code + Cloudflare preview) | Codex | after Robin pushes |
+| pending | Later checkpoint scopes (2B onward) | Robin + Codex | — |
 | not approved | Merge of the rebuild to `main` | Codex | — |
 
 ## Next movements (in order)
 
-1. ~~Codex gives final handoff approval~~ — **done, 2026-08-23** (content
-   commit `7b121df`). The new Claude account onboards via the first-day
-   checklist in `docs/sessions/2026-08-23-claude-account-migration-handoff.md`.
-2. Robin + Codex approve a Checkpoint 2 scope.
-3. Checkpoint 2 is built in review commits on an approved branch, previewed,
-   and approved round by round.
-4. Merge to `main` is proposed only at full-site parity — Codex's call.
+1. ~~Codex approves a Checkpoint 2A scope~~ — **done, 2026-08-24.**
+2. ~~Build Checkpoint 2A~~ — **done; gates green; awaiting push.**
+3. Robin pushes the single CP2A commit to `experiment/full-site-visual-rebuild-v2`
+   from the authorized PC (verify `git rev-parse HEAD` = `69a74d1…604005` first),
+   then records the commit SHA and the Cloudflare preview URL above.
+4. Codex reviews the code + the preview and approves or returns blockers.
+5. On approval, agree the next checkpoint scope (2B) with Robin + Codex.
+6. Merge to `main` is proposed only at full-site parity — Codex's call.

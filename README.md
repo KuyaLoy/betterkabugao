@@ -43,7 +43,7 @@ npm run dev
 npm test          # contract tests + unit tests
 npm run typecheck
 npm run lint
-npm run build     # ends with "PRERENDER_OK 31 pages"
+npm run build     # ends with "PRERENDER_OK 33 pages" (32 sitemap URLs; /404 excluded)
 ```
 
 The production build is written to `dist`. The build is a pipeline — `seo:build → tsc -b → build:client → build:ssr → prerender` — and must not be reduced to `vite build`; that would ship a client-only SPA and every shared link would preview identically.

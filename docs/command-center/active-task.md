@@ -1,10 +1,12 @@
-# ACTIVE TASK — account migration COMPLETE (handoff approved by Codex)
+# ACTIVE TASK — Checkpoint 2A built (Government hub + Officials), awaiting Codex review
 
 > Any session resuming work reads this file first, then
 > `docs/command-center/release-tracker.md`, then the latest file in
 > `docs/sessions/`. Update this file after each milestone.
 
-_Last updated: **2026-08-23** (handoff APPROVED by Codex; migration complete)._
+_Last updated: **2026-08-24** (Checkpoint 2A implemented on the experimental
+branch; all gates green in a clean clone; awaiting Robin's push, the Cloudflare
+preview, and Codex review)._
 
 ---
 
@@ -20,8 +22,9 @@ _Last updated: **2026-08-23** (handoff APPROVED by Codex; migration complete)._
 | **Approved handoff content commit** | `7b121df2cb79f879fdf2722202127fbe9509cff5` — the corrected handoff docs Codex reviewed. **Account-migration handoff APPROVED by Codex on 2026-08-23; migration complete.** |
 | **Current remote HEAD** | never hardcoded here — `git fetch origin && git rev-parse origin/experiment/full-site-visual-rebuild-v2` is authoritative; later documentation-only corrections may follow `5f73755` |
 | `main` | `745b8779dd711cc20d478dee82f01101c9ed2c74` — **untouched**; no merge approved |
-| Gates at the approved baseline | 39 contract + 49 unit; typecheck + lint clean; build `PRERENDER_OK 33 pages`; `npm run qa` 123/123, exit 0 |
-| Checkpoint 2 | **not started** — scope needs Robin + Codex approval |
+| Gates at the approved CP1 baseline | 39 contract + 49 unit; typecheck + lint clean; build `PRERENDER_OK 33 pages`; `npm run qa` 123/123, exit 0 |
+| **Checkpoint 2A** | **BUILT on `experiment/full-site-visual-rebuild-v2`; prepared on parent `69a74d1…604005`; gates green (39 contract + 50 unit; typecheck + lint clean; `PRERENDER_OK 33 pages`; `npm run qa` 175/175). Awaiting Robin's push, the Cloudflare preview, and Codex review.** Scope: `/government` + `/government/officials` only. |
+| Later checkpoints (2B onward) | **not started** — scope needs Robin + Codex approval |
 
 The full commit-by-commit history of Checkpoint 1 (six correction rounds,
 previews, and the wrong-parent incident) lives in
@@ -31,34 +34,45 @@ previews, and the wrong-parent incident) lives in
 
 ## 1. The active task
 
-**Account-migration handoff (documentation only).** The Claude account that
-built Checkpoint 1 is being deleted; this commit makes the repository carry
-everything a new Claude account needs to continue without the old
-conversations. Deliverables: updated `docs/START-HERE.md`, `CLAUDE.md`,
-`docs/CONTEXT.md`, this file, `docs/command-center/source-registry.md`; new
-`docs/command-center/release-tracker.md` and
-`docs/sessions/2026-08-23-claude-account-migration-handoff.md`.
+**Checkpoint 2A — Government hub + Elected officials** (Codex-approved for
+implementation 2026-08-24). Bring `/government` and `/government/officials`
+into the "Kabugao in View" direction; no other route touched.
 
-Status: **APPROVED by Codex on 2026-08-23** at the approved handoff content
-commit `7b121df2cb79f879fdf2722202127fbe9509cff5` (the handoff landed as
-`5f73755`, followed by one Codex-requested documentation correction pass).
-**The migration is complete.** The new Claude account starts with the
-first-day checklist at the end of
-`docs/sessions/2026-08-23-claude-account-migration-handoff.md`.
+Delivered on `experiment/full-site-visual-rebuild-v2`, prepared on parent
+`69a74d1…604005`:
+- One additive `PageHeader` interior variant (`variant="kv"`, solid navy +
+  gold-rule eyebrow), used only by these two routes; existing variants and
+  other pages unchanged; page-header markup not duplicated.
+- `/government`: the three-card grid replaced by an editorial wayfinding list
+  (Elected officials — Available; All 21 barangays — Available; Transparency —
+  In preparation), each a real crawlable link; one restrained page-entry
+  animation + hover/focus cue, off under reduced motion.
+- `/government/officials`: the card grid replaced by a scannable roster —
+  executive tier (gold rail, one coherent treatment, not floating cards) then
+  the Sangguniang Bayan; exact names, positions, term, eLGU source + retrieval
+  date, and both explanatory notices preserved.
+- Same commit: `SimplePages.tsx` + `OfficialsPage.tsx` added to the
+  className↔stylesheet cross-check; a Government-hub unit test; the committed
+  QA harness extended to both routes.
+- Weather/clock left unmounted; legacy components/CSS not pruned (deferred).
+  The now-unused `.nav-card` / `.card-grid` / `.official*` rules are left in
+  place on purpose — pruning is the separate approved cleanup task.
 
-## 2. What happens next (in order — none of it before approval)
+Gates (clean clone, parent `69a74d1`): 39 contract + 50 unit; typecheck + lint
+clean; build `PRERENDER_OK 33 pages`; `npm run qa` **175/175, exit 0**.
 
-1. ~~Codex reviews the handoff docs~~ — **done: APPROVED 2026-08-23** (content
-   commit `7b121df`).
-2. The new Claude account starts with the first-day checklist at the end of
-   `docs/sessions/2026-08-23-claude-account-migration-handoff.md`.
-3. Robin + Codex approve a **Checkpoint 2 scope** (a recommendation is in the
-   handoff doc: government hub + officials → emergency → about + transparency →
-   search/404/sitemap → explore/services placeholders; then the approved
-   pruning of unmounted legacy components).
-4. Checkpoint 2 is built in review commits, previewed on Cloudflare, and
-   approved round by round. **No merge to `main` until full-site parity and
-   Codex's explicit approval.**
+Status: **implemented; all gates green; NOT yet pushed.** Awaiting Robin's push
+from the authorized PC, the Cloudflare preview, and Codex review.
+
+## 2. What happens next (in order)
+
+1. Robin pushes the single Checkpoint 2A commit to
+   `experiment/full-site-visual-rebuild-v2` from the authorized PC (verify
+   `git rev-parse HEAD` = `69a74d1…604005` before committing).
+2. Cloudflare auto-builds a preview; Robin relays the `*.pages.dev` URL.
+3. Codex reviews the code + the preview and approves or returns blockers.
+4. On approval, the next checkpoint scope (2B) is agreed with Robin + Codex.
+   **No merge to `main` until full-site parity and Codex's explicit approval.**
 
 ## 3. Standing constraints
 
