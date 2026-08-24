@@ -1,9 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import { EmergencyPage } from "./pages/EmergencyPage";
-import { HotlineBar } from "./components/HotlineBar";
 import { SiteFooter } from "./components/SiteFooter";
 import { SiteHeader } from "./components/SiteHeader";
-import { UtilityStrip } from "./components/UtilityStrip";
 import { BarangayDetailPage } from "./pages/BarangayDetailPage";
 import { BarangaysPage } from "./pages/BarangaysPage";
 import { HomePage } from "./pages/HomePage";
@@ -26,8 +24,6 @@ export function App() {
       <a className="skip-link" href="#main-content">
         Skip to main content
       </a>
-      <HotlineBar />
-      <UtilityStrip />
       <SiteHeader />
       <main id="main-content">
         <Routes>

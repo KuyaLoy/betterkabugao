@@ -116,7 +116,7 @@ test("site content states only verified, sourced facts", () => {
   assert.match(content, /Robin Tapiru/);
   assert.match(content, /₱670/);
   assert.match(content, /No public funds/);
-  assert.match(content, /not the official website of the Municipality of Kabugao/);
+  assert.match(content, /neither affiliated with nor endorsed by the Municipality of Kabugao, and it is not the municipality['’]s official website/);
   // the tracker schema must ship without any values
   assert.match(content, /Public project records are being prepared/);
 });
@@ -251,6 +251,50 @@ test("the map is CSP-safe by construction", async () => {
     assert.doesNotMatch(leaflet, /\bnew Function\b/);
     const version = JSON.parse(readFileSync(new URL("node_modules/leaflet/package.json", root), "utf8")).version;
     assert.match(version, /^1\.9\./, `Leaflet ${version}: re-audit the CSP notes in MapView.tsx before widening this`);
+  }
+});
+
+test("prerendered pages carry a real OpenStreetMap attribution link (JS-off)", () => {
+  // `npm test` builds first (pretest), so dist/ normally exists here; skip when
+  // it does not, exactly like the prerender test, so `test:contracts` alone is
+  // safe. The build itself fails loudly if prerendering breaks.
+  if (!existsSync(new URL("dist/index.html", root))) return;
+  // With JavaScript disabled — before Leaflet's own attribution control exists —
+  // the ODbL-required attribution must still be a real link in the server-
+  // rendered body of every prerendered page that shows a map. Measured against
+  // the built output, not the source, and scoped to the #root render (before the
+  // shared <noscript> block).
+  const linked = /<a href="https:\/\/www\.openstreetmap\.org\/copyright"[^>]*>\s*OpenStreetMap\s*<\/a>/;
+  for (const route of [
+    "dist/index.html",
+    "dist/government/barangays/index.html",
+    "dist/government/barangays/poblacion/index.html",
+  ]) {
+    const html = load(route);
+    const noscriptAt = html.indexOf("<noscript>");
+    const body = html.slice(0, noscriptAt === -1 ? html.length : noscriptAt);
+    assert.match(body, linked, `${route}: server-rendered OSM attribution must be a real link`);
+  }
+});
+
+test("no capital-claim or unpublished-spending wording ships on any route", async () => {
+  // The site must only claim what it actually publishes. The unqualified capital
+  // claim and public-works/procurement/contractor/flood-control wording must be
+  // absent from every prerendered page, and the shared <noscript> fallback must
+  // carry no peso figures (those live on /about's own body only). Measured
+  // against the built output on every route.
+  if (!existsSync(new URL("dist/index.html", root))) return;
+  const { ALL_PATHS } = await import(new URL("dist-ssr/routes.js", root).href);
+  const banned = [/capital of Apayao/i, /flood[- ]control/i, /procurement/i, /\bcontractor\b/i, /public works/i];
+  for (const path of ALL_PATHS) {
+    const file = path === "/" ? new URL("dist/index.html", root) : new URL(`dist${path}/index.html`, root);
+    if (!existsSync(file)) continue;
+    const html = readFileSync(file, "utf8");
+    for (const re of banned) {
+      assert.doesNotMatch(html, re, `${path}: built HTML must not contain ${re}`);
+    }
+    const noscript = (html.match(/<noscript>[\s\S]*?<\/noscript>/) || [""])[0];
+    assert.doesNotMatch(noscript, /₱/, `${path}: the global <noscript> must not carry peso figures`);
   }
 });
 
@@ -407,6 +451,8 @@ test("every class a component renders has a rule in the stylesheet", () => {
     "src/pages/BarangaysPage.tsx",
     "src/pages/HomePage.tsx",
     "src/pages/SitemapPage.tsx",
+    "src/pages/SimplePages.tsx",
+    "src/pages/OfficialsPage.tsx",
     "src/components/SearchPanel.tsx",
   ];
 
@@ -811,4 +857,12 @@ test("README documents local and Cloudflare build settings", () => {
   assert.match(readme, /Production branch:\s*`main`/);
   assert.match(readme, /Build output directory:\s*`dist`/);
   assert.match(readme, /independent/i);
+});
+
+test("no element forces a 320px min-width (classic scrollbars overflow at 320)", () => {
+  assert.doesNotMatch(
+    load("src/styles.css"),
+    /min-width\s*:\s*320px/,
+    "min-width: 320px causes horizontal overflow under classic scrollbars",
+  );
 });

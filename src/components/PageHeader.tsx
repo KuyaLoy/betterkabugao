@@ -13,7 +13,13 @@ type PageHeaderProps = {
   actions?: ReactNode;
   /** Counts or status pills under the description. */
   badges?: ReactNode;
-  variant?: "hero" | "compact";
+  /**
+   * "hero"/"compact" are the original interior headers. "kv" is the additive
+   * "Kabugao in View" interior header (solid navy, gold-rule eyebrow, kv type)
+   * used by the Government hub and Officials in Checkpoint 2A — same markup,
+   * one extra modifier class, so the existing variants stay unchanged.
+   */
+  variant?: "hero" | "compact" | "kv";
 };
 
 function Breadcrumbs({ items }: { items: Crumb[] }) {

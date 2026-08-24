@@ -1,6 +1,6 @@
 # BetterKabugao
 
-BetterKabugao is an independent, community-maintained civic portal for Kabugao, the capital municipality of Apayao. It is an independent civic initiative, not the official website of the Municipality of Kabugao, and is part of the [BetterGov.ph](https://bettergov.ph/) volunteer network — see the [BetterLGU Directory](https://lgu.bettergov.ph/).
+BetterKabugao is an independent, community-maintained civic portal for Kabugao, a municipality of Apayao. It is an independent civic initiative, not the official website of the Municipality of Kabugao, and is part of the [BetterGov.ph](https://bettergov.ph/) volunteer network — see the [BetterLGU Directory](https://lgu.bettergov.ph/).
 
 Kabugao: 21 barangays · 16,425 residents (2024 POPCEN) · 935.12 km² · 1st-class income · PSGC 1408104000. Built at ₱0 cost to the people.
 
@@ -43,12 +43,20 @@ npm run dev
 npm test          # contract tests + unit tests
 npm run typecheck
 npm run lint
-npm run build     # ends with "PRERENDER_OK 31 pages"
+npm run build     # ends with "PRERENDER_OK 33 pages" (32 sitemap URLs; /404 excluded)
 ```
 
 The production build is written to `dist`. The build is a pipeline — `seo:build → tsc -b → build:client → build:ssr → prerender` — and must not be reduced to `vite build`; that would ship a client-only SPA and every shared link would preview identically.
 
 To inspect the built site locally, serve `dist` with a static server that honours directory `index.html` files. `vite preview` rewrites all paths to the SPA shell, so nested routes appear to show the homepage.
+
+### Browser QA (Checkpoint 1)
+
+```bash
+npm run qa        # builds, serves dist/ like Cloudflare Pages, runs real-Chrome checks
+```
+
+`npm run qa` (`scripts/qa/`) launches Chromium through Playwright — a dev-only dependency, so `npm install` fetches the matching browser (or run `npx playwright install chromium`). It serves `dist/` with clean-URL routing (not `vite preview`'s SPA fallback) and asserts every header, mobile-menu, search-overlay, barangay-directory and map interaction at 320–1440 widths, including the layered-Escape and menu-plus-search sequences. It writes a pass/fail report to `docs/qa/checkpoint-2a/qa-report.json` (the current Checkpoint 2A report) and exits non-zero if any check fails.
 
 ## Cloudflare Pages
 

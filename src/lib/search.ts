@@ -39,7 +39,7 @@ const PAGES: SearchEntry[] = [
   { path: "/government/barangays", kind: "Page", title: "All 21 barangays", summary: "Population, PSGC codes, coordinates and directions.", keywords: ["barangay", "list", "population", "psgc"] },
   { path: "/government/officials", kind: "Page", title: "Elected officials", summary: "Mayor, vice mayor and Sangguniang Bayan, 2025–2028.", keywords: ["mayor", "vice mayor", "sangguniang bayan", "councilor", "kagawad"] },
   { path: "/emergency", kind: "Page", title: "Emergency hotlines", summary: "Every published Kabugao emergency number, with +63 dialling from abroad.", keywords: ["emergency", "hotline", "911", "rescue", "police", "fire", "ambulance", "mdrrmo", "bfp", "rhu", "hospital", "tulong", "sunog", "pulis"] },
-  { path: "/transparency", kind: "Page", title: "Transparency", summary: "Public money and public projects — in preparation.", keywords: ["budget", "procurement", "flood control", "contractor", "spending"] },
+  { path: "/transparency", kind: "Page", title: "Transparency", summary: "Public records for Kabugao — in preparation.", keywords: ["transparency", "records", "public information", "sources", "in preparation"] },
   { path: "/explore", kind: "Page", title: "Explore Kabugao", summary: "Places, rivers, heritage and Isnag culture.", keywords: ["tourism", "isnag", "isneg", "river", "falls", "heritage"] },
   { path: "/services", kind: "Page", title: "Services", summary: "Certificates, permits, offices and contacts — in preparation.", keywords: ["permit", "certificate", "clearance", "office", "tax"] },
   { path: "/about", kind: "Page", title: "About", summary: "Who runs BetterKabugao, and how it is funded.", keywords: ["volunteer", "independent", "bettergov", "cost", "contact"] },

@@ -15,7 +15,7 @@ export function OfficialsPage() {
   return (
     <>
       <PageHeader
-        variant="hero"
+        variant="kv"
         eyebrow={`Government · ${OFFICIALS_TERM} term`}
         title="Elected municipal officials"
         description={`Kabugao is governed by an elected mayor and vice mayor, with a Sangguniang Bayan of eight elected members, serving the ${OFFICIALS_TERM} term. This list comes from the municipality's own government platform.`}
@@ -26,16 +26,16 @@ export function OfficialsPage() {
       <section className="section" aria-labelledby="exec-title">
         <div className="shell">
           <h2 id="exec-title">Executive</h2>
-          <div className="official-grid official-grid--exec">
+          <ul className="kv-roster kv-roster--exec">
             {EXECUTIVE.map((o) => (
-              <article className="official official--lead" key={o.name}>
-                <p className="official__post">{o.position}</p>
-                <h3>{o.name}</h3>
-              </article>
+              <li className="kv-roster__row" key={o.name}>
+                <span className="kv-roster__post">{o.position}</span>
+                <span className="kv-roster__name">{o.name}</span>
+              </li>
             ))}
-          </div>
+          </ul>
 
-          <h2 className="stack-top" id="sb-title">
+          <h2 className="kv-roster-h2" id="sb-title">
             Sangguniang Bayan
           </h2>
           <p className="section__body">
@@ -43,14 +43,14 @@ export function OfficialsPage() {
             Sangguniang Kabataan federation president — are not published on the municipality's platform,
             so they are not listed here.
           </p>
-          <div className="official-grid official-grid--sb">
+          <ul className="kv-roster kv-roster--sb">
             {SANGGUNIAN.map((o) => (
-              <article className="official" key={o.name}>
-                <h3>{o.name}</h3>
-                <p className="official__post">Sangguniang Bayan Member</p>
-              </article>
+              <li className="kv-roster__row" key={o.name}>
+                <span className="kv-roster__name">{o.name}</span>
+                <span className="kv-roster__post">Sangguniang Bayan Member</span>
+              </li>
             ))}
-          </div>
+          </ul>
 
           <p className="section__note">
             Source:{" "}
@@ -62,11 +62,11 @@ export function OfficialsPage() {
           </p>
 
           <aside className="notice">
-            <h3>Barangay officials are a separate matter</h3>
+            <h3>Barangay officials are not listed yet</h3>
             <p>
-              No government source publishes the punong barangay or kagawad of Kabugao's barangays. We
-              explain what we checked, and why we are not repeating an unverified list, on the{" "}
-              <Link to="/government/barangays">barangays page</Link>.
+              A current, publicly citable roster for Kabugao's 21 barangays was not available in the
+              official sources checked. We explain what was reviewed, and why we are not repeating an
+              unverified list, on the <Link to="/government/barangays">barangays page</Link>.
             </p>
           </aside>
         </div>

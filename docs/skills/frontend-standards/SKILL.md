@@ -54,9 +54,11 @@ A change fails review if it introduces any of these:
 
 Verified Kabugao facts live in `src/app/site-content.ts` and are pinned by
 contract tests: 18.0246° N, 121.1845° E · 132 m · 935.12 km² · 21 barangays ·
-**16,425 residents (2024 POPCEN)** · 1st-class income · PSGC 1408104000 ·
-capital of Apayao. Per-barangay figures live in `src/data/barangays.ts` and sum
-to exactly 16,425. Any new figure needs a named official source, with its date,
+**16,425 residents (2024 POPCEN)** · 1st-class income · PSGC 1408104000.
+(Published copy must never make an **unqualified "capital of Apayao"** claim —
+the neutral wording is "the municipality of Kabugao, Apayao"; a contract test
+bans the unqualified phrase on every built route.) Per-barangay figures live in
+`src/data/barangays.ts` and sum to exactly 16,425. Any new figure needs a named official source, with its date,
 displayed next to it.
 
 (16,215 was the 2020 census count and appears in older session logs. It is

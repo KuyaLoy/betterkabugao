@@ -34,9 +34,11 @@ type SearchTriggerProps = {
   children: React.ReactNode;
   id?: string;
   ariaLabel?: string;
+  /** Fired on activation, before the overlay opens — lets the header close its menu. */
+  onActivate?: () => void;
 };
 
-export function SearchTrigger({ className, children, id, ariaLabel }: SearchTriggerProps) {
+export function SearchTrigger({ className, children, id, ariaLabel, onActivate }: SearchTriggerProps) {
   return (
     <a
       id={id}
@@ -45,6 +47,7 @@ export function SearchTrigger({ className, children, id, ariaLabel }: SearchTrig
       aria-label={ariaLabel}
       aria-keyshortcuts="/"
       onClick={(event) => {
+        onActivate?.();
         if (typeof HTMLDialogElement === "undefined") return;
         if (typeof HTMLDialogElement.prototype.showModal !== "function") return;
         event.preventDefault();
@@ -156,6 +159,22 @@ export function SearchOverlay() {
       className="palette"
       aria-label="Search BetterKabugao"
       onClick={() => dialog.current?.close()}
+      onKeyDownCapture={(event) => {
+        // Only the topmost layer handles Escape. Two things are intercepted in
+        // the capture phase, before anything below sees the key:
+        //  - a non-empty <input type="search"> would otherwise consume Escape to
+        //    clear itself (Chromium/WebKit), swallowing the dialog's close;
+        //  - the event must not reach a lower layer's document listener — e.g.
+        //    the barangays selection sheet — or one Escape would close both.
+        // So: close the overlay (its `close` handler clears the query and
+        // returns focus to the trigger) and stop propagation. A second Escape
+        // then reaches the sheet.
+        if (event.key === "Escape" && dialog.current?.open) {
+          event.preventDefault();
+          event.stopPropagation();
+          dialog.current.close();
+        }
+      }}
     >
       {/* The backdrop is the dialog element itself, so a click that lands on
           the panel must not bubble up and close it. */}

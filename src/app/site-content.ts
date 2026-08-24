@@ -23,7 +23,7 @@ export const siteContent = {
   eyebrow: "Kabugao, Apayao",
   headline: "BetterKabugao.org",
   summary:
-    "A volunteer-run civic portal for Kabugao, the capital of Apayao — bringing public spending, public projects, local services and local knowledge into one place anyone can read.",
+    "A volunteer-run civic portal for the municipality of Kabugao, Apayao — bringing its barangays, elected officials, local services and local knowledge into one place anyone can read.",
 
   links: {
     repository: "https://github.com/KuyaLoy/betterkabugao",
@@ -51,7 +51,7 @@ export const siteContent = {
       { label: "Elected municipal officials", state: "done" },
       { label: "Public project records", state: "progress" },
       { label: "Service guides and contacts", state: "planned" },
-      { label: "Budget and procurement data", state: "planned" },
+      { label: "Verified public data", state: "planned" },
     ],
     footnote: "One feature ships at a time. Follow the build, or contribute, on GitHub.",
   },
@@ -60,9 +60,9 @@ export const siteContent = {
     kicker: "What this will be",
     title: "Public information about Kabugao, in one readable place.",
     body:
-      "Kabugao is the capital of Apayao — 21 barangays spread across 935.12 km² of the Cordillera, home to 16,425 people. Information about how it is governed exists, but it is scattered across national portals, PDFs and offices. BetterKabugao is being built to gather it, explain it in plain language, and keep it linked to its official source.",
+      "Kabugao is a municipality of Apayao — 21 barangays spread across 935.12 km² of the Cordillera, home to 16,425 people. Information about how it is governed exists, but it is scattered across national portals, PDFs and offices. BetterKabugao is being built to gather it, explain it in plain language, and keep it linked to its official source.",
     facts: [
-      { value: "Capital", label: "of Apayao province" },
+      { value: "Apayao", label: "province, Luzon" },
       { value: KABUGAO.barangays, label: "barangays" },
       { value: KABUGAO.population, label: `residents · ${KABUGAO.populationYear} POPCEN` },
       { value: KABUGAO.areaLabel, label: "land area" },
@@ -73,20 +73,17 @@ export const siteContent = {
 
   transparency: {
     number: "03",
-    kicker: "Transparency and public money",
-    title: "Where the money goes, and what gets built.",
+    kicker: "Public records",
+    title: "Public records for Kabugao",
     body:
-      "The first thing being built is a public record of local projects — flood control, roads, bridges, drainage, water systems and government facilities — with the budget, the funding source and the contractor attached to each one.",
-    schemaTitle: "Every project record will carry",
+      "Public records for Kabugao are being prepared. Nothing is published here until it can be verified against an official source, so this page shows only the fields a record will use and the official portals it will be checked against.",
+    schemaTitle: "What each record will show",
     schemaNote: "Public project records are being prepared. No figures are published until verified against official sources.",
     schema: [
-      "Project",
+      "Title",
       "Location",
-      "Budget",
-      "Funding source",
-      "Contractor",
-      "Implementing agency",
-      "Timeline",
+      "Source",
+      "Date verified",
       "Status",
       "Public documents",
     ],
@@ -155,8 +152,8 @@ export const siteContent = {
   developer: { name: "Robin Tapiru", role: "Developer and initiator" },
 
   disclaimer:
-    "BetterKabugao is an independent, volunteer-run civic project. It is not the official website of the Municipality of Kabugao.",
-  sourceNote: "All public information will be sourced from official government portals.",
+    "BetterKabugao is an independent, volunteer-run civic project for Kabugao, Apayao, and part of the BetterGov.ph volunteer network. It is neither affiliated with nor endorsed by the Municipality of Kabugao, and it is not the municipality's official website.",
+  sourceNote: "Published public information is sourced from official government portals.",
   license: "MIT · Content CC BY 4.0",
   version: "3.0.0",
 } as const;

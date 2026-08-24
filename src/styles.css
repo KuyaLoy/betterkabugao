@@ -71,7 +71,7 @@
 
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
-body { margin: 0; min-width: 320px; background: var(--color-white); }
+body { margin: 0; background: var(--color-white); }
 a { color: inherit; }
 h1, h2, h3, h4, p, ul, ol, dl, dd, figure { margin: 0; }
 ul { padding: 0; list-style: none; }
@@ -869,6 +869,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--color-primary-5
 .map__fallback-links { display: flex; flex-wrap: wrap; gap: 16px; }
 .map__fallback-links a { color: var(--color-primary-700); font-size: 0.9375rem; font-weight: 600; }
 .map__note { margin-top: 10px; color: var(--color-gray-700); font-size: 0.75rem; line-height: 1.6; }
+.map__note a { color: var(--color-primary-600); }
 
 /* Markers are divIcons styled here, so no marker image is ever requested.
    Do NOT set `position` on .map-pin: Leaflet gives .leaflet-marker-icon
@@ -1220,4 +1221,279 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--color-primary-5
   }
   .palette__field { min-height: 64px; padding-inline: 14px; }
   .palette__list a { padding: 14px; }
+}
+
+/* ============================================================
+   KABUGAO IN VIEW — v2 visual rebuild (Checkpoint 1)
+   New header, photo hero, task strip, place band, barangays
+   atlas + selection sheet, footer. Inter only; styling in
+   classes (no inline styles); reduced motion respected.
+   ============================================================ */
+:root {
+  --kv-sand: #f3efe8;
+  --kv-emerg-hover: #8f1d1d;
+  --kv-ease: cubic-bezier(0.2, 0, 0, 1);
+}
+
+/* ---- Header ---- */
+.mast--solid { position: sticky; top: 0; z-index: 40; background: var(--color-primary-900); border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
+.mast--over { position: absolute; top: 0; left: 0; right: 0; z-index: 40; background: transparent; }
+.mast__inner { display: flex; align-items: center; gap: 20px; min-height: 76px; }
+.mast__home { display: inline-flex; align-items: center; }
+.mast__logo { height: 42px; width: auto; display: block; }
+.mast__mark { display: none; height: 40px; width: auto; }
+.mast__nav { display: flex; gap: 24px; align-items: center; margin-left: 8px; }
+.mast__link { color: #e7eefb; font-size: 0.9375rem; font-weight: 600; text-decoration: none; }
+.mast__link:hover { color: #fff; text-decoration: underline; text-underline-offset: 4px; }
+.mast--over .mast__link { text-shadow: 0 1px 10px rgba(0, 10, 30, 0.4); }
+.mast__actions { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+.mast__search { display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 14px; border-radius: 6px; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); color: #eaf1fc; font-weight: 600; font-size: 0.9375rem; text-decoration: none; }
+.mast__search:hover { background: rgba(255, 255, 255, 0.16); }
+.mast__search svg { flex: none; }
+.mast__emerg { display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 16px; border-radius: 6px; background: var(--color-alert); color: #fff; font-weight: 700; font-size: 0.9375rem; text-decoration: none; white-space: nowrap; }
+.mast__emerg:hover { background: var(--kv-emerg-hover); }
+.mast__emerg-dot { width: 8px; height: 8px; border-radius: 50%; background: #fff; flex: none; }
+.mast__burger { display: none; width: 44px; height: 44px; border-radius: 6px; align-items: center; justify-content: center; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.24); cursor: pointer; }
+.mast__burger-icon, .mast__burger-icon::before, .mast__burger-icon::after { content: ""; display: block; width: 20px; height: 2px; background: #fff; position: relative; }
+.mast__burger-icon::before { position: absolute; top: -6px; }
+.mast__burger-icon::after { position: absolute; top: 6px; }
+/* Hidden entirely at desktop; the mobile media query below gives it its
+   animated disclosure, so an open menu can never render beside the desktop nav
+   after a resize/rotate. */
+.mast__menu { display: none; }
+.mast__menu-link { display: block; color: #e7eefb; padding: 13px 24px; font-weight: 600; text-decoration: none; border-top: 1px solid rgba(255, 255, 255, 0.07); }
+.mast__menu-link:first-child { border-top: 0; }
+
+/* ---- Photo hero ---- */
+.kv-hero { position: relative; min-height: 90vh; display: flex; align-items: flex-end; overflow: hidden; background: var(--color-primary-800); }
+.kv-hero__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 44%; }
+.kv-hero__scrim { position: absolute; inset: 0; background: linear-gradient(84deg, rgba(0, 15, 38, 0.9) 0%, rgba(0, 15, 38, 0.68) 30%, rgba(0, 15, 38, 0.32) 56%, rgba(0, 15, 38, 0.04) 82%, rgba(0, 15, 38, 0) 100%), linear-gradient(0deg, rgba(0, 15, 38, 0.78) 0%, rgba(0, 15, 38, 0.1) 44%, rgba(0, 15, 38, 0) 62%); }
+.kv-hero__inner { position: relative; padding-block: 40px 72px; }
+.kv-hero__eyebrow { display: inline-flex; align-items: center; gap: 9px; color: #ffe08a; font-weight: 700; font-size: 0.8125rem; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 16px; }
+.kv-hero__eyebrow::before { content: ""; width: 26px; height: 2px; background: var(--color-gold); }
+.kv-hero__title { color: #fff; font-size: clamp(2.6rem, 6vw, 4.75rem); font-weight: 800; letter-spacing: 0; line-height: 1.02; max-width: 16ch; text-shadow: 0 2px 30px rgba(0, 8, 24, 0.35); }
+.kv-hero__sub { color: #e7eefb; font-size: clamp(1.0625rem, 1.5vw, 1.25rem); font-weight: 500; max-width: 56ch; margin-top: 18px; text-shadow: 0 1px 16px rgba(0, 8, 24, 0.4); }
+.kv-hero__search { display: flex; align-items: center; gap: 12px; margin-top: 28px; max-width: 560px; height: 62px; padding: 0 20px; border-radius: 12px; background: #fff; color: var(--color-gray-600); text-decoration: none; box-shadow: 0 18px 50px -14px rgba(0, 10, 30, 0.5); }
+.kv-hero__search:hover { color: var(--color-gray-700); }
+.kv-hero__search svg { flex: none; }
+.kv-hero__search-text { flex: 1; min-width: 0; color: var(--color-gray-700); font-size: 1.0625rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.kv-hero__search-key { flex: none; color: var(--color-gray-600); border: 1px solid var(--color-gray-300); border-radius: 4px; padding: 2px 8px; font-size: 0.8125rem; }
+.kv-hero__cue { position: absolute; left: 50%; bottom: 18px; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 3px; color: #dfe8f6; font-size: 0.6875rem; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 600; }
+@media (prefers-reduced-motion: no-preference) {
+  .kv-hero__eyebrow { animation: kv-rise 0.5s 0.04s var(--kv-ease) both; }
+  .kv-hero__title { animation: kv-rise 0.6s 0.12s var(--kv-ease) both; }
+  .kv-hero__sub { animation: kv-rise 0.6s 0.22s var(--kv-ease) both; }
+  .kv-hero__search { animation: kv-rise 0.6s 0.32s var(--kv-ease) both; }
+}
+@keyframes kv-rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+
+/* ---- Task strip ---- */
+.kv-desk { background: #fff; border-bottom: 1px solid var(--color-gray-200); }
+.kv-desk__inner { display: grid; grid-template-columns: repeat(4, 1fr); }
+.kv-desk__item { display: flex; align-items: center; gap: 15px; padding: 24px 22px; color: var(--color-primary-900); text-decoration: none; position: relative; }
+.kv-desk__item + .kv-desk__item::before { content: ""; position: absolute; left: 0; top: 22px; bottom: 22px; width: 1px; background: var(--color-gray-200); }
+.kv-desk__item:hover { background: var(--kv-sand); }
+.kv-desk__ic { flex: none; width: 44px; height: 44px; border-radius: 10px; background: var(--color-primary-900); color: #fff; display: flex; align-items: center; justify-content: center; }
+.kv-desk__ic svg { width: 23px; height: 23px; }
+.kv-desk__item:nth-child(3) .kv-desk__ic { background: var(--color-alert); }
+.kv-desk__text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.kv-desk__label { font-weight: 800; font-size: 1.0625rem; letter-spacing: 0; }
+.kv-desk__sub { color: var(--color-gray-700); font-size: 0.8125rem; }
+
+/* ---- Place band ---- */
+.kv-place { padding-block: clamp(48px, 6vw, 76px); background: var(--kv-sand); }
+.kv-place__inner { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: 52px; align-items: center; }
+.kv-place__title { font-size: clamp(1.75rem, 3.2vw, 2.75rem); font-weight: 800; letter-spacing: 0; color: var(--color-primary-900); max-width: 15ch; }
+.kv-place__lede { margin-top: 16px; color: var(--color-gray-700); font-size: 1.0625rem; line-height: 1.6; max-width: 50ch; }
+.kv-place__figs { display: flex; flex-wrap: wrap; gap: 18px 34px; margin-top: 26px; }
+.kv-place__fig dt { color: var(--color-gray-700); font-size: 0.8125rem; }
+.kv-place__fig dd { margin: 2px 0 0; color: var(--color-primary-900); font-size: 1.875rem; font-weight: 800; letter-spacing: 0; font-variant-numeric: tabular-nums; }
+.kv-place__link { margin-top: 26px; }
+.kv-place__source { margin-top: 22px; color: var(--color-gray-700); font-size: 0.75rem; line-height: 1.6; max-width: 62ch; }
+.kv-place__map .map { margin-top: 0; }
+
+/* ---- Barangays atlas (map + directory) ---- */
+.kv-atlas { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr); gap: 28px; align-items: start; }
+.kv-atlas__map { position: sticky; top: 92px; }
+.kv-atlas__map .map { margin-top: 0; }
+.kv-atlas__legend { margin-top: 10px; color: var(--color-gray-700); font-size: 0.75rem; line-height: 1.6; }
+.kv-atlas__legend a { color: var(--color-primary-600); }
+.kv-atlas__panel { min-width: 0; }
+/* Each row is a real navigating link (crawlable, Ctrl/Cmd-click, open-in-new-tab)
+   plus a separate "show on map" preview button — the link never cancels its own
+   navigation. */
+.kv-dir { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--color-gray-200); }
+.kv-dir__head { display: flex; justify-content: space-between; padding: 8px 6px; padding-right: 62px; color: var(--color-gray-700); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid var(--color-gray-200); }
+.kv-dir__row { display: grid; grid-template-columns: minmax(0, 1fr) 44px; gap: 6px; align-items: center; border-bottom: 1px solid var(--color-gray-200); }
+.kv-dir__row.is-selected { background: var(--color-primary-50); box-shadow: inset 3px 0 0 var(--color-gold); }
+.kv-dir__link { display: flex; align-items: center; gap: 12px; min-width: 0; padding: 11px 6px; color: var(--color-gray-900); text-decoration: none; }
+.kv-dir__link:hover { background: var(--color-primary-50); }
+.kv-dir__link:hover .kv-dir__name { text-decoration: underline; text-underline-offset: 3px; }
+.kv-dir__name { flex: 1; font-weight: 700; font-size: 0.9375rem; color: var(--color-primary-900); min-width: 0; }
+.kv-dir__name em { font-style: normal; color: var(--color-gray-700); font-weight: 400; font-size: 0.75rem; margin-left: 7px; }
+.kv-dir__cap { display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: var(--color-gold); margin-right: 7px; vertical-align: 1px; }
+.kv-dir__pop { flex: none; font-size: 0.875rem; font-weight: 600; color: var(--color-gray-900); font-variant-numeric: tabular-nums; text-align: right; }
+.kv-dir__preview { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border: 0; background: transparent; color: var(--color-primary-600); cursor: pointer; border-radius: 6px; }
+.kv-dir__preview:hover { background: var(--color-primary-50); color: var(--color-primary-800); }
+.kv-dir__preview[aria-pressed="true"] { color: var(--color-primary-900); background: var(--color-primary-50); }
+.kv-dir__preview svg { width: 20px; height: 20px; }
+
+/* ---- Selection sheet: card in the panel on desktop, bottom sheet on phones ---- */
+.kv-sheet { margin: 0 0 18px; background: #fff; border: 1px solid var(--color-gray-200); border-radius: 14px; overflow: hidden; box-shadow: 0 16px 40px -22px rgba(0, 20, 50, 0.4); }
+.kv-sheet__grip { display: none; }
+.kv-sheet__head { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; padding: 18px 18px 12px; background: var(--color-primary-900); color: #fff; }
+.kv-sheet__eyebrow { color: #9fb6da; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
+/* Specificity: beat `.section h2` (0,1,1), which the panel lives inside. */
+.kv-sheet__head .kv-sheet__name { color: #fff; font-size: 1.5rem; font-weight: 800; letter-spacing: 0; margin-top: 2px; }
+.kv-sheet__type { color: #bcd0ef; font-size: 0.8125rem; margin-top: 3px; }
+.kv-sheet__close { flex: none; width: 40px; height: 40px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.2); background: transparent; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.kv-sheet__close:hover { background: rgba(255, 255, 255, 0.1); }
+.kv-sheet__facts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 16px; padding: 16px 18px 4px; }
+.kv-sheet__facts dt { color: var(--color-gray-700); font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.04em; }
+.kv-sheet__facts dd { margin: 2px 0 0; color: var(--color-primary-900); font-weight: 700; font-size: 0.9375rem; }
+.kv-sheet__more { margin: 8px 18px 0; display: inline-flex; }
+.kv-sheet__attr { margin: 12px 18px 18px; color: var(--color-gray-700); font-size: 0.6875rem; line-height: 1.5; }
+.kv-sheet__attr a { color: var(--color-primary-600); }
+
+/* ---- Selected map pin ---- */
+.map-pin--selected .map-pin__dot { background: var(--color-gold); width: 20px; height: 20px; margin: -3px 0 0 -3px; box-shadow: 0 0 0 4px rgba(255, 185, 0, 0.35), 0 2px 6px rgba(0, 20, 47, 0.5); }
+
+/* ---- Footer: override the old four-column layout ---- */
+.footer__top { grid-template-columns: 1.7fr 1fr 1fr; }
+.footer__brand { max-width: 42ch; }
+.footer__logo { height: 34px; width: auto; display: block; margin-bottom: 4px; }
+.footer__col h3 { color: #fff; }
+
+/* ---- Responsive ---- */
+@media (max-width: 1024px) {
+  .kv-atlas { grid-template-columns: 1fr; gap: 18px; }
+  .kv-atlas__map { position: static; }
+  .kv-place__inner { grid-template-columns: 1fr; gap: 30px; }
+}
+@media (max-width: 900px) {
+  .mast__nav, .mast__search-label, .mast__emerg-long { display: none; }
+  /* On phones the transparent over-hero header left the white logo/Search/Menu
+     unreadable against the photo. Give the mobile header a solid, compact navy
+     surface (no gradient/blur/glow); the desktop image-overlay stays untouched. */
+  .mast--over { background: var(--color-primary-900); border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
+  .mast--over .mast__link { text-shadow: none; }
+  .mast__search { padding: 0 12px; }
+  .mast__burger { display: inline-flex; }
+  .mast__menu {
+    display: block; position: absolute; top: 100%; left: 0; right: 0;
+    background: var(--color-primary-800); border-top: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 14px 34px rgba(0, 10, 30, 0.45);
+    transform: translateY(-10px); opacity: 0; pointer-events: none;
+    transition: opacity 200ms ease-out, transform 200ms ease-out;
+  }
+  .mast__menu--open { transform: translateY(0); opacity: 1; pointer-events: auto; }
+  .kv-desk__inner { grid-template-columns: 1fr 1fr; }
+  .kv-desk__item:nth-child(2)::before, .kv-desk__item:nth-child(4)::before { display: none; }
+  .kv-desk__item { border-top: 1px solid var(--color-gray-200); }
+  .footer__top { grid-template-columns: 1fr; }
+  .kv-sheet { position: fixed; left: 0; right: 0; bottom: 0; z-index: 60; margin: 0; border-radius: 18px 18px 0 0; max-height: 72vh; overflow-y: auto; box-shadow: 0 -14px 40px rgba(0, 10, 30, 0.28); }
+  .kv-sheet__grip { display: block; width: 40px; height: 4px; border-radius: 3px; background: rgba(255, 255, 255, 0.4); margin: 8px auto 0; }
+  .kv-sheet__head { border-radius: 18px 18px 0 0; }
+}
+@media (max-width: 640px) {
+  /* Phones: the full wordmark would be cramped beside Search/911/Menu, so show
+     the approved Kabugao symbol only. The home link keeps its accessible name. */
+  .mast__logo { display: none; }
+  .mast__mark { display: block; }
+  .kv-hero { min-height: 88vh; }
+  /* Bottom padding must clear the absolutely-positioned Explore cue so the
+     hero search field keeps >=12px of visible separation from it. */
+  .kv-hero__inner { padding-block: 24px 84px; }
+  .kv-desk__inner { grid-template-columns: 1fr; }
+  .kv-desk__item + .kv-desk__item::before { display: none; }
+  .kv-place__figs { gap: 14px 24px; }
+}
+@media (max-width: 520px) {
+  .mast__inner { min-height: 60px; gap: 12px; }
+  .mast__mark { height: 36px; }
+  .mast__emerg { padding: 0 12px; }
+  .kv-hero__search { height: 56px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .kv-hero__eyebrow, .kv-hero__title, .kv-hero__sub, .kv-hero__search { animation: none !important; }
+  .kv-sheet { transition: none !important; }
+  .mast__menu { transition: none !important; }
+}
+.kv-place__text { min-width: 0; }
+
+/* ============================================================
+   CHECKPOINT 2A — Government hub + Elected officials
+   Additive "Kabugao in View" interior header, an editorial
+   wayfinding list (not cards), and a scannable officials roster.
+   Tokens only; letter-spacing 0 on titles and uppercase labels; one
+   restrained page-entry animation; reduced motion honoured.
+   ============================================================ */
+
+/* Local tokens for this block (clearly named; values preserved from the
+   approved Checkpoint 2A design). */
+:root {
+  --kv-eyebrow: #ffe08a;          /* light gold — kv interior header eyebrow */
+  --kv-on-navy: #e7eefb;          /* readable light text on the navy header */
+  --kv-status-soon-bg: #fbefdd;   /* pale amber — "In preparation" status pill */
+}
+
+/* ---- Interior header: additive "kv" variant (solid navy, gold rule) ---- */
+.page-head--kv { background: var(--color-primary-900); border-bottom: 0; padding-block: clamp(30px, 5vw, 54px) clamp(26px, 4vw, 42px); }
+.page-head--kv .crumbs a { color: var(--color-primary-100); }
+.page-head--kv .crumbs a:hover { color: #fff; }
+.page-head--kv .crumbs span[aria-current] { color: #fff; }
+.page-head--kv .crumbs__sep { color: rgba(255, 255, 255, 0.5); }
+.page-head--kv .page-head__eyebrow { display: inline-flex; align-items: center; gap: 9px; color: var(--kv-eyebrow); font-weight: 700; font-size: 0.8125rem; letter-spacing: 0; text-transform: uppercase; }
+.page-head--kv .page-head__eyebrow::before { content: ""; width: 26px; height: 2px; background: var(--color-gold); }
+.page-head--kv h1 { color: #fff; font-size: clamp(2.1rem, 4.4vw, 3.25rem); font-weight: 800; letter-spacing: 0; line-height: 1.05; }
+.page-head--kv .page-head__desc { color: var(--kv-on-navy); font-size: clamp(1.02rem, 1.4vw, 1.1875rem); line-height: 1.6; }
+.page-head--kv .page-head__badges .pill { background: rgba(255, 255, 255, 0.15); color: #fff; }
+
+/* ---- Government hub: editorial wayfinding list (not cards) ---- */
+.kv-intro { max-width: var(--measure); color: var(--color-gray-700); font-size: 1.0625rem; line-height: 1.65; }
+.kv-guide { margin-top: 30px; border-top: 1px solid var(--color-gray-200); }
+.kv-guide__item { border-bottom: 1px solid var(--color-gray-200); }
+.kv-guide__link { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 22px 10px 22px 18px; color: var(--color-primary-900); text-decoration: none; }
+.kv-guide__link::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: transparent; }
+.kv-guide__link:hover, .kv-guide__link:focus-visible { background: var(--kv-sand); }
+.kv-guide__link:hover::before, .kv-guide__link:focus-visible::before { background: var(--color-gold); }
+.kv-guide__main { min-width: 0; }
+.kv-guide__title { display: block; color: var(--color-primary-900); font-size: 1.25rem; font-weight: 800; letter-spacing: 0; }
+.kv-guide__desc { display: block; margin-top: 5px; color: var(--color-gray-700); font-size: 0.9375rem; line-height: 1.55; max-width: 54ch; }
+.kv-guide__meta { flex: none; display: flex; align-items: center; gap: 16px; }
+.kv-guide__status { white-space: nowrap; padding: 4px 10px; border-radius: 6px; font-size: 0.6875rem; font-weight: 700; letter-spacing: 0; text-transform: uppercase; }
+.kv-guide__status--live { color: var(--color-success-700); background: var(--color-success-50); }
+.kv-guide__status--soon { color: var(--color-accent-700); background: var(--kv-status-soon-bg); }
+.kv-guide__go { flex: none; color: var(--color-primary-600); font-size: 1.25rem; font-weight: 700; }
+
+/* ---- Officials roster (scannable; no floating cards) ---- */
+.kv-roster { margin-top: 18px; border-top: 1px solid var(--color-gray-200); }
+.kv-roster__row { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; padding: 14px 8px; border-bottom: 1px solid var(--color-gray-200); }
+.kv-roster__name { color: var(--color-primary-900); font-size: 1.0625rem; font-weight: 700; letter-spacing: 0; }
+.kv-roster__post { color: var(--color-gray-700); font-size: 0.75rem; font-weight: 700; letter-spacing: 0; text-transform: uppercase; }
+.kv-roster-h2 { margin-top: 44px; }
+/* Executive tier: one coherent roster with a gold rail and stronger hierarchy —
+   the position sits above the name; deliberately not two floating cards. */
+.kv-roster--exec { border-top: 2px solid var(--color-primary-900); }
+.kv-roster--exec .kv-roster__row { position: relative; flex-direction: column; align-items: flex-start; gap: 4px; padding: 18px 8px 18px 20px; }
+.kv-roster--exec .kv-roster__row::before { content: ""; position: absolute; left: 0; top: 12px; bottom: 12px; width: 3px; background: var(--color-gold); }
+.kv-roster--exec .kv-roster__name { font-size: 1.375rem; font-weight: 800; }
+/* Sangguniang Bayan: two-column roster on wider screens, one column on phones. */
+.kv-roster--sb { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 40px; }
+
+/* ---- Entry motion (page-entry + hover cue; off under reduced motion) ---- */
+@media (prefers-reduced-motion: no-preference) {
+  .kv-guide__item { animation: kv-rise 0.5s var(--kv-ease) both; }
+  .kv-guide__item:nth-child(2) { animation-delay: 0.06s; }
+  .kv-guide__item:nth-child(3) { animation-delay: 0.12s; }
+  .kv-guide__go { transition: transform 160ms var(--kv-ease); }
+  .kv-guide__link:hover .kv-guide__go,
+  .kv-guide__link:focus-visible .kv-guide__go { transform: translateX(3px); }
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 640px) {
+  .kv-roster--sb { grid-template-columns: 1fr; }
+  .kv-guide__link { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .kv-guide__meta { gap: 12px; }
 }

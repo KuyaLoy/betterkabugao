@@ -7,24 +7,63 @@ the traps. This file is the dated decision log behind it.
 Living snapshot of BetterKabugao. Update both at the end of every working
 session (see `docs/skills/session-memory/SKILL.md`).
 
-## Current state (2026-08-20)
+## Current state (2026-08-24)
 
 - **Domain:** betterkabugao.org — Cloudflare Pages, deploys from `main`
   (build `npm run build`, output `dist`)
-- **Released to `main`:** v3.0.0 — the real multi-page portal, merged and
-  live. `main` HEAD is `441b766`. Production checks passed on the deploy: all
-  seven security headers sent, per-page titles and canonicals, BreadcrumbList
-  JSON-LD, ~9.9 KB of real HTML per barangay page, OSM tiles rendering, live
-  weather, no console or CSP errors.
-- **In flight:** `improvement/search-404-recovery`, now two layers. First,
-  `/search` and `/404` rebuilt as recovery screens: `?q=` query URLs, results
-  grouped by kind, starter suggestions, an empty state with a way out, and a real
-  search form plus six plain-anchor recovery links on the 404. Second, search
-  made site-wide: a native-`<dialog>` overlay opened from the masthead, from the
-  homepage hero field and by `/` (or Ctrl/Cmd+K), with live results, arrow-key
-  navigation, Enter to the shareable `/search?q=` page, and Escape returning
-  focus to the Search button. **Held for Codex QA; not to be merged to `main`
-  without it.**
+- **`main` HEAD:** `745b877` — the v3.0.0 multi-page portal plus the `/sitemap`
+  page (PR #1) plus the search/404 recovery screens and the site-wide search
+  overlay (**PR #2, merged 2026-08-20** after Codex QA — the old "in flight"
+  entry is resolved). 33 prerendered routes, live and verified in production.
+- **Visual rebuild (experimental):** `experiment/full-site-visual-rebuild-v2` —
+  the approved **"Kabugao in View"** photo-led redesign. **Checkpoint 1 is
+  APPROVED by Codex (2026-08-22)** at the **approved implementation baseline**
+  `e5dc158fe3b75b406f0a9663d5a70a55f08bf1bf`; **approved preview**
+  `https://e19410fa.betterkabugao.pages.dev/`. The branch has since received
+  the documentation-only handoff commit
+  `5f7375598fd42d5fd239374aece1fda38282c648`; the **current remote HEAD** is
+  read with `git fetch origin && git rev-parse
+  origin/experiment/full-site-visual-rebuild-v2` — never from a SHA written in
+  these docs. Still experimental — **not merged to `main`**, and Checkpoint 2
+  has not started (scope needs Robin + Codex approval). Six correction rounds are ledgered in
+  `docs/command-center/release-tracker.md`; the narrative is in
+  `docs/sessions/2026-08-21-full-site-visual-rebuild-v2.md` and the
+  account-migration handoff
+  `docs/sessions/2026-08-23-claude-account-migration-handoff.md`. Spec:
+  `docs/superpowers/specs/2026-08-21-full-site-visual-rebuild-v2-kabugao-in-view.md`.
+- **Account migration: COMPLETE.** Handoff documentation commit `5f73755`
+  plus one Codex-requested correction pass were reviewed at the approved
+  handoff content commit `7b121df2cb79f879fdf2722202127fbe9509cff5`, and the
+  **handoff was APPROVED by Codex on 2026-08-23**. The new Claude account
+  must follow the first-day checklist at the end of
+  `docs/sessions/2026-08-23-claude-account-migration-handoff.md`. Checkpoint 1
+  remains approved at baseline `e5dc158`; `main` remains untouched; the current
+  remote HEAD is still fetched and verified before any work.
+- **Checkpoint 2A (Government hub + Officials): PUSHED and APPROVED.**
+  `/government` and `/government/officials` were brought into "Kabugao in View"
+  (an additive `kv` PageHeader variant, an editorial wayfinding list, and a
+  scannable officials roster). Pushed at **`cf1ee7cc4a29114d5819557f81b762e3bcd1404f`**;
+  Cloudflare preview **https://69d4e1d9.betterkabugao.pages.dev/**; **Codex
+  approved the code and visual direction (2026-08-24)** (39 contract + 50 unit;
+  typecheck + lint clean; `PRERENDER_OK 33 pages`; `npm run qa` 175/175). A small
+  docs/CSS cleanup pass followed (record push/preview/approval; README report
+  path; CP2A CSS tokens + letter-spacing). No other route was touched;
+  weather/clock stay unmounted; the now-unused legacy CSS was left in place
+  (pruning is a separate approved task).
+- **Footer cleanup (standalone — Codex-approved 2026-08-24 with one copy edit,
+  committed on the branch):** the global
+  footer's two repetitive disclaimer paragraphs consolidated into one. The
+  brand column carries the independence + BetterGov-network disclaimer once
+  (`siteContent.disclaimer`, reworded to a single consolidated sentence); the
+  bottom row states only where published information is sourced
+  (`siteContent.sourceNote`). Author, licence, version and the Find/Network
+  links are unchanged, and **no "Barangay officials" link was added** — no
+  verified roster page exists. The pinned disclaimer contract was updated to
+  the new wording in the same change. Gates: 39 contract + 50 unit; typecheck +
+  lint clean; `PRERENDER_OK 33 pages`; `npm run qa` 175/175. **Checkpoint 2B
+  (barangay officials) stays blocked** pending an official DILG roster — no
+  names were added or guessed. Recap:
+  `docs/sessions/2026-08-24-footer-disclaimer-cleanup.md`.
 - **BetterLGU Directory:** PR #208 open against `jmacj/better-lgu-directory` —
   Kabugao row updated to 🟢 Active with the domain and the three socials, PR body
   and checklist completed, and a comment answering the triage bot's four
@@ -32,7 +71,7 @@ session (see `docs/skills/session-memory/SKILL.md`).
 - **Merged:** the public `/sitemap` page (PR #1, `21f622b`). 33 prerendered
   routes, 32 sitemap.xml URLs.
 - **What is live:** v3.0.0 — the real multi-page portal.
-  **32 routes prerendered to static HTML**, each with its own title,
+  **33 prerendered pages (32 sitemap URLs; /404 excluded)**, each with its own title,
   description, canonical, OG tags and `BreadcrumbList` JSON-LD. Real homepage
   (no longer coming-soon), `/government` hub, `/government/officials`,
   `/government/barangays` with a live filter, and **one page per barangay** at
@@ -62,13 +101,132 @@ session (see `docs/skills/session-memory/SKILL.md`).
   RMFB 15, ICT), each in local and `+63` form, with `tel:+63` links so overseas
   family can dial. 911 leads. The red bar on every page carries 911 plus the
   all eight offices in a marquee, and a popup with the full list.
-- **Quality:** 36 contract tests + 45 unit tests green; typecheck, lint,
-  build clean; no horizontal overflow at 320–1560; one `h1`, one `header`, one
-  `main` and zero inline styles (outside the Leaflet canvas) on every page at
-  every width.
+- **Quality (at the approved implementation baseline `e5dc158`):** 39 contract tests + 49 unit
+  tests green; typecheck, lint, build clean (`PRERENDER_OK 33 pages`);
+  `npm run qa` (committed Playwright harness) **123/123** at
+  305/320/360/390/768/1280/1440 — zero horizontal overflow from 305px up, one
+  `h1`, one `header`, one `main` and zero inline styles (outside the Leaflet
+  canvas) on every page at every width.
 
 ## Key decisions log
 
+- **2026-08-24** **Footer cleanup (standalone correction).** The global footer
+  stated the independence disclaimer twice — once in the brand column's
+  `.footer__about` paragraph and again in the bottom `.footer__disclaimer`
+  row — which the anti-slop skill flags as a fact said in two places. Removed
+  the repeat: the brand column now carries a single consolidated sentence
+  (independent, volunteer-run, for Kabugao/Apayao, part of the BetterGov.ph
+  network, and "neither affiliated with nor endorsed by the Municipality of
+  Kabugao, and it is not the municipality's official website"); the bottom row
+  carries only the source line
+  ("Published public information is sourced from official government portals.").
+  Both are wired from `site-content.ts` (`disclaimer` and `sourceNote`) so the
+  copy has one home and no footer content field is left dead — `.footer__about`,
+  previously hardcoded, now renders `siteContent.disclaimer`. Because the pinned
+  disclaimer wording changed on purpose, the matching assertion in
+  `tests/site-contracts.test.mjs` ("site content states only verified, sourced
+  facts") was updated in the same change; the disclaimer is still asserted
+  present, in the new wording. `index.html`'s `<noscript>` "not the official
+  website" line was left untouched (out of scope; its own contract still
+  passes). Author/licence/version and the Find/Network links are unchanged;
+  **no "Barangay officials" footer link was added and no barangay names were
+  introduced — Checkpoint 2B stays blocked pending an official DILG roster.**
+  Gates green (39 contract + 50 unit; typecheck + lint clean; `PRERENDER_OK 33
+  pages`; `npm run qa` 175/175); the footer was looked at on the built homepage
+  at 1440 / 390 / 305 — the disclaimer renders once and there is no horizontal
+  overflow. **Codex approved the footer cleanup on 2026-08-24 with one copy
+  edit** — the consolidated disclaimer wording above is Codex's approved version
+  (a firmer "neither affiliated with nor endorsed by … and it is not the
+  municipality's official website"). Committed on the experimental branch; the
+  origin SHA and Cloudflare preview follow from the push (fetch stays
+  authoritative for HEAD). Recap:
+  `docs/sessions/2026-08-24-footer-disclaimer-cleanup.md`.
+- **2026-08-24** **Checkpoint 2A — Government hub + Officials** built on
+  `experiment/full-site-visual-rebuild-v2` (parent `69a74d1…604005`), after
+  Codex approved the scope and rulings. Brought `/government` and
+  `/government/officials` into "Kabugao in View": one *additive* `PageHeader`
+  variant (`variant="kv"` — solid navy, gold-rule eyebrow) used only by these
+  two routes (existing variants and other pages unchanged; page-header markup
+  not duplicated); the hub's three-card grid replaced by an editorial
+  wayfinding list (real crawlable links; status labels Available / Available /
+  In preparation; one page-entry animation + hover/focus cue, off under reduced
+  motion); the officials card grid replaced by a scannable roster (executive
+  tier with a gold rail — one coherent treatment, not floating cards — then the
+  Sangguniang Bayan), preserving exact names, positions, term, the eLGU source
+  + retrieval date, and both notices. The same commit added `SimplePages.tsx` +
+  `OfficialsPage.tsx` to the className↔stylesheet cross-check, added a hub unit
+  test, and extended the committed QA harness to both routes (175/175); and
+  corrected two stale docs (the `frontend-standards` "capital of Apayao"
+  pinned-fact wording; route-count wording → "33 prerendered pages / 32 sitemap
+  URLs"). Weather/clock left unmounted; the now-unused legacy CSS
+  (`.nav-card` / `.card-grid` / `.official*`) left in place (pruning is the
+  separate approved cleanup task). Gates green; **pushed at `cf1ee7c`**;
+  Cloudflare preview **https://69d4e1d9.betterkabugao.pages.dev/**; **Codex
+  approved the code and visual direction (2026-08-24)**; a small docs/CSS
+  cleanup pass followed. Full recap:
+  `docs/sessions/2026-08-24-checkpoint-2a-government-officials.md`.
+- **2026-08-23** Account-migration handoff written (docs-only): new
+  `docs/command-center/release-tracker.md` and
+  `docs/sessions/2026-08-23-claude-account-migration-handoff.md`; START-HERE /
+  CLAUDE.md / CONTEXT / active-task / source-registry refreshed. Reason: the
+  building Claude account is being deleted; the repository must carry the
+  project's full working memory. Landed as documentation commit `5f73755`.
+  Codex's review returned one documentation-state correction pass — label the
+  approved implementation baseline (`e5dc158`) distinctly from the current
+  remote HEAD (fetch is authoritative), remove an unexplained identity, use
+  `npm ci` in first-day instructions — applied in the commit after `5f73755`.
+  **Codex approved the handoff on 2026-08-23** at content commit `7b121df`;
+  the migration is complete.
+- **2026-08-22** **Checkpoint 1 approved by Codex** at `e5dc158` (preview
+  `e19410fa`). Merge to `main` remains unapproved; Checkpoint 2 needs a scope
+  approval first.
+- **2026-08-21 (rounds 4–6)** Live Windows-Chrome QA caught what headless QA
+  could not: `body { min-width: 320px }` forced horizontal overflow under
+  classic (~15px) scrollbars — a 320px window has a ~305px content area.
+  Removed the floor (fluid layout needs none), added a contract test forbidding
+  `min-width: 320px`, added a **305x568** viewport to the committed harness,
+  and gave `.kv-hero__search-text` single-line truncation (nowrap + ellipsis)
+  so the hero search control holds one line at 305px. A process rule came out
+  of round 5: commit `3352ee3` was accidentally built on `ae8ef20` (a
+  `git reset --hard` to a stale ref), silently dropping the round-4 fix —
+  restored on the correct parent in `e5dc158`. Standing rule: prepare commits
+  only on the fetched, SHA-verified origin tip; never reset to an unverified
+  ref; check the new commit's parent before pushing.
+- **2026-08-21 (round 3)** Cleared the final production **copy blocker** and two
+  QA/UX fixes on `experiment/full-site-visual-rebuild-v2`. Neutralised the
+  unqualified "capital of Apayao" everywhere (→ "the municipality of Kabugao,
+  Apayao"); removed public-works / procurement / contractor / flood-control /
+  spending promises from the global `<noscript>`, the homepage / `/transparency`
+  / `/government` copy, the SEO metadata and the structured data; dropped ₱0/₱670
+  from the global `<noscript>` (they stay on `/about`'s own body). Kept the
+  independence disclaimer and the contract-required strings. Also: the mobile
+  homepage header now has a solid compact **navy** surface (white logo/Search/
+  Menu were unreadable over the photo; desktop overlay unchanged); and
+  `npm ci && npm test` now builds first via a `pretest` hook so the prerendered
+  OSM-attribution contract test runs for real, while `npm run qa` builds only if
+  `dist/` is missing (verification sequence builds once). A new contract test
+  guards the prohibited wording across every built route. `npm run qa` → 113/113.
+- **2026-08-21** Built the approved **"Kabugao in View"** photo-led redesign as
+  Checkpoint 1 on `experiment/full-site-visual-rebuild-v2` (clean-cut from
+  `origin/main` `745b877`; the rejected "Living Civic Atlas" experiment was
+  stashed, never reused). Photo hero (self-hosted PD Dibagat River image, Andrew
+  Garnett / Wikimedia Commons), real inverse logo (no HTML wordmark), one
+  Emergency 911 header action, integrated search, unframed four-task strip, and a
+  map-first barangays directory with synchronized map/list selection + a mobile
+  bottom sheet. Kept the per-barangay detail route as-is (already compliant), and
+  did **not** redesign the other routes. **Committed, not pushed** — for an
+  experimental Cloudflare staging preview only. Two decisions worth recording:
+  (a) left the pre-existing global SEO meta + `<noscript>` fallback untouched
+  even though they still carry an unqualified "capital of Apayao" claim,
+  public-works vocabulary and ₱0/₱670 — they are contract-pinned, all-routes, and
+  a core-template no-JS/SEO contract, so scrubbing them is a separate approved
+  follow-up, not this checkpoint; (b) kept the now-unmounted `HotlineBar` /
+  `UtilityStrip` / `HotlineDialog` / `useKabugaoNow` and their CSS so existing
+  contract tests stay green — prune later. One real bug found and fixed in QA:
+  `.section h2` was overriding the sheet name to dark-on-navy; fixed by raising
+  specificity to `.kv-sheet__head .kv-sheet__name`. Full record:
+  `docs/command-center/active-task.md`, spec, and
+  `docs/sessions/2026-08-21-full-site-visual-rebuild-v2.md`.
 - **2026-08-16** v1 launch page (centred hero, three cards, zigzag SVG
   mountains, glows, pill buttons) was rejected by the maintainer as generic.
   Root cause: it was designed from taste rather than from the ecosystem.
@@ -267,36 +425,50 @@ session (see `docs/skills/session-memory/SKILL.md`).
 
 ## Next steps
 
-1. **React hydration error #418 on prerendered pages** — reported by Codex from
-   local browser QA; **open**. Did not reproduce against the built `dist` in the
-   sandbox across four routes with all console output captured. The clock's
-   server snapshot is `null` and `.utility__inner` is empty in the prerendered
-   HTML, so the utility strip is not the obvious cause. Needs Codex's exact
-   conditions — dev or built, which route, which browser, first load or after a
-   client navigation, and whether it survives with `StrictMode` removed —
-   because #418 is minified and names no element.
-2. **Codex QA on `improvement/search-404-recovery`**, then merge to `main`. The
-   one thing the sandbox cannot check is whether `form-action 'self'` actually
-   ships in the Cloudflare response headers.
-3. **Awaiting `jmacj`:** BetterLGU Directory PR #208.
-4. **Open design decision:** with JavaScript off, the `<noscript>` block renders
+1. ~~Codex reviews the account-migration handoff~~ — **done: APPROVED
+   2026-08-23** at content commit `7b121df`. The new Claude account onboards
+   via the handoff document's first-day checklist.
+2. **Checkpoint 2A (Government hub + Officials): pushed and approved.** Pushed at
+   `cf1ee7c`; Cloudflare preview https://69d4e1d9.betterkabugao.pages.dev/; Codex
+   approved the code and visual direction (2026-08-24); a small docs/CSS cleanup
+   pass followed. Next, Robin + Codex agree the scope for 2B. No merge to `main`
+   until full-site parity and Codex approval.
+3. ~~React hydration error #418~~ — **explained during rebuild QA**: `vite
+   preview`'s SPA fallback serves the homepage HTML for every non-root URL, so
+   hydration mismatches on every other route. Served the way Cloudflare Pages
+   serves (clean URLs → the prerendered file, e.g. `scripts/qa/serve.mjs`),
+   every route has zero hydration errors. Reopen only if it reproduces on a
+   Cloudflare-served page.
+4. ~~Codex QA on `improvement/search-404-recovery`~~ — **done; merged to
+   `main` as PR #2 (2026-08-20)**.
+5. **Awaiting `jmacj`:** BetterLGU Directory PR #208 — status not checked since
+   2026-08-19; re-check.
+6. **Open design decision:** with JavaScript off, the `<noscript>` block renders
    below a complete page and unstyled, restating the footer's cost chips,
    disclaimer and `Built by` credit. Either trim it to the JavaScript
    explanation alone or give it styles — the facts inside are pinned by contract
    tests, so changing them is a deliberate act. Needs Robin's call.
-5. `_headers` / `_routes.json` review now that the deploy is multi-page.
-6. Collect verified Kabugao emergency hotline numbers — someone in Kabugao
+7. `_headers` / `_routes.json` review now that the deploy is multi-page.
+8. Collect verified Kabugao emergency hotline numbers — someone in Kabugao
    test-dialling them, or the LGU confirming them.
-7. Source project records from PhilGEPS / DILG FDP / COA / FOI before building
+9. Source project records from PhilGEPS / DILG FDP / COA / FOI before building
    any UI for them — and email `lfdad@blgf.gov.ph` about the BLGF licence first.
-8. Any future intake form needs Turnstile + rate limiting before launch.
-9. Licence decision: `package.json` still says ISC; the network standard is
-   MIT + CC BY 4.0, and the footer already states MIT · CC BY 4.0 — align them.
-10. Robin to delete `_to_delete/`, and `src/components/SiteSearch.tsx` if a
+10. Any future intake form needs Turnstile + rate limiting before launch.
+11. Licence decision: `package.json` still says ISC; the network standard is
+    MIT + CC BY 4.0. The pre-rebuild footer on `main` states MIT · CC BY 4.0;
+    the rebuilt footer's licence text should be settled in the same decision —
+    align all of them.
+12. Robin to delete `_to_delete/`, and `src/components/SiteSearch.tsx` if a
     `git rm` ever leaves it behind (the device bridge cannot remove files).
+13. **README.md refresh** — the stale `PRERENDER_OK` count was corrected to
+    "33 pages" in Checkpoint 2A; the route table and the pre-portal "Project
+    status" section are still stale and want a fuller refresh (safe — only
+    build settings are contract-pinned).
 
 ## People
 
-- Maintainer / repo owner: KuyaLoy (Safdar)
-- Developer and initiator: **Robin Tapiru** — credited in the footer
+- GitHub repository account: KuyaLoy
+- Product owner, civic source owner, developer and initiator: **Robin
+  Tapiru** — credited in the footer. (The "maintainer" in these docs is Robin.)
+- Commander / final QA: Codex — approves every checkpoint and any merge
 - Community: BetterGov.ph · directory at lgu.bettergov.ph

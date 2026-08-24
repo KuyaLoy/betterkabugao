@@ -27,7 +27,7 @@ afterEach(() => {
 });
 
 describe("site shell", () => {
-  it("puts the same landmarks and hotline on every page", () => {
+  it("puts the same landmarks and one emergency action on every page", () => {
     for (const path of ["/", "/government/barangays", "/government/officials", "/about"]) {
       cleanup();
       renderAt(path);
@@ -35,7 +35,9 @@ describe("site shell", () => {
       expect(screen.getByRole("main")).toHaveAttribute("id", "main-content");
       expect(screen.getByRole("contentinfo")).toBeInTheDocument();
       expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
-      expect(screen.getByRole("link", { name: "911" })).toHaveAttribute("href", "tel:911");
+      // One emergency action lives in the header, linking to the hotlines page.
+      const emergency = within(screen.getByRole("banner")).getByRole("link", { name: /emergency/i });
+      expect(emergency).toHaveAttribute("href", "/emergency");
     }
   });
 
@@ -57,7 +59,7 @@ describe("home page", () => {
   it("is a real homepage, not a coming-soon holding page", () => {
     renderAt("/");
     expect(
-      screen.getByRole("heading", { level: 1, name: /Public information about Kabugao/i }),
+      screen.getByRole("heading", { level: 1, name: /Know your Kabugao/i }),
     ).toBeInTheDocument();
     // the launch-page status chip is gone
     expect(screen.queryByText(/^Coming soon$/i)).not.toBeInTheDocument();
@@ -65,29 +67,37 @@ describe("home page", () => {
 
   it("shows Kabugao at a glance with sourced figures", () => {
     renderAt("/");
-    expect(screen.getByText("16,425")).toBeInTheDocument();
-    expect(screen.getByText("935.12 km²")).toBeInTheDocument();
-    expect(screen.getByText("1st class")).toBeInTheDocument();
-    expect(screen.getByText(/PSGC 1408104000/)).toBeInTheDocument();
+    const main = screen.getByRole("main");
+    expect(within(main).getByText("16,425")).toBeInTheDocument();
+    expect(within(main).getByText("935.12 km²")).toBeInTheDocument();
   });
 
   it("links into the sections that exist", () => {
     renderAt("/");
     const main = screen.getByRole("main");
-    for (const href of ["/government/barangays", "/government/officials", "/transparency", "/about"]) {
+    for (const href of ["/government/barangays", "/government/officials", "/emergency", "/about"]) {
       expect(within(main).getAllByRole("link").some((l) => l.getAttribute("href") === href)).toBe(true);
     }
   });
 });
 
 describe("barangay list page", () => {
-  it("lists all 21 barangays, each linking to its own page", () => {
+  it("lists all 21 barangays as real crawlable links to their own pages", () => {
     renderAt("/government/barangays");
-    const rows = screen.getAllByRole("row").filter((r) => r.getAttribute("href"));
-    expect(rows).toHaveLength(21);
+    // Real navigating anchors, not role=row with cancelled clicks.
+    const dir = screen.getByRole("list", { name: "Barangays of Kabugao" });
+    const links = within(dir).getAllByRole("link");
+    expect(links).toHaveLength(21);
     for (const b of BARANGAYS) {
-      expect(rows.some((r) => r.getAttribute("href") === `/government/barangays/${b.slug}`)).toBe(true);
+      expect(links.some((l) => l.getAttribute("href") === `/government/barangays/${b.slug}`)).toBe(true);
     }
+  });
+
+  it("gives every barangay a separate map-preview control", () => {
+    renderAt("/government/barangays");
+    const dir = screen.getByRole("list", { name: "Barangays of Kabugao" });
+    // One preview button per barangay, distinct from the navigating link.
+    expect(within(dir).getAllByRole("button", { name: /Show .* on the map/i })).toHaveLength(21);
   });
 
   it("filters as you type and reports the count", async () => {
@@ -96,7 +106,8 @@ describe("barangay list page", () => {
     expect(screen.getByText(/Showing all 21 barangays/)).toBeInTheDocument();
 
     await user.type(screen.getByLabelText(/Filter barangays/i), "pobla");
-    expect(screen.getAllByRole("row").filter((r) => r.getAttribute("href"))).toHaveLength(1);
+    const dir = screen.getByRole("list", { name: "Barangays of Kabugao" });
+    expect(within(dir).getAllByRole("link")).toHaveLength(1);
     expect(screen.getByText(/1 of 21 barangays match/)).toBeInTheDocument();
   });
 
@@ -165,10 +176,24 @@ describe("officials page", () => {
   });
 });
 
+describe("government hub", () => {
+  it("guides into the three government destinations as real links, with one h1", () => {
+    renderAt("/government");
+    const main = screen.getByRole("main");
+    for (const href of ["/government/officials", "/government/barangays", "/transparency"]) {
+      const link = within(main)
+        .getAllByRole("link")
+        .find((a) => a.getAttribute("href") === href);
+      expect(link, `missing wayfinding link to ${href}`).toBeTruthy();
+    }
+    expect(within(main).getAllByRole("heading", { level: 1 })).toHaveLength(1);
+  });
+});
+
 describe("search", () => {
   const field = () => screen.getByLabelText(/Search everything published here/i);
-  // The hotline bar is also a region named "Emergency hotlines" and the footer
-  // repeats Home and Sitemap, so every query here is scoped to <main>.
+  // The header and footer repeat destinations like Home, Sitemap and the
+  // emergency action, so every query here is scoped to <main>.
   const page = () => within(screen.getByRole("main"));
 
   it("finds a barangay by name and links to its page", async () => {
@@ -274,20 +299,14 @@ describe("404 recovery", () => {
 });
 
 describe("emergency hotlines", () => {
-  it("keeps 911 and the local numbers on every page, all dialable as +63", () => {
+  it("keeps one emergency action in the header of every page, aimed at the hotlines", () => {
     for (const path of ["/", "/government/barangays", "/about"]) {
       cleanup();
       renderAt(path);
-      const bar = screen.getByRole("region", { name: /emergency hotlines/i });
-      expect(within(bar).getByRole("link", { name: "911" })).toHaveAttribute("href", "tel:911");
-      // Every office is in the bar, MDRRMO first, each one tap from any page.
-      const calls = within(bar).getAllByRole("link", { name: /^Call / });
-      expect(calls).toHaveLength(8);
-      expect(calls[0]).toHaveAttribute("href", "tel:+639275919022");
-      for (const call of calls) {
-        expect(call.getAttribute("href")).toMatch(/^tel:\+63\d{10}$/);
-      }
-      expect(within(bar).getByRole("link", { name: /All numbers/i })).toHaveAttribute("href", "/emergency");
+      // The persistent Emergency 911 control lives in the header and routes to
+      // the hotlines page, where every dialable number is listed.
+      const emergency = within(screen.getByRole("banner")).getByRole("link", { name: /emergency/i });
+      expect(emergency).toHaveAttribute("href", "/emergency");
     }
   });
 
@@ -367,13 +386,19 @@ describe("maps", () => {
     );
   });
 
-  it("credits OpenStreetMap on every page that shows a map", () => {
+  it("credits OpenStreetMap with a real link on every page that shows a map", () => {
     for (const path of ["/", "/government/barangays/waga"]) {
       cleanup();
       renderAt(path);
-      expect(
-        screen.getByText(/Map data, tiles and barangay coordinates © OpenStreetMap contributors \(ODbL\)/),
-      ).toBeInTheDocument();
+      const note = document.querySelector(".map__note") as HTMLElement;
+      expect(note).not.toBeNull();
+      expect(note.textContent).toMatch(
+        /Map data, tiles and barangay coordinates © OpenStreetMap contributors \(ODbL\)/,
+      );
+      expect(within(note).getByRole("link", { name: "OpenStreetMap" })).toHaveAttribute(
+        "href",
+        "https://www.openstreetmap.org/copyright",
+      );
     }
   });
 
@@ -503,6 +528,26 @@ describe("search overlay", () => {
     overlay()?.close();
   });
 
+  it("closes on Escape with a query typed, clears it, and restores focus to the trigger", async () => {
+    const user = userEvent.setup();
+    renderAt("/");
+    const trigger = screen.getByRole("link", { name: "Search" });
+    await user.click(trigger);
+    expect(overlay()?.open).toBe(true);
+
+    const input = screen.getByLabelText("Search barangays, officials, hotlines and pages");
+    await user.type(input, "poblacion");
+    expect(input).toHaveValue("poblacion");
+
+    // A non-empty <input type="search"> tries to consume Escape to clear itself;
+    // the capture-phase handler must still close the dialog, clear the query,
+    // and return focus to the exact trigger that opened it.
+    await user.keyboard("{Escape}");
+    expect(overlay()?.open).toBe(false);
+    await waitFor(() => expect(input).toHaveValue(""));
+    expect(trigger).toHaveFocus();
+  });
+
   it("leaves / alone while the visitor is typing", async () => {
     const user = userEvent.setup();
     renderAt("/government/barangays");
@@ -546,5 +591,55 @@ describe("search overlay", () => {
 
     expect(screen.getByText(/Nothing matches/)).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Browse every page" })).toHaveAttribute("href", "/sitemap");
+  });
+
+  it("layers Escape: first closes only Search, second closes the barangay sheet", async () => {
+    const user = userEvent.setup();
+    renderAt("/government/barangays");
+
+    // Open a barangay preview sheet from the list.
+    const previewButtons = within(screen.getByRole("list", { name: "Barangays of Kabugao" })).getAllByRole(
+      "button",
+      { name: /Show .* on the map/i },
+    );
+    await user.click(previewButtons[0]);
+    expect(document.querySelector(".kv-sheet")).not.toBeNull();
+
+    // Open Search over the sheet and type a query.
+    const trigger = screen.getByRole("link", { name: "Search" });
+    await user.click(trigger);
+    expect(overlay()?.open).toBe(true);
+    await user.type(screen.getByLabelText("Search barangays, officials, hotlines and pages"), "poblacion");
+
+    // First Escape: only Search closes; the sheet stays; focus returns to trigger.
+    await user.keyboard("{Escape}");
+    expect(overlay()?.open).toBe(false);
+    expect(document.querySelector(".kv-sheet")).not.toBeNull();
+    expect(trigger).toHaveFocus();
+
+    // Second Escape: the sheet closes and focus returns to its preview button.
+    await user.keyboard("{Escape}");
+    expect(document.querySelector(".kv-sheet")).toBeNull();
+    expect(document.activeElement).toBe(previewButtons[0]);
+  });
+
+  it("closes the mobile menu when Search opens via '/', and it stays closed after navigating", async () => {
+    const user = userEvent.setup();
+    renderAt("/government/barangays");
+
+    const burger = document.querySelector(".mast__burger") as HTMLButtonElement;
+    await user.click(burger);
+    expect(burger).toHaveAttribute("aria-expanded", "true");
+
+    // '/' opens the overlay -> the mobile menu must collapse.
+    await user.keyboard("/");
+    expect(overlay()?.open).toBe(true);
+    expect(burger).toHaveAttribute("aria-expanded", "false");
+
+    // Navigating from a result leaves the menu closed.
+    await user.type(screen.getByLabelText("Search barangays, officials, hotlines and pages"), "poblacion");
+    const dialog = document.querySelector("dialog.palette") as HTMLElement;
+    await user.click(within(dialog).getByRole("link", { name: /Barangay Poblacion/ }));
+    expect(burger).toHaveAttribute("aria-expanded", "false");
   });
 });

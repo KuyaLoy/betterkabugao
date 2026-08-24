@@ -71,7 +71,7 @@ function structuredData(barangays, officials) {
         url: SITE,
         name: "BetterKabugao.org",
         description:
-          "A volunteer-run civic portal for Kabugao, the capital of Apayao — public spending, public projects, local services and local knowledge in one readable place.",
+          "A volunteer-run civic portal for the municipality of Kabugao, Apayao — its barangays, elected officials, local services and local knowledge in one readable place.",
         inLanguage: "en-PH",
         publisher: { "@id": `${SITE}/#publisher` },
       },
