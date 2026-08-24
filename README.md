@@ -56,7 +56,7 @@ To inspect the built site locally, serve `dist` with a static server that honour
 npm run qa        # builds, serves dist/ like Cloudflare Pages, runs real-Chrome checks
 ```
 
-`npm run qa` (`scripts/qa/`) launches Chromium through Playwright — a dev-only dependency, so `npm install` fetches the matching browser (or run `npx playwright install chromium`). It serves `dist/` with clean-URL routing (not `vite preview`'s SPA fallback) and asserts every header, mobile-menu, search-overlay, barangay-directory and map interaction at 320–1440 widths, including the layered-Escape and menu-plus-search sequences. It writes a pass/fail report to `docs/qa/checkpoint-1/qa-report.json` and exits non-zero if any check fails.
+`npm run qa` (`scripts/qa/`) launches Chromium through Playwright — a dev-only dependency, so `npm install` fetches the matching browser (or run `npx playwright install chromium`). It serves `dist/` with clean-URL routing (not `vite preview`'s SPA fallback) and asserts every header, mobile-menu, search-overlay, barangay-directory and map interaction at 320–1440 widths, including the layered-Escape and menu-plus-search sequences. It writes a pass/fail report to `docs/qa/checkpoint-2a/qa-report.json` (the current Checkpoint 2A report) and exits non-zero if any check fails.
 
 ## Cloudflare Pages
 

@@ -39,15 +39,17 @@ session (see `docs/skills/session-memory/SKILL.md`).
   `docs/sessions/2026-08-23-claude-account-migration-handoff.md`. Checkpoint 1
   remains approved at baseline `e5dc158`; `main` remains untouched; the current
   remote HEAD is still fetched and verified before any work.
-- **Checkpoint 2A (Government hub + Officials): BUILT, awaiting review.** Codex
-  approved the 2A scope on 2026-08-24; `/government` and `/government/officials`
-  were brought into "Kabugao in View" (an additive `kv` PageHeader variant, an
-  editorial wayfinding list, and a scannable officials roster) in one focused
-  commit prepared on parent `69a74d1…604005`. Gates green (39 contract + 50
-  unit; typecheck + lint clean; `PRERENDER_OK 33 pages`; `npm run qa` 175/175).
-  Not yet pushed — awaiting Robin's push, the Cloudflare preview, and Codex
-  review. No other route was touched; weather/clock stay unmounted; the now-unused
-  legacy CSS was left in place (pruning is a separate approved task).
+- **Checkpoint 2A (Government hub + Officials): PUSHED and APPROVED.**
+  `/government` and `/government/officials` were brought into "Kabugao in View"
+  (an additive `kv` PageHeader variant, an editorial wayfinding list, and a
+  scannable officials roster). Pushed at **`cf1ee7cc4a29114d5819557f81b762e3bcd1404f`**;
+  Cloudflare preview **https://69d4e1d9.betterkabugao.pages.dev/**; **Codex
+  approved the code and visual direction (2026-08-24)** (39 contract + 50 unit;
+  typecheck + lint clean; `PRERENDER_OK 33 pages`; `npm run qa` 175/175). A small
+  docs/CSS cleanup pass followed (record push/preview/approval; README report
+  path; CP2A CSS tokens + letter-spacing). No other route was touched;
+  weather/clock stay unmounted; the now-unused legacy CSS was left in place
+  (pruning is a separate approved task).
 - **BetterLGU Directory:** PR #208 open against `jmacj/better-lgu-directory` —
   Kabugao row updated to 🟢 Active with the domain and the three socials, PR body
   and checklist completed, and a comment answering the triage bot's four
@@ -113,8 +115,10 @@ session (see `docs/skills/session-memory/SKILL.md`).
   pinned-fact wording; route-count wording → "33 prerendered pages / 32 sitemap
   URLs"). Weather/clock left unmounted; the now-unused legacy CSS
   (`.nav-card` / `.card-grid` / `.official*`) left in place (pruning is the
-  separate approved cleanup task). Gates green; **not yet pushed** — awaiting
-  Robin's push, the Cloudflare preview, and Codex review. Full recap:
+  separate approved cleanup task). Gates green; **pushed at `cf1ee7c`**;
+  Cloudflare preview **https://69d4e1d9.betterkabugao.pages.dev/**; **Codex
+  approved the code and visual direction (2026-08-24)**; a small docs/CSS
+  cleanup pass followed. Full recap:
   `docs/sessions/2026-08-24-checkpoint-2a-government-officials.md`.
 - **2026-08-23** Account-migration handoff written (docs-only): new
   `docs/command-center/release-tracker.md` and
@@ -379,11 +383,11 @@ session (see `docs/skills/session-memory/SKILL.md`).
 1. ~~Codex reviews the account-migration handoff~~ — **done: APPROVED
    2026-08-23** at content commit `7b121df`. The new Claude account onboards
    via the handoff document's first-day checklist.
-2. **Checkpoint 2A (Government hub + Officials): built, awaiting review.** Codex
-   approved the 2A scope 2026-08-24; the single commit is prepared on parent
-   `69a74d1…604005` and gate-green — awaiting Robin's push, the Cloudflare
-   preview, and Codex review. Afterward Robin + Codex agree the next scope (2B).
-   No merge to `main` until full-site parity and Codex approval.
+2. **Checkpoint 2A (Government hub + Officials): pushed and approved.** Pushed at
+   `cf1ee7c`; Cloudflare preview https://69d4e1d9.betterkabugao.pages.dev/; Codex
+   approved the code and visual direction (2026-08-24); a small docs/CSS cleanup
+   pass followed. Next, Robin + Codex agree the scope for 2B. No merge to `main`
+   until full-site parity and Codex approval.
 3. ~~React hydration error #418~~ — **explained during rebuild QA**: `vite
    preview`'s SPA fallback serves the homepage HTML for every non-root URL, so
    hydration mismatches on every other route. Served the way Cloudflare Pages

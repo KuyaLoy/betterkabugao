@@ -2,8 +2,11 @@
 
 Date: 2026-08-24
 Branch: experiment/full-site-visual-rebuild-v2
-Prepared on parent SHA: 69a74d1436509aeb0f97ce22b0c81a7cf1604005
-(unchanged — no commit / push / merge / tag / branch action was performed here)
+Parent SHA: 69a74d1436509aeb0f97ce22b0c81a7cf1604005
+Pushed at: cf1ee7cc4a29114d5819557f81b762e3bcd1404f (2026-08-24)
+Cloudflare preview: https://69d4e1d9.betterkabugao.pages.dev/
+Status: Codex approved the code and visual direction (2026-08-24); a small
+docs/CSS cleanup pass followed on the same branch.
 Scope: /government and /government/officials only. No other route touched.
 
 ## Gates (clean clone, parent 69a74d1)

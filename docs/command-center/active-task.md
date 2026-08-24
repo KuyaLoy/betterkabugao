@@ -1,12 +1,12 @@
-# ACTIVE TASK — Checkpoint 2A built (Government hub + Officials), awaiting Codex review
+# ACTIVE TASK — Checkpoint 2A pushed and approved (Government hub + Officials)
 
 > Any session resuming work reads this file first, then
 > `docs/command-center/release-tracker.md`, then the latest file in
 > `docs/sessions/`. Update this file after each milestone.
 
-_Last updated: **2026-08-24** (Checkpoint 2A implemented on the experimental
-branch; all gates green in a clean clone; awaiting Robin's push, the Cloudflare
-preview, and Codex review)._
+_Last updated: **2026-08-24** (Checkpoint 2A pushed at `cf1ee7c`, Cloudflare
+preview live, Codex approved the code and visual direction; a small docs/CSS
+cleanup pass followed)._
 
 ---
 
@@ -23,7 +23,7 @@ preview, and Codex review)._
 | **Current remote HEAD** | never hardcoded here — `git fetch origin && git rev-parse origin/experiment/full-site-visual-rebuild-v2` is authoritative; later documentation-only corrections may follow `5f73755` |
 | `main` | `745b8779dd711cc20d478dee82f01101c9ed2c74` — **untouched**; no merge approved |
 | Gates at the approved CP1 baseline | 39 contract + 49 unit; typecheck + lint clean; build `PRERENDER_OK 33 pages`; `npm run qa` 123/123, exit 0 |
-| **Checkpoint 2A** | **BUILT on `experiment/full-site-visual-rebuild-v2`; prepared on parent `69a74d1…604005`; gates green (39 contract + 50 unit; typecheck + lint clean; `PRERENDER_OK 33 pages`; `npm run qa` 175/175). Awaiting Robin's push, the Cloudflare preview, and Codex review.** Scope: `/government` + `/government/officials` only. |
+| **Checkpoint 2A** | **PUSHED at `cf1ee7cc4a29114d5819557f81b762e3bcd1404f`; Cloudflare preview https://69d4e1d9.betterkabugao.pages.dev/ ; Codex APPROVED the code and visual direction (2026-08-24).** Gates: 39 contract + 50 unit; typecheck + lint clean; `PRERENDER_OK 33 pages`; `npm run qa` 175/175. Scope: `/government` + `/government/officials` only. A small docs/CSS cleanup pass follows on the same branch. |
 | Later checkpoints (2B onward) | **not started** — scope needs Robin + Codex approval |
 
 The full commit-by-commit history of Checkpoint 1 (six correction rounds,
@@ -61,17 +61,19 @@ Delivered on `experiment/full-site-visual-rebuild-v2`, prepared on parent
 Gates (clean clone, parent `69a74d1`): 39 contract + 50 unit; typecheck + lint
 clean; build `PRERENDER_OK 33 pages`; `npm run qa` **175/175, exit 0**.
 
-Status: **implemented; all gates green; NOT yet pushed.** Awaiting Robin's push
-from the authorized PC, the Cloudflare preview, and Codex review.
+Status: **PUSHED at `cf1ee7cc4a29114d5819557f81b762e3bcd1404f`; Cloudflare
+preview live at https://69d4e1d9.betterkabugao.pages.dev/ ; Codex APPROVED the
+code and visual direction (2026-08-24).** A small docs/CSS cleanup pass follows
+on the same experimental branch.
 
 ## 2. What happens next (in order)
 
-1. Robin pushes the single Checkpoint 2A commit to
-   `experiment/full-site-visual-rebuild-v2` from the authorized PC (verify
-   `git rev-parse HEAD` = `69a74d1…604005` before committing).
-2. Cloudflare auto-builds a preview; Robin relays the `*.pages.dev` URL.
-3. Codex reviews the code + the preview and approves or returns blockers.
-4. On approval, the next checkpoint scope (2B) is agreed with Robin + Codex.
+1. ~~Robin pushes Checkpoint 2A~~ — **done: pushed at `cf1ee7c` (2026-08-24).**
+2. ~~Cloudflare preview~~ — **done: https://69d4e1d9.betterkabugao.pages.dev/**
+3. ~~Codex reviews the code + preview~~ — **done: APPROVED (2026-08-24).**
+4. A small docs/CSS cleanup pass (record push/preview/approval; README report
+   path; CP2A CSS tokens + letter-spacing) lands on the same branch.
+5. The next checkpoint scope (2B) is agreed with Robin + Codex when ready.
    **No merge to `main` until full-site parity and Codex's explicit approval.**
 
 ## 3. Standing constraints

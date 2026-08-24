@@ -1425,9 +1425,17 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--color-primary-5
    CHECKPOINT 2A — Government hub + Elected officials
    Additive "Kabugao in View" interior header, an editorial
    wayfinding list (not cards), and a scannable officials roster.
-   Tokens only; letter-spacing 0 on titles; one restrained
-   page-entry animation; reduced motion honoured.
+   Tokens only; letter-spacing 0 on titles and uppercase labels; one
+   restrained page-entry animation; reduced motion honoured.
    ============================================================ */
+
+/* Local tokens for this block (clearly named; values preserved from the
+   approved Checkpoint 2A design). */
+:root {
+  --kv-eyebrow: #ffe08a;          /* light gold — kv interior header eyebrow */
+  --kv-on-navy: #e7eefb;          /* readable light text on the navy header */
+  --kv-status-soon-bg: #fbefdd;   /* pale amber — "In preparation" status pill */
+}
 
 /* ---- Interior header: additive "kv" variant (solid navy, gold rule) ---- */
 .page-head--kv { background: var(--color-primary-900); border-bottom: 0; padding-block: clamp(30px, 5vw, 54px) clamp(26px, 4vw, 42px); }
@@ -1435,10 +1443,10 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--color-primary-5
 .page-head--kv .crumbs a:hover { color: #fff; }
 .page-head--kv .crumbs span[aria-current] { color: #fff; }
 .page-head--kv .crumbs__sep { color: rgba(255, 255, 255, 0.5); }
-.page-head--kv .page-head__eyebrow { display: inline-flex; align-items: center; gap: 9px; color: #ffe08a; font-weight: 700; font-size: 0.8125rem; letter-spacing: 0.14em; text-transform: uppercase; }
+.page-head--kv .page-head__eyebrow { display: inline-flex; align-items: center; gap: 9px; color: var(--kv-eyebrow); font-weight: 700; font-size: 0.8125rem; letter-spacing: 0; text-transform: uppercase; }
 .page-head--kv .page-head__eyebrow::before { content: ""; width: 26px; height: 2px; background: var(--color-gold); }
 .page-head--kv h1 { color: #fff; font-size: clamp(2.1rem, 4.4vw, 3.25rem); font-weight: 800; letter-spacing: 0; line-height: 1.05; }
-.page-head--kv .page-head__desc { color: #e7eefb; font-size: clamp(1.02rem, 1.4vw, 1.1875rem); line-height: 1.6; }
+.page-head--kv .page-head__desc { color: var(--kv-on-navy); font-size: clamp(1.02rem, 1.4vw, 1.1875rem); line-height: 1.6; }
 .page-head--kv .page-head__badges .pill { background: rgba(255, 255, 255, 0.15); color: #fff; }
 
 /* ---- Government hub: editorial wayfinding list (not cards) ---- */
@@ -1453,16 +1461,16 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--color-primary-5
 .kv-guide__title { display: block; color: var(--color-primary-900); font-size: 1.25rem; font-weight: 800; letter-spacing: 0; }
 .kv-guide__desc { display: block; margin-top: 5px; color: var(--color-gray-700); font-size: 0.9375rem; line-height: 1.55; max-width: 54ch; }
 .kv-guide__meta { flex: none; display: flex; align-items: center; gap: 16px; }
-.kv-guide__status { white-space: nowrap; padding: 4px 10px; border-radius: 6px; font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+.kv-guide__status { white-space: nowrap; padding: 4px 10px; border-radius: 6px; font-size: 0.6875rem; font-weight: 700; letter-spacing: 0; text-transform: uppercase; }
 .kv-guide__status--live { color: var(--color-success-700); background: var(--color-success-50); }
-.kv-guide__status--soon { color: var(--color-accent-700); background: #fbefdd; }
+.kv-guide__status--soon { color: var(--color-accent-700); background: var(--kv-status-soon-bg); }
 .kv-guide__go { flex: none; color: var(--color-primary-600); font-size: 1.25rem; font-weight: 700; }
 
 /* ---- Officials roster (scannable; no floating cards) ---- */
 .kv-roster { margin-top: 18px; border-top: 1px solid var(--color-gray-200); }
 .kv-roster__row { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; padding: 14px 8px; border-bottom: 1px solid var(--color-gray-200); }
 .kv-roster__name { color: var(--color-primary-900); font-size: 1.0625rem; font-weight: 700; letter-spacing: 0; }
-.kv-roster__post { color: var(--color-gray-700); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+.kv-roster__post { color: var(--color-gray-700); font-size: 0.75rem; font-weight: 700; letter-spacing: 0; text-transform: uppercase; }
 .kv-roster-h2 { margin-top: 44px; }
 /* Executive tier: one coherent roster with a gold rail and stronger hierarchy —
    the position sits above the name; deliberately not two floating cards. */

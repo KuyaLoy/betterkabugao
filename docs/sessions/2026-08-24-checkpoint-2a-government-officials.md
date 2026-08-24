@@ -56,21 +56,25 @@ other route touched. Prepared on parent `69a74d1…604005`.
 - Looked at the render: both routes at 1440/768/390/305 (screenshots in
   `docs/qa/checkpoint-2a/{government,officials}-{1440,768,390,305}.png`). Zero
   horizontal overflow, one h1/one main, calm/civic, visually of a piece with CP1.
-- NOT verified here: the live Cloudflare preview (produced only after Robin
-  pushes) — Codex's final review is on that URL.
+- Live Cloudflare preview verified by Codex at
+  https://69d4e1d9.betterkabugao.pages.dev/ (390px Government and Officials: no
+  overflow, correct content and links, clean console).
 
 ## Open threads
-- Awaiting Robin's push, the Cloudflare preview URL, and Codex review.
-- Commit SHA is produced on Robin's PC (sandbox has no push credentials) —
-  record it in the release tracker after the push.
+- Pushed at `cf1ee7cc4a29114d5819557f81b762e3bcd1404f`; Codex approved the code
+  and visual direction (2026-08-24). A small docs/CSS cleanup pass followed on
+  the same branch.
 - Everything from the migration handoff's open list still stands (README fuller
   refresh, licence ISC vs MIT·CC BY 4.0, legacy prune, weather/clock decision,
   `<noscript>` styling, hotline confirmation, BLGF licence, PR #208).
 
 ## Handoff notes
-- Robin handles all Git actions from the authorized PC; the completed changes
-  sit uncommitted in the working tree, prepared on parent
-  `69a74d1436509aeb0f97ce22b0c81a7cf1604005` (keep it as the parent).
+- Pushed by Robin at `cf1ee7cc4a29114d5819557f81b762e3bcd1404f` (parent
+  `69a74d1436509aeb0f97ce22b0c81a7cf1604005`); Cloudflare preview
+  https://69d4e1d9.betterkabugao.pages.dev/; Codex approved the code and visual
+  direction (2026-08-24). A small docs/CSS cleanup pass followed on the same
+  branch (notice reword; README report path → checkpoint-2a; CP2A CSS colour
+  tokens + letter-spacing 0 on the new eyebrow/status/roster-post labels).
 - QA evidence for Codex is repository-relative: screenshots in
   `docs/qa/checkpoint-2a/`, the machine-readable report at
   `docs/qa/checkpoint-2a/qa-report.json`, and this recap.
