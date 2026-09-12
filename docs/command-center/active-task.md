@@ -13,6 +13,13 @@ official DILG roster)._
 
 ---
 
+> **CURRENT TASK OVERRIDE — 2026-09-13:** The previous release work is now
+> merged into `main` at `16532fe`. This session is in feature discovery, not
+> implementation. The current decision is whether to build **Public Projects
+> & Flood Watch**, **Services Navigator**, or **Budget & Disaster Fund
+> Explorer**. Research, reasoning, and the approval gate are recorded in
+> `docs/sessions/2026-09-13-feature-research-and-handoff.md`.
+
 ## 0. Where things stand (verified)
 
 | | |

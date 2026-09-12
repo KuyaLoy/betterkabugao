@@ -11,6 +11,12 @@ the current branch tip, not yet pushed. Checkpoint 2A — Government hub +
 Officials — was pushed at `cf1ee7c` and Codex-approved; its docs/CSS cleanup
 landed at `657fbb2`)._
 
+> **CURRENT RELEASE OVERRIDE — 2026-09-13:** `main` and `origin/main` were
+> fetch-verified at `16532fe`, which merges the Kabugao in View rebuild into
+> production history. Feature discovery is now the active work; no new feature
+> has been implemented or approved yet. See
+> `docs/sessions/2026-09-13-feature-research-and-handoff.md`.
+
 ## Release rules (standing)
 
 1. **Never push directly to `main`.** All work lands on a review/experiment

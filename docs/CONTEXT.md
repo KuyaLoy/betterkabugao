@@ -7,6 +7,13 @@ the traps. This file is the dated decision log behind it.
 Living snapshot of BetterKabugao. Update both at the end of every working
 session (see `docs/skills/session-memory/SKILL.md`).
 
+> **Current-status override — 2026-09-13:** `main` and `origin/main` are both
+> at `16532fe`, the merge that brought the Kabugao in View rebuild,
+> Checkpoints 1/2A, footer cleanup, and their documentation into `main`.
+> Earlier entries that call the rebuild experimental are historical. The
+> latest feature research and handoff are in
+> `docs/sessions/2026-09-13-feature-research-and-handoff.md`.
+
 ## Current state (2026-08-24)
 
 - **Domain:** betterkabugao.org — Cloudflare Pages, deploys from `main`
@@ -109,6 +116,14 @@ session (see `docs/skills/session-memory/SKILL.md`).
   canvas) on every page at every width.
 
 ## Key decisions log
+
+- **2026-09-13** Feature discovery was documented before implementation. After
+  researching the BetterGov directory and guide, the recommended next feature
+  is **Public Projects & Flood Watch**, because it is specific to Kabugao and
+  the research tracker already has a citable DPWH source. **Services Navigator**
+  and **Budget & Disaster Fund Explorer** remain alternatives. Robin's choice
+  and design approval are still pending. Full reasoning and source links:
+  `docs/sessions/2026-09-13-feature-research-and-handoff.md`.
 
 - **2026-08-24** **Footer cleanup (standalone correction).** The global footer
   stated the independence disclaimer twice — once in the brand column's

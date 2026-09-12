@@ -15,6 +15,13 @@ its docs/CSS cleanup landed at `657fbb2`).
 Update this file at the end of every session — see
 [§11](#11-before-you-finish-a-session).
 
+> **CURRENT STATUS OVERRIDE — 13 September 2026:** `main` is currently at
+> `16532fe` (`Merge Kabugao in View rebuild...`), fetched from `origin/main`
+> on this date. The Kabugao in View rebuild is now merged into `main`; older
+> rows below that describe it as experimental are historical records. The
+> current feature discussion and next decision are recorded in
+> `docs/sessions/2026-09-13-feature-research-and-handoff.md`.
+
 ## Reading order
 
 | # | File | Why |
