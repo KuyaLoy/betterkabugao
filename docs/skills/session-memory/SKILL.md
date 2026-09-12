@@ -9,6 +9,15 @@ Multiple volunteers and AI assistants work on this repo across sessions.
 Context dies when a session ends — unless it is written down. This protocol
 is mandatory.
 
+It applies equally to new work and to sessions that resume an older branch,
+task or AI handoff. Older records are historical evidence, not permission to
+skip the current recap. When an older status is stale, add a dated override or
+correction and keep the original entry for traceability.
+
+The maintainer may use Tagalog for feelings, emphasis or requirements. The
+default assistant response language is English unless the maintainer requests
+another language; the recap must preserve the full meaning of every decision.
+
 ## At session START (before touching code)
 
 1. Read **`docs/START-HERE.md`** — the single entry point: current state, what

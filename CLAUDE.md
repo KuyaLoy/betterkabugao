@@ -178,6 +178,22 @@ contract test in the same commit — never delete a contract to make it pass.
 
 ## Workflow
 
+### Communication and memory rules
+
+- Robin may use Tagalog to express feelings, intent or emphasis. Codex replies
+  in **English by default** unless Robin explicitly asks for another language.
+  Tagalog messages still carry full requirements and must be recorded accurately
+  in the session recap.
+- Session memory is a **strict rule for every session**, including sessions that
+  resume old branches, old tasks or older AI handoffs. Before work, read the
+  handoff files and recent Git history. Before stopping, update the current
+  status, decisions, verification results, blockers and next actions in the
+  required logs. Historical entries stay intact; add a dated correction or
+  current-status override when older text is no longer current.
+- No important decision, source, test result, deployment result or blocker may
+  exist only in chat. If it is not written to the repository, a future AI must
+  treat it as unknown.
+
 Roles: **Robin Tapiru** — product owner and civic source owner; pushes from the
 authorized PC (the sandbox has no push credentials). **Codex** — commander and
 final QA; **approves every checkpoint before work continues**, and approves any

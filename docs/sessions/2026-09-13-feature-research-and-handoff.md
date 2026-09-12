@@ -52,3 +52,12 @@ Robin Tapiru and Codex. Repository checked from `C:\Users\Robin Tapiru\Documents
 2. Do not treat older “experimental rebuild” rows as current; the override at
    the top of each command-center file points to `main` `16532fe`.
 3. Do not code until Robin approves the selected feature design.
+
+## Protocol update
+
+- Robin clarified that Tagalog may be used to express feelings, emphasis or
+  intent, while Codex should reply in English by default.
+- This language preference and the strict retroactive handoff requirement were
+  added to `CLAUDE.md` and `docs/skills/session-memory/SKILL.md`.
+- Existing sessions are covered: every resumed task must read the current
+  handoff files, verify Git state, and leave a dated recap before stopping.
