@@ -61,3 +61,47 @@ Robin Tapiru and Codex. Repository checked from `C:\Users\Robin Tapiru\Documents
   added to `CLAUDE.md` and `docs/skills/session-memory/SKILL.md`.
 - Existing sessions are covered: every resumed task must read the current
   handoff files, verify Git state, and leave a dated recap before stopping.
+
+## Team operating model decision — 2026-09-13
+
+To reduce overwhelm and prevent conflicting work in the shared folder, the
+Project Manager task is now the **BetterKabugao Command Center**, the single
+user-facing owner. Robin normally communicates only with that task. It
+delegates the minimum necessary request to specialists, reconciles their
+findings, obtains approval, and sends Development one consolidated brief.
+Development is the sole task permitted to edit code or Git. All specialists
+remain read-only and provide research, design, content, review findings or
+safe command proposals. After implementation, the Command Center routes the
+appropriate QA and Platform/Security checks before reporting release
+readiness. English is the default response language; Tagalog intent remains
+preserved in requirements and handoffs.
+
+### Specialist task directory
+
+| Department | Task ID |
+|---|---|
+| Development | `019fbf4d-1754-7ec2-8543-0e337ac3c68c` |
+| Social Media | `01a097ba-2598-7071-a5b9-ca314b235ec9` |
+| QA & Accessibility | `01a097bd-e241-7b90-8036-b80e30287c80` |
+| Civic Research & Data | `01a097bd-eff0-72c3-a198-317fdf795060` |
+| UX & Brand | `01a097be-039b-7be3-aa38-12ef76d3fa68` |
+| SEO & Growth | `01a097be-13bb-7f22-a1c6-7c2cab864c70` |
+| Platform & Security | `01a097be-20b2-71f2-8ed5-5ad7b8e18d13` |
+| Community & Editorial | `01a097be-2fa2-7e60-89f5-1230eaf0ae23` |
+
+The Command Center task is `01a097b8-3176-7dd1-8759-ec9f47f47b57`.
+
+### Adaptive model-routing policy
+
+The Command Center chooses model and reasoning separately for every delegated
+turn according to complexity, consequence and uncertainty. Luna low/medium
+covers routine status checks, summaries, formatting, documentation and simple
+social/editorial drafts. Terra medium/high covers normal implementation,
+UI/SEO work, structured research, test writing and ordinary debugging. Sol
+high/xhigh covers difficult bugs, complex refactors, cross-system reasoning,
+sensitive civic-data synthesis, security and release review. Astra high or
+above is reserved for exceptional architecture decisions, unresolved high-risk
+failures or the hardest end-to-end work. Start at the lowest reliable tier and
+escalate only when evidence shows it is needed; this protects Robin's $20 Plus
+allowance. Model overrides apply per delegated turn and must be specified each
+time.

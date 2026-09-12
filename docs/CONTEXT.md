@@ -14,6 +14,32 @@ session (see `docs/skills/session-memory/SKILL.md`).
 > latest feature research and handoff are in
 > `docs/sessions/2026-09-13-feature-research-and-handoff.md`.
 
+## Decision log — 2026-09-13: one Command Center for the team
+
+The Project Manager task was promoted to the **BetterKabugao Command Center**
+and is now the single user-facing owner for coordination. It delegates only
+the minimum necessary work to specialist tasks, reconciles their findings,
+maintains the roadmap/backlog and approvals, and sends Development one
+consolidated brief after approval. Development is the sole task allowed to
+edit code or Git; all other specialist tasks are read-only. This hub-and-spoke
+model prevents conflicting briefs and lost context while keeping the shared
+folder safe and the AI team understandable to future maintainers.
+
+### Adaptive model-routing policy — 2026-09-13
+
+The Command Center selects model and reasoning effort separately for each
+delegated turn, based on complexity, consequence and uncertainty; departments
+do not have one permanent model. Start with the lowest tier likely to finish
+reliably and escalate only when evidence requires it, protecting Robin's $20
+Plus allowance. Luna low/medium is for routine checks, summaries, formatting,
+documentation and simple social/editorial drafts. Terra medium/high is for
+normal implementation, UI/SEO work, structured research, test writing and
+ordinary debugging. Sol high/xhigh is for difficult bugs, complex refactors,
+cross-system reasoning, sensitive civic-data synthesis, security and release
+review. Astra high or above is reserved for exceptional architecture,
+unresolved high-risk failures or the hardest end-to-end work. Model overrides
+must be specified on every delegated turn.
+
 ## Current state (2026-08-24)
 
 - **Domain:** betterkabugao.org — Cloudflare Pages, deploys from `main`

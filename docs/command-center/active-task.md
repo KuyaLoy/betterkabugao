@@ -20,6 +20,28 @@ official DILG roster)._
 > Explorer**. Research, reasoning, and the approval gate are recorded in
 > `docs/sessions/2026-09-13-feature-research-and-handoff.md`.
 
+## Current operating model — 2026-09-13
+
+- **Coordination owner:** BetterKabugao Command Center (the former Project
+  Manager task). Robin normally talks only to this task for planning,
+  research, prioritization and approvals.
+- **Sole executor:** BetterKabugao Development. It is the only task permitted
+  to edit source files, tests, dependencies or Git in the shared folder, and
+  it receives one consolidated implementation brief at a time.
+- **Read-only specialists:** QA & Accessibility; Civic Research & Data;
+  UX & Brand; SEO & Growth; Platform & Security; Social Media; and Community
+  & Editorial. The Command Center consults only the specialists needed for a
+  request, then routes post-implementation review to QA and/or Platform.
+- **Handoff rule:** Every decision, source, approval, test result, blocker and
+  release result must be recorded in the dated session/command-center docs.
+- **Adaptive routing:** Select model and reasoning per delegated turn. Start
+  with Luna low/medium for routine work; Terra medium/high for normal
+  implementation, UI/SEO, structured research, tests and debugging; Sol
+  high/xhigh for difficult or sensitive work and security/release review; use
+  Astra high+ only for exceptional high-risk architecture or end-to-end work.
+  Escalate only when evidence requires it to protect Robin's $20 Plus
+  allowance; specify the override on every delegated turn.
+
 ## 0. Where things stand (verified)
 
 | | |

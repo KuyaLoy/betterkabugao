@@ -22,6 +22,14 @@ Update this file at the end of every session — see
 > current feature discussion and next decision are recorded in
 > `docs/sessions/2026-09-13-feature-research-and-handoff.md`.
 
+> **CURRENT WORKFLOW — 13 September 2026:** The **BetterKabugao Command
+> Center** is the single user-facing coordination task. It owns research,
+> roadmap, approvals and cross-team handoffs, and sends Development one
+> consolidated implementation brief only after approval. **Development is the
+> sole task permitted to edit code or Git**; QA, research, design, SEO,
+> platform/security, social and community tasks are read-only specialists.
+> See `docs/command-center/active-task.md` for the operating model.
+
 ## Reading order
 
 | # | File | Why |
