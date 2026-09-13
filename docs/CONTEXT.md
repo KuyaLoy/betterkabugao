@@ -40,6 +40,18 @@ review. Astra high or above is reserved for exceptional architecture,
 unresolved high-risk failures or the hardest end-to-end work. Model overrides
 must be specified on every delegated turn.
 
+### Approved population-observations checkpoint — 2026-09-13
+
+Robin approved a narrow, source-first statistics release outside the previously
+unapproved A/B/C feature choices: a concise homepage feature index and a
+`/statistics` route. The route may show only nine exact, selected official
+census/POPCEN observations from 1960–2024, with the primary PSA/NSO source
+record linked beside the data. It must not publish candidate years 1918, 1939,
+1948, 1975, 1995 or 2007; derive percentages or growth claims; interpolate;
+or make projections. The authoritative ledger is
+`docs/command-center/source-registry.md`; implementation and verification are
+recorded in `docs/sessions/2026-09-13-homepage-statistics.md`.
+
 ## Current state (2026-08-24)
 
 - **Domain:** betterkabugao.org — Cloudflare Pages, deploys from `main`

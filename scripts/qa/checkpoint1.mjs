@@ -29,6 +29,8 @@ mkdirSync(OUT, { recursive: true });
 // Checkpoint 2A route screenshots live in their own repository-relative folder.
 const OUT_2A = fileURLToPath(new URL("../../docs/qa/checkpoint-2a/", import.meta.url));
 mkdirSync(OUT_2A, { recursive: true });
+const OUT_STATISTICS = fileURLToPath(new URL("../../docs/qa/checkpoint-statistics/", import.meta.url));
+mkdirSync(OUT_STATISTICS, { recursive: true });
 
 const SIZES = [
   // 305 = a 320px Windows window minus a ~15px classic (non-overlay) scrollbar.
@@ -54,7 +56,10 @@ const ROUTES_2A = [
   ["/government", "government"],
   ["/government/officials", "officials"],
 ];
-const LAYOUT_ROUTES = [...ROUTES, ...ROUTES_2A];
+// The statistics route is source-led and has no map, so it joins layout checks
+// and receives its own screenshots rather than inheriting map-only assertions.
+const ROUTES_STATISTICS = [["/statistics", "statistics"]];
+const LAYOUT_ROUTES = [...ROUTES, ...ROUTES_2A, ...ROUTES_STATISTICS];
 const EXPECTED_ERR = /tile\.openstreetmap\.org|openstreetmap|open-meteo|Failed to load resource|net::ERR|ERR_|favicon/i;
 
 const checks = [];
@@ -570,6 +575,18 @@ async function main() {
     for (const [path, name] of ROUTES_2A) {
       await stable(page, base, path);
       await page.screenshot({ path: `${OUT_2A}/${name}-${w}.png`, fullPage: true });
+    }
+    await ctx.close();
+  }
+
+  // Statistics screenshots → docs/qa/checkpoint-statistics/ at the same
+  // desktop and narrow widths used for the interior-page review.
+  for (const [w, h] of [[1440, 900], [768, 900], [390, 844], [305, 568]]) {
+    const ctx = await browser.newContext({ viewport: { width: w, height: h } });
+    const page = await ctx.newPage();
+    for (const [path, name] of ROUTES_STATISTICS) {
+      await stable(page, base, path);
+      await page.screenshot({ path: `${OUT_STATISTICS}/${name}-${w}.png`, fullPage: true });
     }
     await ctx.close();
   }

@@ -450,6 +450,7 @@ test("every class a component renders has a rule in the stylesheet", () => {
     "src/components/SearchOverlay.tsx",
     "src/pages/BarangaysPage.tsx",
     "src/pages/HomePage.tsx",
+    "src/pages/StatisticsPage.tsx",
     "src/pages/SitemapPage.tsx",
     "src/pages/SimplePages.tsx",
     "src/pages/OfficialsPage.tsx",
@@ -587,6 +588,14 @@ test("SEO artefacts are generated from the site's own data", async () => {
 
   const sitemap = load("public/sitemap.xml");
   assert.match(sitemap, /sitemaps\.org\/schemas\/sitemap\/0\.9/);
+  const statisticsUrl = sitemap.match(
+    /<url>\s*<loc>https:\/\/betterkabugao\.org\/statistics<\/loc>\s*<lastmod>([^<]+)<\/lastmod>/,
+  );
+  assert.equal(statisticsUrl?.[1], "2026-09-13", "new /statistics route needs its real publication date");
+  const governmentUrl = sitemap.match(
+    /<url>\s*<loc>https:\/\/betterkabugao\.org\/government<\/loc>\s*<lastmod>([^<]+)<\/lastmod>/,
+  );
+  assert.equal(governmentUrl?.[1], "2026-08-17", "unchanged routes must retain their existing lastmod date");
   // Real routes, not in-page anchors: every entry must be a URL a crawler can
   // fetch on its own and get distinct HTML back.
   assert.doesNotMatch(sitemap, /<loc>[^<]*#/, "sitemap entries must be routes, not hash anchors");

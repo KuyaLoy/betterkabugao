@@ -99,6 +99,22 @@ never carry a number forward without a fresh source.
 | Weather | Open-Meteo, no key/cookies — omitted rather than faked on failure (currently unmounted in the rebuild; host still CSP-pinned) | live API |
 | Hero photograph | see the media section above | Wikimedia Commons, PD |
 
+### Kabugao population observations — `/statistics`
+
+Added: **13 September 2026**. The page publishes only directly verified census
+and POPCEN observations. It intentionally does not interpolate missing years,
+calculate growth, or project future population. Retrieved **13 September 2026**.
+
+| Years / values | Source of record | Publication detail |
+|---|---|---|
+| 1960 5,961; 1970 7,358; 1980 9,600; 1990 11,198; 2000 13,985; 2010 16,170 | [NSO, *2010 Census of Population and Housing: Apayao*](https://psa.gov.ph/system/files/main-publication/APAYAO_FINAL%20PDF.pdf) | Table 1, printed page 3 |
+| 2015 15,537 | [PSA, *2015 Census of Population Report No. 3*](https://psa.gov.ph/system/files/main-publication/_POPCEN%2520Report%2520No.%25203.pdf) | Table 1, document page 2 |
+| 2020 16,215 | [PSA, Population Density Table A](https://psa.gov.ph/system/files/phcd/2022-12/2010-2015-2020%2520Population%2520Density_Table%2520A_Using%25202013%2520Land%2520Areas_12%2520July%25202021.pdf?vcode=41) | document page 2 |
+| 2024 16,425 | [PSA, Kabugao PSGC record](https://psa.gov.ph/classification/psgc/barangays/1408104000) | 2024 POPCEN observation |
+
+Candidate years **1918, 1939, 1948, 1975, 1995, and 2007** are withheld: no
+directly verified primary document is recorded for them in this release.
+
 ### Prohibited, unpublished, or unverified — never ship these
 
 - An **unqualified "capital of Apayao"** claim (neutral wording is "the

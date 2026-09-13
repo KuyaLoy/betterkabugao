@@ -14,11 +14,14 @@ official DILG roster)._
 ---
 
 > **CURRENT TASK OVERRIDE — 2026-09-13:** The previous release work is now
-> merged into `main` at `16532fe`. This session is in feature discovery, not
-> implementation. The current decision is whether to build **Public Projects
-> & Flood Watch**, **Services Navigator**, or **Budget & Disaster Fund
-> Explorer**. Research, reasoning, and the approval gate are recorded in
-> `docs/sessions/2026-09-13-feature-research-and-handoff.md`.
+> merged into `main` at `16532fe`. Robin approved a separate, narrow
+> implementation checkpoint: an editorial homepage feature index and
+> `/statistics`, using nine selected, primary-source population observations
+> only. A development review workspace is in progress. Robin explicitly
+> authorized a direct push to `main` on 2026-09-13; the push, Cloudflare
+> deployment and live verification are still pending. The A/B/C feature choices (**Public Projects & Flood Watch**,
+> **Services Navigator**, and **Budget & Disaster Fund Explorer**) remain
+> unapproved. See `docs/sessions/2026-09-13-homepage-statistics.md`.
 
 ## Current operating model — 2026-09-13
 

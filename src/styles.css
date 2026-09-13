@@ -1287,8 +1287,12 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--color-primary-5
 }
 @keyframes kv-rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
 
-/* ---- Task strip ---- */
-.kv-desk { background: #fff; border-bottom: 1px solid var(--color-gray-200); }
+/* ---- Homepage feature index ---- */
+.kv-index { padding-block: 30px 0; background: var(--color-white); }
+.kv-index__head { display: flex; align-items: baseline; justify-content: space-between; gap: 20px; padding-bottom: 18px; }
+.kv-index__head p { color: var(--color-gray-700); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+.kv-index__head h2 { color: var(--color-primary-900); font-size: clamp(1.3rem, 2.4vw, 1.75rem); font-weight: 800; letter-spacing: 0; }
+.kv-desk { border-top: 2px solid var(--color-primary-900); border-bottom: 1px solid var(--color-gray-200); }
 .kv-desk__inner { display: grid; grid-template-columns: repeat(4, 1fr); }
 .kv-desk__item { display: flex; align-items: center; gap: 15px; padding: 24px 22px; color: var(--color-primary-900); text-decoration: none; position: relative; }
 .kv-desk__item + .kv-desk__item::before { content: ""; position: absolute; left: 0; top: 22px; bottom: 22px; width: 1px; background: var(--color-gray-200); }
@@ -1311,6 +1315,42 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--color-primary-5
 .kv-place__link { margin-top: 26px; }
 .kv-place__source { margin-top: 22px; color: var(--color-gray-700); font-size: 0.75rem; line-height: 1.6; max-width: 62ch; }
 .kv-place__map .map { margin-top: 0; }
+
+/* ---- Statistics: a civic source ledger, not a dashboard ---- */
+.stats { background: var(--color-gray-50); }
+.stats__intro { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: 42px; align-items: end; margin-bottom: 34px; }
+.stats__kicker { color: var(--color-accent-700); font-size: 0.75rem; font-weight: 800; letter-spacing: 0.09em; text-transform: uppercase; }
+.stats__intro h2 { margin-top: 8px; max-width: 16ch; }
+.stats__intro > p { max-width: 58ch; color: var(--color-gray-700); font-size: 1rem; line-height: 1.7; }
+.stats-chart { border: 1px solid var(--color-gray-300); border-radius: 12px; overflow: hidden; background: var(--color-white); }
+.stats-chart__bar { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; padding: 14px 20px; background: var(--color-primary-900); color: var(--color-white); }
+.stats-chart__bar p { font-size: 0.875rem; font-weight: 800; letter-spacing: 0.03em; text-transform: uppercase; }
+.stats-chart__bar span { color: var(--color-primary-100); font-size: 0.75rem; }
+.stats-chart__svg { display: block; width: 100%; height: auto; padding: 16px 14px 0; }
+.stats-chart__grid { stroke: var(--color-gray-200); stroke-width: 1; }
+.stats-chart__axis, .stats-chart__year { fill: var(--color-gray-700); font-family: "Inter", ui-sans-serif, system-ui, sans-serif; font-size: 12px; }
+.stats-chart__line { fill: none; stroke: var(--color-primary-700); stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+.stats-chart__point { fill: var(--color-gold); stroke: var(--color-primary-900); stroke-width: 2; }
+.stats-chart figcaption { padding: 0 20px 18px; color: var(--color-gray-700); font-size: 0.8125rem; line-height: 1.6; }
+.stats__body { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.75fr); gap: 32px; align-items: start; margin-top: 32px; }
+.stats__table-wrap { overflow-x: auto; border: 1px solid var(--color-gray-300); border-radius: 12px; background: var(--color-white); }
+.stats-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+.stats-table caption { padding: 16px 18px; color: var(--color-primary-900); font-size: 0.9375rem; font-weight: 800; text-align: left; }
+.stats-table th, .stats-table td { padding: 12px 18px; border-top: 1px solid var(--color-gray-200); text-align: left; vertical-align: top; }
+.stats-table th { background: var(--color-primary-50); color: var(--color-primary-900); font-size: 0.75rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; }
+.stats-table td { color: var(--color-gray-800); }
+.stats-table td:nth-child(1), .stats-table td:nth-child(2) { font-variant-numeric: tabular-nums; font-weight: 700; white-space: nowrap; }
+.stats-table a { color: var(--color-primary-700); font-weight: 600; }
+.stats__sources { border-top: 3px solid var(--color-gold); padding: 18px 20px 22px; background: var(--kv-sand); }
+.stats__sources h2 { color: var(--color-primary-900); font-size: 1.125rem; font-weight: 800; letter-spacing: 0; }
+.stats__sources > p { margin-top: 10px; color: var(--color-gray-700); font-size: 0.875rem; line-height: 1.65; }
+.stats__sources ul { margin-top: 16px; }
+.stats__sources li { padding-block: 11px; border-top: 1px solid rgba(0, 20, 47, 0.14); }
+.stats__sources a { display: block; color: var(--color-primary-800); font-size: 0.875rem; font-weight: 700; }
+.stats__sources li span { display: block; margin-top: 3px; color: var(--color-gray-700); font-size: 0.75rem; line-height: 1.5; }
+.stats__sources .stats__retrieved { margin-top: 16px; font-size: 0.75rem; }
+.stats__sources .btn { margin-top: 18px; }
+.stats__sources .btn--solid { color: var(--color-white); }
 
 /* ---- Barangays atlas (map + directory) ---- */
 .kv-atlas { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr); gap: 28px; align-items: start; }
@@ -1369,6 +1409,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--color-primary-5
   .kv-atlas { grid-template-columns: 1fr; gap: 18px; }
   .kv-atlas__map { position: static; }
   .kv-place__inner { grid-template-columns: 1fr; gap: 30px; }
+  .stats__body { grid-template-columns: 1fr; }
 }
 @media (max-width: 900px) {
   .mast__nav, .mast__search-label, .mast__emerg-long { display: none; }
@@ -1407,6 +1448,11 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--color-primary-5
   .kv-desk__inner { grid-template-columns: 1fr; }
   .kv-desk__item + .kv-desk__item::before { display: none; }
   .kv-place__figs { gap: 14px 24px; }
+  .kv-index__head, .stats__intro { grid-template-columns: 1fr; display: grid; gap: 8px; }
+  .kv-index__head { padding-bottom: 14px; }
+  .stats-chart__bar { align-items: flex-start; flex-direction: column; gap: 4px; }
+  .stats-chart__svg { padding-inline: 2px; }
+  .stats-table th, .stats-table td { padding: 11px 12px; }
 }
 @media (max-width: 520px) {
   .mast__inner { min-height: 60px; gap: 12px; }

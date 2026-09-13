@@ -8,6 +8,7 @@ import { HomePage } from "./pages/HomePage";
 import { OfficialsPage } from "./pages/OfficialsPage";
 import { SearchOverlay } from "./components/SearchOverlay";
 import { SitemapPage } from "./pages/SitemapPage";
+import { StatisticsPage } from "./pages/StatisticsPage";
 import {
   AboutPage,
   ExplorePage,
@@ -33,7 +34,8 @@ export function App() {
           <Route path="/government/barangays" element={<BarangaysPage />} />
           <Route path="/government/barangays/:slug" element={<BarangayDetailPage />} />
           <Route path="/emergency" element={<EmergencyPage />} />
-        <Route path="/transparency" element={<TransparencyPage />} />
+          <Route path="/statistics" element={<StatisticsPage />} />
+          <Route path="/transparency" element={<TransparencyPage />} />
           <Route path="/explore" element={<ExplorePage />} />
           <Route path="/services" element={<ServicesPage />} />
           <Route path="/about" element={<AboutPage />} />

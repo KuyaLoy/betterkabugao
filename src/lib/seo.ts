@@ -25,6 +25,7 @@ const SEGMENT_LABELS: Record<string, string> = {
   "/government/barangays": "Barangays",
   "/government/officials": "Elected officials",
   "/emergency": "Emergency hotlines",
+  "/statistics": "Kabugao statistics",
   "/transparency": "Transparency",
   "/explore": "Explore Kabugao",
   "/services": "Services",
@@ -58,6 +59,11 @@ const STATIC_META: Record<string, { title: string; description: string }> = {
     title: "Emergency hotlines for Kabugao",
     description:
       "Emergency numbers published by the Municipality of Kabugao — MDRRMO, police, fire, the Rural Health Unit, MSWDO and the Apayao Provincial Hospital — with +63 international dialling for family abroad.",
+  },
+  "/statistics": {
+    title: "Kabugao population observations, 1960–2024",
+    description:
+      "Selected official census and POPCEN observations for Kabugao, Apayao from 1960 to 2024, with the original PSA and NSO source records linked for checking.",
   },
   "/transparency": {
     title: "Public records for Kabugao — in preparation",
@@ -143,6 +149,7 @@ export const ALL_PATHS: readonly string[] = [
   "/government/barangays",
   ...BARANGAYS.map((b) => `/government/barangays/${b.slug}`),
   "/emergency",
+  "/statistics",
   "/transparency",
   "/explore",
   "/services",
@@ -185,6 +192,7 @@ const SITEMAP_LABELS: Record<string, string> = {
   "/government/barangays": `All ${BARANGAYS.length} barangays`,
   "/transparency": "Transparency",
   "/emergency": "Emergency hotlines",
+  "/statistics": "Kabugao population observations",
   "/explore": "Explore Kabugao",
   "/services": "Services",
   "/about": "About this project",
@@ -198,7 +206,7 @@ const GROUP_ORDER: ReadonlyArray<{
   paths?: readonly string[];
   barangays?: true;
 }> = [
-  { id: "core", title: "Core", paths: ["/", "/search"] },
+  { id: "core", title: "Core", paths: ["/", "/statistics", "/search"] },
   {
     id: "government",
     title: "Government",

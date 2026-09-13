@@ -12,9 +12,13 @@ const root = new URL("../", import.meta.url);
 const SITE = "https://betterkabugao.org";
 const STATIC_SECTIONS = [
   "/", "/government", "/government/officials", "/government/barangays",
-  "/emergency", "/transparency", "/explore", "/services", "/about", "/search",
+  "/emergency", "/statistics", "/transparency", "/explore", "/services", "/about", "/search",
   "/sitemap",
 ];
+const ROUTE_LASTMOD = {
+  "/": "2026-09-13",
+  "/statistics": "2026-09-13",
+};
 
 /**
  * Read the barangay table straight out of the TypeScript source, so the SEO
@@ -150,10 +154,11 @@ function sitemapXml(stamp, barangays) {
   ];
   const urls = paths.map((path) => {
     const priority = path === "/" ? "1.0" : path.split("/").length > 3 ? "0.6" : "0.8";
+    const lastmod = ROUTE_LASTMOD[path] ?? stamp;
     return [
       "  <url>",
       `    <loc>${SITE}${path}</loc>`,
-      `    <lastmod>${stamp}</lastmod>`,
+      `    <lastmod>${lastmod}</lastmod>`,
       "    <changefreq>weekly</changefreq>",
       `    <priority>${priority}</priority>`,
       "  </url>",

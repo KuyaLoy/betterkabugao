@@ -13,9 +13,12 @@ landed at `657fbb2`)._
 
 > **CURRENT RELEASE OVERRIDE — 2026-09-13:** `main` and `origin/main` were
 > fetch-verified at `16532fe`, which merges the Kabugao in View rebuild into
-> production history. Feature discovery is now the active work; no new feature
-> has been implemented or approved yet. See
-> `docs/sessions/2026-09-13-feature-research-and-handoff.md`.
+> production history. A source-led `/statistics` and homepage index checkpoint
+> is prepared in an isolated review workspace. Robin explicitly authorized a
+> direct push to `main` on 2026-09-13 as a one-checkpoint exception to the
+> standing review-branch rule. The push and resulting Cloudflare deployment
+> and live verification are pending. See
+> `docs/sessions/2026-09-13-homepage-statistics.md`.
 
 ## Release rules (standing)
 

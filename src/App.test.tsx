@@ -75,9 +75,43 @@ describe("home page", () => {
   it("links into the sections that exist", () => {
     renderAt("/");
     const main = screen.getByRole("main");
-    for (const href of ["/government/barangays", "/government/officials", "/emergency", "/about"]) {
+    for (const href of ["/government/barangays", "/government/officials", "/emergency", "/statistics"]) {
       expect(within(main).getAllByRole("link").some((l) => l.getAttribute("href") === href)).toBe(true);
     }
+  });
+});
+
+describe("Kabugao statistics", () => {
+  it("publishes selected official population observations as both a chart and a table", () => {
+    renderAt("/statistics");
+
+    expect(
+      screen.getByRole("heading", { level: 1, name: "Kabugao population observations" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("img", { name: "Kabugao population observations from 1960 to 2024" }),
+    ).toBeInTheDocument();
+
+    const table = screen.getByRole("table", { name: "Selected official census and POPCEN observations, 1960 to 2024" });
+    for (const [year, population] of [
+      ["1960", "5,961"],
+      ["1970", "7,358"],
+      ["1980", "9,600"],
+      ["1990", "11,198"],
+      ["2000", "13,985"],
+      ["2010", "16,170"],
+      ["2015", "15,537"],
+      ["2020", "16,215"],
+      ["2024", "16,425"],
+    ]) {
+      expect(within(table).getByRole("cell", { name: year })).toBeInTheDocument();
+      expect(within(table).getByRole("cell", { name: population })).toBeInTheDocument();
+    }
+
+    expect(screen.getByRole("link", { name: /^All 21 barangays/ })).toHaveAttribute(
+      "href",
+      "/government/barangays",
+    );
   });
 });
 

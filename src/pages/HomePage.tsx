@@ -25,7 +25,7 @@ const TASKS = [
   { to: "/government/barangays", label: "Barangays", sub: `All ${BARANGAYS.length}, on the map`, icon: "pin" },
   { to: "/government/officials", label: "Officials", sub: `Your ${OFFICIALS_TERM} leaders`, icon: "people" },
   { to: "/emergency", label: "Hotlines", sub: `911 and ${HOTLINES.length} local offices`, icon: "phone" },
-  { to: "/about", label: "About", sub: "Who runs this, and how", icon: "info" },
+  { to: "/statistics", label: "Statistics", sub: "Population observations, 1960–2024", icon: "chart" },
 ] as const;
 
 function TaskIcon({ name }: { name: string }) {
@@ -44,11 +44,14 @@ function TaskIcon({ name }: { name: string }) {
       </>
     ),
     phone: <path d="M5 4h4l2 5-3 2a12 12 0 0 0 5 5l2-3 5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z" />,
-    info: (
+    chart: (
       <>
-        <circle cx="12" cy="12" r="9" />
-        <path d="M12 11v5" />
-        <circle cx="12" cy="7.6" r="1.1" fill="currentColor" stroke="none" />
+        <path d="M4 19V5M4 19h16" />
+        <path d="m7 15 4-4 3 2 5-6" />
+        <circle cx="7" cy="15" r="1" fill="currentColor" stroke="none" />
+        <circle cx="11" cy="11" r="1" fill="currentColor" stroke="none" />
+        <circle cx="14" cy="13" r="1" fill="currentColor" stroke="none" />
+        <circle cx="19" cy="7" r="1" fill="currentColor" stroke="none" />
       </>
     ),
   };
@@ -103,21 +106,29 @@ export function HomePage() {
         </span>
       </section>
 
-      <nav className="kv-desk" aria-label="Main sections">
-        <div className="shell kv-desk__inner">
-          {TASKS.map((task) => (
-            <Link className="kv-desk__item" to={task.to} key={task.to}>
-              <span className="kv-desk__ic">
-                <TaskIcon name={task.icon} />
-              </span>
-              <span className="kv-desk__text">
-                <span className="kv-desk__label">{task.label}</span>
-                <span className="kv-desk__sub">{task.sub}</span>
-              </span>
-            </Link>
-          ))}
+      <section className="kv-index" aria-labelledby="index-title">
+        <div className="shell">
+          <div className="kv-index__head">
+            <p>What you can find here</p>
+            <h2 id="index-title">Start with what you need.</h2>
+          </div>
+          <nav className="kv-desk" aria-label="What you can find here">
+            <div className="kv-desk__inner">
+              {TASKS.map((task) => (
+                <Link className="kv-desk__item" to={task.to} key={task.to}>
+                  <span className="kv-desk__ic">
+                    <TaskIcon name={task.icon} />
+                  </span>
+                  <span className="kv-desk__text">
+                    <span className="kv-desk__label">{task.label}</span>
+                    <span className="kv-desk__sub">{task.sub}</span>
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </nav>
         </div>
-      </nav>
+      </section>
 
       <section className="kv-place" aria-labelledby="place-title">
         <div className="shell kv-place__inner">

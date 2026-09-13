@@ -30,6 +30,15 @@ Update this file at the end of every session — see
 > platform/security, social and community tasks are read-only specialists.
 > See `docs/command-center/active-task.md` for the operating model.
 
+> **CURRENT FEATURE CHECKPOINT — 13 September 2026:** Development has prepared
+> an unmerged review-workspace change: an editorial homepage feature index and
+> `/statistics`, a source-led page containing nine selected official Kabugao
+> population observations (1960–2024). The exact source ledger, exclusions and
+> verification evidence are in `docs/sessions/2026-09-13-homepage-statistics.md`.
+> Robin explicitly authorized a direct push to `main` for this checkpoint on
+> 13 September 2026. That push and the resulting Cloudflare deployment/live
+> verification are still pending.
+
 ## Reading order
 
 | # | File | Why |
