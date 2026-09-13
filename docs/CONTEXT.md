@@ -25,6 +25,11 @@ edit code or Git; all other specialist tasks are read-only. This hub-and-spoke
 model prevents conflicting briefs and lost context while keeping the shared
 folder safe and the AI team understandable to future maintainers.
 
+The permanent authority boundary is recorded in
+`docs/command-center/COMMAND-CENTER-RULES.md`. The Command Center coordinates,
+assigns, monitors and reports; department tasks own execution. Only Robin can
+explicitly authorize a narrowly scoped exception.
+
 ### Adaptive model-routing policy — 2026-09-13
 
 The Command Center selects model and reasoning effort separately for each

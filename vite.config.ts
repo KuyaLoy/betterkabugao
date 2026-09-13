@@ -8,6 +8,6 @@ export default defineConfig({
     environment: "jsdom",
     setupFiles: "./src/test/setup.ts",
     css: true,
-    exclude: ["tests/**", "**/node_modules/**", "**/dist/**", "_to_delete/**"],
+    exclude: ["tests/**", "**/.worktrees/**", "**/node_modules/**", "**/dist/**", "_to_delete/**"],
   },
 });

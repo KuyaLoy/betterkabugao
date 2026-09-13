@@ -28,7 +28,8 @@ Update this file at the end of every session — see
 > consolidated implementation brief only after approval. **Development is the
 > sole task permitted to edit code or Git**; QA, research, design, SEO,
 > platform/security, social and community tasks are read-only specialists.
-> See `docs/command-center/active-task.md` for the operating model.
+> See `docs/command-center/COMMAND-CENTER-RULES.md` for the permanent boundary
+> and `docs/command-center/active-task.md` for current coordination state.
 
 > **CURRENT FEATURE CHECKPOINT — 13 September 2026:** Development has prepared
 > an unmerged review-workspace change: an editorial homepage feature index and
@@ -46,10 +47,11 @@ Update this file at the end of every session — see
 | 1 | **this file** | state, plan, traps |
 | 2 | `CLAUDE.md` | the hard rules, stated as rules |
 | 3 | `docs/CONTEXT.md` | living snapshot + dated decision log |
-| 4 | `docs/sessions/` (newest first) | what happened, in the maintainer's own words |
-| 5 | `design-research/RESEARCH.md` + `design-research/ARCHITECTURE.md` | why the site looks and routes the way it does |
-| 6 | `docs/research/data-tracker.html` | **the feature roadmap** — open it in a browser |
-| 7 | `docs/skills/` | anti-slop, frontend, security and session-memory playbooks — **read the relevant one before editing, not after** |
+| 4 | `docs/command-center/COMMAND-CENTER-RULES.md` | permanent coordination and department boundary |
+| 5 | `docs/sessions/` (newest first) | what happened, in the maintainer's own words |
+| 6 | `design-research/RESEARCH.md` + `design-research/ARCHITECTURE.md` | why the site looks and routes the way it does |
+| 7 | `docs/research/data-tracker.html` | **the feature roadmap** — open it in a browser |
+| 8 | `docs/skills/` | anti-slop, frontend, security and session-memory playbooks — **read the relevant one before editing, not after** |
 
 Do not skip 5 and 6. The design and the roadmap are both *measured* and
 *sourced*; re-deriving them from taste is how the first version got rejected.

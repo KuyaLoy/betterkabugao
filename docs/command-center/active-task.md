@@ -25,6 +25,8 @@ official DILG roster)._
 
 ## Current operating model — 2026-09-13
 
+Permanent rule: `docs/command-center/COMMAND-CENTER-RULES.md`.
+
 - **Coordination owner:** BetterKabugao Command Center (the former Project
   Manager task). Robin normally talks only to this task for planning,
   research, prioritization and approvals.

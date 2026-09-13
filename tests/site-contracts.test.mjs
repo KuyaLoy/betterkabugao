@@ -45,6 +45,7 @@ test("Vite loads React and the Tailwind v4 plugin", () => {
   assert.match(config, /react\(\)/);
   assert.match(config, /tailwindcss\(\)/);
   assert.match(config, /environment:\s*["']jsdom["']/);
+  assert.match(config, /\*\*\/\.worktrees\/\*\*/, "Vitest must ignore nested Git worktrees");
 });
 
 test("the project pins the validated Node release", () => {
@@ -499,6 +500,10 @@ test("social-card renderer is font-free and byte-stable", async () => {
   assert.doesNotMatch(svg, /<text\b/i);
   assert.doesNotMatch(svg, /font-family/i);
   assert.doesNotMatch(svg, /undefined/, "every referenced geometry path must exist");
+  assert.doesNotMatch(svg, /COMING SOON|Public spending/i);
+  assert.match(svg, /Know your Kabugao\./);
+  assert.match(svg, /Barangays · officials · hotlines · sourced statistics/);
+  assert.match(svg, /Independent · volunteer-run · not an official LGU website/);
 
   const first = await renderSocialCard();
   const second = await renderSocialCard();
@@ -512,6 +517,14 @@ test("social-card renderer is font-free and byte-stable", async () => {
     encoding: "utf8",
   });
   assert.match(output, /SOCIAL_CARD_OK 1200x630/);
+});
+
+test("the statistics source CTA keeps the shared button's flex centering", () => {
+  const css = load("src/styles.css");
+  assert.match(
+    css,
+    /\.stats__sources\s+\.btn\s*\{[^}]*display:\s*flex[^}]*align-items:\s*center[^}]*justify-content:\s*center/s,
+  );
 });
 
 test("the design research is committed alongside the design it produced", () => {

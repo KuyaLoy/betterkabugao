@@ -48,16 +48,19 @@ function mark(x, y, size) {
 
 export async function buildSocialCardSvg() {
   return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <title>Know your Kabugao.</title>
+  <desc>Barangays · officials · hotlines · sourced statistics. Independent · volunteer-run · not an official LGU website.</desc>
   <rect width="1200" height="630" fill="#003D8D" />
   <rect x="0" y="0" width="1200" height="8" fill="#FFB900" />
-  ${mark(80, 74, 150)}
-  <g fill="#99C2F7">${textPaths(600, "KABUGAO, APAYAO", 80, 292, 24, 3)}</g>
-  <g fill="#FFFFFF">${textPaths(800, "BetterKabugao.org", 80, 380, 76)}</g>
-  <g fill="#CCE0FB">${textPaths(500, "Public spending, public projects, services and local", 80, 442, 28)}</g>
-  <g fill="#CCE0FB">${textPaths(500, "knowledge — in one readable place.", 80, 482, 28)}</g>
-  <rect x="80" y="524" width="1040" height="1" fill="#FFFFFF" opacity="0.25" />
-  <g fill="#FFB900">${textPaths(600, "COMING SOON", 80, 578, 26, 2)}</g>
-  <g fill="#99C2F7">${textPaths(500, "Volunteer-run · Not an official government website", 468, 578, 24)}</g>
+  ${mark(80, 62, 132)}
+  <g fill="#FFFFFF">${textPaths(800, "BetterKabugao.org", 240, 133, 38)}</g>
+  <g fill="#99C2F7">${textPaths(600, "KABUGAO, APAYAO", 80, 252, 24, 3)}</g>
+  <g fill="#FFFFFF">${textPaths(800, "Know your Kabugao.", 80, 354, 72)}</g>
+  <g fill="#CCE0FB">${textPaths(600, "Barangays · officials · hotlines · sourced statistics", 80, 425, 30)}</g>
+  <g fill="#CCE0FB">${textPaths(500, "Public information, with sources you can check.", 80, 474, 26)}</g>
+  <rect x="80" y="520" width="1040" height="1" fill="#FFFFFF" opacity="0.25" />
+  <g fill="#FFB900">${textPaths(600, "BETTERKABUGAO.ORG", 80, 578, 24, 1.5)}</g>
+  <g fill="#99C2F7">${textPaths(500, "Independent · volunteer-run · not an official LGU website", 430, 578, 21)}</g>
 </svg>`;
 }
 

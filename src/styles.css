@@ -1349,7 +1349,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--color-primary-5
 .stats__sources a { display: block; color: var(--color-primary-800); font-size: 0.875rem; font-weight: 700; }
 .stats__sources li span { display: block; margin-top: 3px; color: var(--color-gray-700); font-size: 0.75rem; line-height: 1.5; }
 .stats__sources .stats__retrieved { margin-top: 16px; font-size: 0.75rem; }
-.stats__sources .btn { margin-top: 18px; }
+.stats__sources .btn { display: flex; align-items: center; justify-content: center; margin-top: 18px; }
 .stats__sources .btn--solid { color: var(--color-white); }
 
 /* ---- Barangays atlas (map + directory) ---- */
