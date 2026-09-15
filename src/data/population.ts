@@ -50,3 +50,40 @@ export const POPULATION_OBSERVATIONS: readonly PopulationObservation[] = [
   { year: 2020, population: 16215, source: "density2020" },
   { year: 2024, population: 16425, source: "psgc2024" },
 ] as const;
+
+export const KABUGAO_2024_SNAPSHOT = [
+  { label: "Total population", value: "16,425", exactValue: undefined, detail: "2024 POPCEN" },
+  { label: "Household population", value: "16,411", exactValue: undefined, detail: "2024 POPCEN" },
+  { label: "Number of households", value: "3,662", exactValue: undefined, detail: "2024 POPCEN" },
+  { label: "Land area", value: "929.88 km²", exactValue: undefined, detail: "square kilometres" },
+  {
+    label: "Population density",
+    value: "17.7 people/km²",
+    exactValue: "17.6636 persons per square kilometre",
+    detail: "rounded for reading",
+  },
+] as const;
+
+export const KABUGAO_2024_SNAPSHOT_SOURCES = [
+  {
+    label: "Population and households",
+    betterGov: "https://statistics.bettergov.ph/datasets/b1b47f8cb7ceb5c50a97",
+    openStat: "https://openstat.psa.gov.ph/PXWeb/pxweb/en/DB/DB__1A__PO_2024/0151A6DTHP4.px",
+  },
+  {
+    label: "Land area and density",
+    betterGov: "https://statistics.bettergov.ph/datasets/05c931eaecec498f9756",
+    openStat: "https://openstat.psa.gov.ph/PXWeb/pxweb/en/DB/DB__1A__PO_2024/0221A6DLPD0.px",
+  },
+] as const;
+
+export const KABUGAO_2024_CITATION = [
+  "Philippine Statistics Authority (PSA) OpenSTAT, 2024 POPCEN datasets for Kabugao, Apayao:",
+  "total population 16,425; household population 16,411; households 3,662; land area 929.88 km²;",
+  "population density 17.6636 persons/km².",
+  "Canonical PSA OpenSTAT sources:",
+  ...KABUGAO_2024_SNAPSHOT_SOURCES.map((source) => source.openStat),
+  "Discovery and selection layer: Philippine Data Explorer / BetterGov.ph:",
+  ...KABUGAO_2024_SNAPSHOT_SOURCES.map((source) => source.betterGov),
+  "Source updated 12 August 2026; snapshot retrieved 9 September 2026; coverage checked 11 September 2026.",
+].join(" ");

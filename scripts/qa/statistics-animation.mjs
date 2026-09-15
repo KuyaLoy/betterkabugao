@@ -40,6 +40,58 @@ const { server, base } = await startServer(0);
 const browser = await chromium.launch({ headless: true });
 
 try {
+  {
+    const { context, page } = await openStatistics(browser, base, { width: 390, height: 844 });
+    await context.grantPermissions(["clipboard-read", "clipboard-write"], { origin: base });
+    const snapshot = page.locator(".stats-snapshot");
+    const recordText = await snapshot.innerText();
+    record(
+      "shows the complete 2024 Kabugao snapshot without implying missing years",
+      ["16,425", "16,411", "3,662", "929.88 km²", "17.7 people/km²", "static, source-linked reference"].every((value) => recordText.includes(value)),
+      recordText.replace(/\s+/g, " ").slice(0, 240),
+    );
+    const sourceLinks = await snapshot.locator(".stats-snapshot__source-list a").evaluateAll((links) =>
+      links.map((link) => link.getAttribute("href")),
+    );
+    record(
+      "pairs PSA OpenSTAT canon with BetterGov discovery links",
+      sourceLinks.includes("https://statistics.bettergov.ph/datasets/b1b47f8cb7ceb5c50a97")
+        && sourceLinks.includes("https://openstat.psa.gov.ph/PXWeb/pxweb/en/DB/DB__1A__PO_2024/0151A6DTHP4.px")
+        && sourceLinks.includes("https://statistics.bettergov.ph/datasets/05c931eaecec498f9756")
+        && sourceLinks.includes("https://openstat.psa.gov.ph/PXWeb/pxweb/en/DB/DB__1A__PO_2024/0221A6DLPD0.px"),
+      sourceLinks.join(" | "),
+    );
+    const csv = await page.evaluate(async () => fetch("/data/kabugao-2024-snapshot.csv").then((response) => response.text()));
+    record(
+      "serves a local CSV extract with the exact density",
+      csv.includes("population_density,17.6636,persons per square kilometre") && csv.includes("total_population,16425,persons"),
+      csv.split("\n").slice(0, 2).join(" | "),
+    );
+    await page.getByRole("button", { name: "Copy citation" }).click();
+    await page.waitForFunction(() => document.querySelector(".stats-snapshot__status")?.textContent === "Citation copied.");
+    const copied = await page.evaluate(() => navigator.clipboard.readText());
+    record(
+      "copies a citation containing PSA and BetterGov provenance",
+      copied.includes("PSA) OpenSTAT") && copied.includes("statistics.bettergov.ph/datasets/b1b47f8cb7ceb5c50a97"),
+      copied.slice(0, 150),
+    );
+    await context.close();
+  }
+
+  {
+    const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
+    const page = await context.newPage();
+    await page.goto(`${base}/`, { waitUntil: "domcontentloaded", timeout: 25000 });
+    const statisticsEntry = page.locator('a[href="/statistics"]');
+    const entryText = await statisticsEntry.innerText();
+    record(
+      "keeps the homepage statistics entry useful and concise",
+      entryText.includes("2024 snapshot: 16,425 residents"),
+      entryText.replace(/\s+/g, " "),
+    );
+    await context.close();
+  }
+
   // A short viewport holds the chart below the fold so the 20% observer gate
   // can be checked before the scroll that starts the sequence.
   {
@@ -175,7 +227,7 @@ try {
 
 const failed = checks.filter((check) => !check.pass);
 const report = {
-  scope: "/statistics chart animation only",
+  scope: "/statistics snapshot, provenance controls, homepage entry, and chart animation",
   sourceRoot: ROOT,
   overallPass: failed.length === 0,
   totalChecks: checks.length,

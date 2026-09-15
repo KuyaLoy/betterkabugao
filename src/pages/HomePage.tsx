@@ -25,7 +25,7 @@ const TASKS = [
   { to: "/government/barangays", label: "Barangays", sub: `All ${BARANGAYS.length}, on the map`, icon: "pin" },
   { to: "/government/officials", label: "Officials", sub: `Your ${OFFICIALS_TERM} leaders`, icon: "people" },
   { to: "/emergency", label: "Hotlines", sub: `911 and ${HOTLINES.length} local offices`, icon: "phone" },
-  { to: "/statistics", label: "Statistics", sub: "Population observations, 1960–2024", icon: "chart" },
+  { to: "/statistics", label: "Statistics", sub: "2024 snapshot: 16,425 residents", icon: "chart" },
 ] as const;
 
 function TaskIcon({ name }: { name: string }) {

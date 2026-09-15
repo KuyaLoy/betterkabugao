@@ -1,11 +1,36 @@
 {
-  "scope": "/statistics chart animation only",
+  "scope": "/statistics snapshot, provenance controls, homepage entry, and chart animation",
   "sourceRoot": "C:\\Users\\Robin Tapiru\\Documents\\betterkabugao\\",
   "overallPass": true,
-  "totalChecks": 10,
-  "passed": 10,
+  "totalChecks": 15,
+  "passed": 15,
   "failed": 0,
   "checks": [
+    {
+      "name": "shows the complete 2024 Kabugao snapshot without implying missing years",
+      "pass": true,
+      "detail": "2024 SNAPSHOT Kabugao, in one checked record. A compact reading of the 2024 POPCEN record. The values below remain a static, source-linked reference; they are not a forecast or a replacement for the full tables. Total population 16,425 2024"
+    },
+    {
+      "name": "pairs PSA OpenSTAT canon with BetterGov discovery links",
+      "pass": true,
+      "detail": "https://statistics.bettergov.ph/datasets/b1b47f8cb7ceb5c50a97 | https://openstat.psa.gov.ph/PXWeb/pxweb/en/DB/DB__1A__PO_2024/0151A6DTHP4.px | https://statistics.bettergov.ph/datasets/05c931eaecec498f9756 | https://openstat.psa.gov.ph/PXWeb/pxweb/en/DB/DB__1A__PO_2024/0221A6DLPD0.px"
+    },
+    {
+      "name": "serves a local CSV extract with the exact density",
+      "pass": true,
+      "detail": "field,value,unit,source_updated,snapshot_retrieved,coverage_checked | total_population,16425,persons,2026-08-12,2026-09-09,2026-09-11"
+    },
+    {
+      "name": "copies a citation containing PSA and BetterGov provenance",
+      "pass": true,
+      "detail": "Philippine Statistics Authority (PSA) OpenSTAT, 2024 POPCEN datasets for Kabugao, Apayao: total population 16,425; household population 16,411; househ"
+    },
+    {
+      "name": "keeps the homepage statistics entry useful and concise",
+      "pass": true,
+      "detail": "Statistics 2024 snapshot: 16,425 residents"
+    },
     {
       "name": "waits until the chart enters the viewport",
       "pass": true,

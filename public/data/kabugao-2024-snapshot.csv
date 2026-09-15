@@ -1,0 +1,6 @@
+field,value,unit,source_updated,snapshot_retrieved,coverage_checked
+total_population,16425,persons,2026-08-12,2026-09-09,2026-09-11
+household_population,16411,persons,2026-08-12,2026-09-09,2026-09-11
+number_of_households,3662,households,2026-08-12,2026-09-09,2026-09-11
+land_area,929.88,square kilometres,2026-08-12,2026-09-09,2026-09-11
+population_density,17.6636,persons per square kilometre,2026-08-12,2026-09-09,2026-09-11

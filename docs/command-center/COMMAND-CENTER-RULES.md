@@ -17,10 +17,14 @@ The Command Center is BetterKabugao's single coordination point for Robin. It:
 - reports one consolidated status with evidence, decisions, blockers and next
   actions.
 
-The Command Center performs no department execution. Every actual task,
-including a small task, is assigned to the appropriate department. The
-Command Center may perform only minimal, read-only coordination checks needed
-to classify, route or report status; it must not perform substantive
+Command Center analysis is coordination-only: it may understand and triage a
+request; choose the appropriate department and model; compare and reconcile
+department outputs; assess priority, risk and completeness; request approvals;
+and report. It never performs the underlying department deliverable. Every
+actual task, including a small task, is assigned to the appropriate department.
+
+The Command Center may perform only minimal, read-only coordination checks
+needed to classify, route or report status; it must not perform substantive
 department analysis.
 
 The prohibited execution areas are explicit: no coding, QA or accessibility
@@ -55,9 +59,20 @@ community work, or any other substantive work owned by a department. Each
 department remains within its own mandate; cross-department work is split and
 routed rather than absorbed by one task.
 
-Only Robin may explicitly authorize an exception. An exception is limited to
-the exact action Robin approved; it does not permanently expand the Command
-Center's authority.
+These boundaries are mandatory and cannot be relaxed for urgency, low credits,
+small scope or convenience. They change only if Robin explicitly changes the
+governance model.
+
+## Permanent-department-only delegation
+
+The Command Center routes department execution only to the established,
+permanent department tasks. It must not create temporary, private, child,
+subagent or substitute workers to perform department work.
+
+If the correct permanent department is unavailable, misconfigured, blocked or
+in the wrong workspace, the Command Center pauses the work, reports the
+blockage, and coordinates a correction or requests Robin's direction. It never
+replaces that department with its own worker.
 
 ## Department routing
 

@@ -1,10 +1,13 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { PageHeader } from "../components/PageHeader";
 import {
   POPULATION_OBSERVATIONS,
   POPULATION_RETRIEVED,
   POPULATION_SOURCES,
+  KABUGAO_2024_CITATION,
+  KABUGAO_2024_SNAPSHOT,
+  KABUGAO_2024_SNAPSHOT_SOURCES,
 } from "../data/population";
 import { metaFor } from "../lib/seo";
 
@@ -104,6 +107,85 @@ function PopulationChart() {
   );
 }
 
+function SnapshotActions() {
+  const [copyStatus, setCopyStatus] = useState("");
+
+  async function copyCitation() {
+    try {
+      await navigator.clipboard.writeText(KABUGAO_2024_CITATION);
+      setCopyStatus("Citation copied.");
+    } catch {
+      setCopyStatus("Copy is unavailable. Use the source links below.");
+    }
+  }
+
+  return (
+    <div className="stats-snapshot__actions">
+      <button className="stats-snapshot__copy" type="button" onClick={() => void copyCitation()}>
+        Copy citation
+      </button>
+      <a className="stats-snapshot__csv" href="/data/kabugao-2024-snapshot.csv" download>
+        Download CSV
+      </a>
+      <p className="stats-snapshot__status" role="status">{copyStatus}</p>
+    </div>
+  );
+}
+
+function Snapshot() {
+  return (
+    <section className="stats-snapshot" aria-label="Kabugao 2024 snapshot">
+      <div className="stats-snapshot__head">
+        <p className="stats__kicker">2024 snapshot</p>
+        <h2 id="snapshot-title">Kabugao, in one checked record.</h2>
+        <p>
+          A compact reading of the 2024 POPCEN record. The values below remain a static, source-linked reference;
+          they are not a forecast or a replacement for the full tables.
+        </p>
+      </div>
+
+      <dl className="stats-snapshot__ledger">
+        {KABUGAO_2024_SNAPSHOT.map((metric) => (
+          <div className="stats-snapshot__metric" key={metric.label}>
+            <dt>{metric.label}</dt>
+            <dd>
+              {metric.exactValue ? <data value="17.6636" aria-label={metric.exactValue}>{metric.value}</data> : metric.value}
+            </dd>
+            <span>{metric.detail}</span>
+          </div>
+        ))}
+      </dl>
+
+      <div className="stats-snapshot__provenance">
+        <div>
+          <h3>Provenance, not a black box</h3>
+          <p>
+            <strong>PSA OpenSTAT</strong> is the canonical source. Philippine Data Explorer / BetterGov.ph is the
+            discovery and selection layer used to locate the matching official datasets.
+          </p>
+          <p className="stats-snapshot__dates">
+            Source updated 12 August 2026 · Snapshot retrieved 9 September 2026 · Coverage checked 11 September 2026.
+          </p>
+        </div>
+        <ul className="stats-snapshot__source-list">
+          {KABUGAO_2024_SNAPSHOT_SOURCES.map((source) => (
+            <li key={source.label}>
+              <span>{source.label}</span>
+              <a href={source.betterGov} target="_blank" rel="noreferrer">
+                {source.label}: BetterGov dataset
+              </a>
+              <a href={source.openStat} target="_blank" rel="noreferrer">
+                {source.label}: PSA OpenSTAT
+              </a>
+            </li>
+          ))}
+        </ul>
+        <SnapshotActions />
+      </div>
+    </section>
+  );
+}
+
 export function StatisticsPage() {
   const meta = metaFor("/statistics");
 
@@ -128,6 +210,8 @@ export function StatisticsPage() {
               Each point is a published census or POPCEN count for Kabugao. The chart connects verified observations for reading; it does not fill in missing years or project future population.
             </p>
           </div>
+
+          <Snapshot />
 
           <PopulationChart />
 

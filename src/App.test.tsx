@@ -79,6 +79,13 @@ describe("home page", () => {
       expect(within(main).getAllByRole("link").some((l) => l.getAttribute("href") === href)).toBe(true);
     }
   });
+
+  it("previews the verified 2024 statistics snapshot", () => {
+    renderAt("/");
+    const statistics = screen.getByRole("link", { name: /Statistics/i });
+    expect(statistics).toHaveAttribute("href", "/statistics");
+    expect(within(statistics).getByText("2024 snapshot: 16,425 residents")).toBeInTheDocument();
+  });
 });
 
 describe("Kabugao statistics", () => {
@@ -111,6 +118,30 @@ describe("Kabugao statistics", () => {
     expect(screen.getByRole("link", { name: /^All 21 barangays/ })).toHaveAttribute(
       "href",
       "/government/barangays",
+    );
+  });
+
+  it("publishes a source-led 2024 snapshot with citation and CSV actions", () => {
+    renderAt("/statistics");
+
+    const snapshot = screen.getByRole("region", { name: "Kabugao 2024 snapshot" });
+    for (const value of ["16,425", "16,411", "3,662", "929.88 km²", "17.7 people/km²"]) {
+      expect(within(snapshot).getByText(value)).toBeInTheDocument();
+    }
+    expect(within(snapshot).getByText("PSA OpenSTAT")).toBeInTheDocument();
+    expect(within(snapshot).getByText(/Source updated 12 August 2026/i)).toBeInTheDocument();
+    expect(within(snapshot).getByRole("link", { name: /Population and households: BetterGov dataset/i })).toHaveAttribute(
+      "href",
+      "https://statistics.bettergov.ph/datasets/b1b47f8cb7ceb5c50a97",
+    );
+    expect(within(snapshot).getByRole("link", { name: /Land area and density: PSA OpenSTAT/i })).toHaveAttribute(
+      "href",
+      "https://openstat.psa.gov.ph/PXWeb/pxweb/en/DB/DB__1A__PO_2024/0221A6DLPD0.px",
+    );
+    expect(within(snapshot).getByRole("button", { name: "Copy citation" })).toBeInTheDocument();
+    expect(within(snapshot).getByRole("link", { name: "Download CSV" })).toHaveAttribute(
+      "href",
+      "/data/kabugao-2024-snapshot.csv",
     );
   });
 
