@@ -1,0 +1,55 @@
+{
+  "scope": "/statistics chart animation only",
+  "sourceRoot": "C:\\Users\\Robin Tapiru\\Documents\\betterkabugao\\",
+  "overallPass": true,
+  "totalChecks": 9,
+  "passed": 9,
+  "failed": 0,
+  "checks": [
+    {
+      "name": "waits until the chart enters the viewport",
+      "pass": true,
+      "detail": "{\"ready\":true,\"visible\":false}"
+    },
+    {
+      "name": "draws for 1100ms with the approved easing",
+      "pass": true,
+      "detail": "1.1s; cubic-bezier(0.22, 0.8, 0.28, 1)"
+    },
+    {
+      "name": "reveals nine chronological points with 2024 last",
+      "pass": true,
+      "detail": "1960→1970→1980→1990→2000→2010→2015→2020→2024; last delay 0.84s"
+    },
+    {
+      "name": "does not replay after scrolling away and back",
+      "pass": true,
+      "detail": "{\"visible\":true,\"lineStart\":290.7430000050226}"
+    },
+    {
+      "name": "390px final chart is complete",
+      "pass": true,
+      "detail": "{\"lineOffset\":\"0px\",\"pointsVisible\":true}"
+    },
+    {
+      "name": "1440px final chart is complete",
+      "pass": true,
+      "detail": "{\"lineOffset\":\"0px\",\"pointsVisible\":true}"
+    },
+    {
+      "name": "reduced motion is immediately static and complete",
+      "pass": true,
+      "detail": "{\"ready\":false,\"visible\":false,\"lineOffset\":\"0px\",\"animationCount\":0,\"pointsVisible\":true}"
+    },
+    {
+      "name": "print output is immediately static and complete",
+      "pass": true,
+      "detail": "{\"lineOffset\":\"0px\",\"lineDuration\":\"0s\",\"pointsVisible\":true}"
+    },
+    {
+      "name": "JavaScript-off output keeps the full chart",
+      "pass": true,
+      "detail": "{\"lineOffset\":\"0px\",\"pointCount\":9,\"pointsVisible\":true}"
+    }
+  ]
+}

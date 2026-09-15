@@ -18,7 +18,8 @@
     "build:client": "vite build",
     "build:ssr": "vite build --ssr src/entry-server.tsx --outDir dist-ssr && vite build --ssr src/lib/routes.ts --outDir dist-ssr --emptyOutDir false",
     "prerender": "node scripts/prerender.mjs",
-    "qa": "node scripts/qa/checkpoint1.mjs"
+    "qa": "node scripts/qa/checkpoint1.mjs",
+    "qa:statistics": "node scripts/qa/statistics-animation.mjs"
   },
   "keywords": [],
   "author": "",

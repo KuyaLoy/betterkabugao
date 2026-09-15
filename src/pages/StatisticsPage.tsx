@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { PageHeader } from "../components/PageHeader";
 import {
@@ -20,14 +21,40 @@ function chartPoint(index: number, population: number) {
 }
 
 function PopulationChart() {
+  const chartRef = useRef<HTMLElement>(null);
   const points = POPULATION_OBSERVATIONS.map((observation, index) => ({
     ...observation,
     ...chartPoint(index, observation.population),
   }));
   const line = points.map((point) => `${point.x},${point.y}`).join(" ");
 
+  useEffect(() => {
+    const chart = chartRef.current;
+    if (
+      !chart ||
+      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ||
+      typeof IntersectionObserver === "undefined"
+    ) {
+      return;
+    }
+
+    chart.classList.add("is-motion-ready");
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (!entry?.isIntersecting || entry.intersectionRatio < 0.2) return;
+        chart.classList.add("is-visible");
+        observer.disconnect();
+      },
+      { threshold: 0.2 },
+    );
+    observer.observe(chart);
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <figure className="stats-chart" aria-labelledby="population-chart-caption">
+    <figure ref={chartRef} className="stats-chart" aria-labelledby="population-chart-caption">
       <div className="stats-chart__bar">
         <p>Population record</p>
         <span>Counts, not annual estimates</span>
@@ -54,9 +81,9 @@ function PopulationChart() {
             </g>
           );
         })}
-        <polyline className="stats-chart__line" points={line} />
-        {points.map((point) => (
-          <g key={point.year}>
+        <polyline className="stats-chart__line" points={line} pathLength="1" />
+        {points.map((point, index) => (
+          <g className="stats-chart__observation" data-step={index} data-year={point.year} key={point.year}>
             <circle className="stats-chart__point" cx={point.x} cy={point.y} r="4.5" />
             <text className="stats-chart__year" x={point.x} y={CHART.height - 22} textAnchor="middle">
               {point.year}

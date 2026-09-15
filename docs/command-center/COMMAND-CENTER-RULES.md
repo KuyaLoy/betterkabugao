@@ -17,6 +17,17 @@ The Command Center is BetterKabugao's single coordination point for Robin. It:
 - reports one consolidated status with evidence, decisions, blockers and next
   actions.
 
+The Command Center performs no department execution. Every actual task,
+including a small task, is assigned to the appropriate department. The
+Command Center may perform only minimal, read-only coordination checks needed
+to classify, route or report status; it must not perform substantive
+department analysis.
+
+The prohibited execution areas are explicit: no coding, QA or accessibility
+testing, civic research or data verification, UX or design work, SEO or growth
+work, social posting or content production, platform or security operations,
+or community work.
+
 ## Department ownership
 
 Departments own execution in their areas:
@@ -39,6 +50,11 @@ assets, conduct department research, draft or publish social content, or
 perform QA itself. It delegates those tasks, evaluates the resulting handoffs
 and coordinates any required follow-up.
 
+It must also not perform SEO, platform operations, security operations,
+community work, or any other substantive work owned by a department. Each
+department remains within its own mandate; cross-department work is split and
+routed rather than absorbed by one task.
+
 Only Robin may explicitly authorize an exception. An exception is limited to
 the exact action Robin approved; it does not permanently expand the Command
 Center's authority.
@@ -53,3 +69,16 @@ request was transferred, then wait. Department work resumes only when the
 Command Center sends a consolidated approved brief. This routing rule
 supersedes earlier ambiguity and does not interrupt work already assigned by a
 Command Center brief.
+
+## Cost and verification discipline
+
+- Use the lowest-capable model and reasoning level by default. Escalate only
+  when complexity, uncertainty or release risk provides a concrete reason.
+- Verification depth must be proportional to the files and behavior changed.
+  Always keep the full automated test, typecheck, lint and production-build
+  gates. Add focused browser and visual checks for the changed surface and its
+  accessibility fallbacks; reuse a recent green full-site baseline for
+  unrelated routes unless evidence points to a wider regression.
+- A targeted fix must not trigger repeated exhaustive full-site visual runs by
+  habit. Expand QA only when shared infrastructure changed, a focused check
+  fails outside the expected surface, or the Command Center explicitly asks.

@@ -1,4 +1,4 @@
-import { cleanup, render, screen, waitFor, within } from "@testing-library/react";
+import { act, cleanup, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -112,6 +112,97 @@ describe("Kabugao statistics", () => {
       "href",
       "/government/barangays",
     );
+  });
+
+  it("draws the chart once after it becomes 20 percent visible", () => {
+    let intersectionCallback: IntersectionObserverCallback | undefined;
+    let observerOptions: IntersectionObserverInit | undefined;
+    const observe = vi.fn();
+    const disconnect = vi.fn();
+
+    vi.stubGlobal(
+      "matchMedia",
+      vi.fn(() => ({
+        matches: false,
+        media: "(prefers-reduced-motion: reduce)",
+        onchange: null,
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+        addListener: vi.fn(),
+        removeListener: vi.fn(),
+        dispatchEvent: vi.fn(),
+      })),
+    );
+    vi.stubGlobal(
+      "IntersectionObserver",
+      class {
+        root = null;
+        rootMargin = "0px";
+        thresholds = [0.2];
+
+        constructor(callback: IntersectionObserverCallback, options?: IntersectionObserverInit) {
+          intersectionCallback = callback;
+          observerOptions = options;
+        }
+
+        observe = observe;
+        disconnect = disconnect;
+        unobserve = vi.fn();
+        takeRecords = vi.fn(() => []);
+      },
+    );
+
+    renderAt("/statistics");
+
+    const chart = document.querySelector(".stats-chart") as HTMLElement;
+    const line = chart.querySelector(".stats-chart__line");
+    const observations = [...chart.querySelectorAll(".stats-chart__observation")];
+    expect(chart).toHaveClass("is-motion-ready");
+    expect(chart).not.toHaveClass("is-visible");
+    expect(line).toHaveAttribute("pathLength", "1");
+    expect(observations.map((point) => point.getAttribute("data-step"))).toEqual([
+      "0", "1", "2", "3", "4", "5", "6", "7", "8",
+    ]);
+    expect(observations.at(-1)).toHaveAttribute("data-year", "2024");
+    expect(observerOptions).toEqual({ threshold: 0.2 });
+    expect(observe).toHaveBeenCalledWith(chart);
+
+    act(() => {
+      intersectionCallback?.(
+        [{ isIntersecting: true, intersectionRatio: 0.2, target: chart } as unknown as IntersectionObserverEntry],
+        {} as IntersectionObserver,
+      );
+    });
+
+    expect(chart).toHaveClass("is-visible");
+    expect(disconnect).toHaveBeenCalledOnce();
+  });
+
+  it("leaves the complete static chart untouched for reduced motion", () => {
+    const observer = vi.fn();
+    vi.stubGlobal(
+      "matchMedia",
+      vi.fn(() => ({
+        matches: true,
+        media: "(prefers-reduced-motion: reduce)",
+        onchange: null,
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+        addListener: vi.fn(),
+        removeListener: vi.fn(),
+        dispatchEvent: vi.fn(),
+      })),
+    );
+    vi.stubGlobal("IntersectionObserver", observer);
+
+    renderAt("/statistics");
+
+    const chart = document.querySelector(".stats-chart") as HTMLElement;
+    expect(chart).not.toHaveClass("is-motion-ready");
+    expect(chart).not.toHaveClass("is-visible");
+    expect(observer).not.toHaveBeenCalled();
+    expect(chart.querySelector(".stats-chart__line")).toHaveAttribute("pathLength", "1");
+    expect(chart.querySelectorAll(".stats-chart__point")).toHaveLength(9);
   });
 });
 

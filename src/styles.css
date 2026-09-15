@@ -1332,6 +1332,32 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--color-primary-5
 .stats-chart__line { fill: none; stroke: var(--color-primary-700); stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
 .stats-chart__point { fill: var(--color-gold); stroke: var(--color-primary-900); stroke-width: 2; }
 .stats-chart figcaption { padding: 0 20px 18px; color: var(--color-gray-700); font-size: 0.8125rem; line-height: 1.6; }
+@keyframes stats-line-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@keyframes stats-point-reveal { from { opacity: 0; transform: scale(0.72); } to { opacity: 1; transform: scale(1); } }
+@media (prefers-reduced-motion: no-preference) {
+  .stats-chart.is-motion-ready .stats-chart__line { stroke-dasharray: 1; stroke-dashoffset: 1; }
+  .stats-chart.is-motion-ready .stats-chart__point { opacity: 0; transform: scale(0.72); transform-box: fill-box; transform-origin: center; }
+  .stats-chart.is-motion-ready.is-visible .stats-chart__line { animation: stats-line-draw 1100ms cubic-bezier(0.22, 0.8, 0.28, 1) forwards; }
+  .stats-chart.is-motion-ready.is-visible .stats-chart__point { animation: stats-point-reveal 140ms cubic-bezier(0.22, 0.8, 0.28, 1) var(--stats-point-delay, 0ms) both; }
+  .stats-chart__observation[data-step="1"] { --stats-point-delay: 105ms; }
+  .stats-chart__observation[data-step="2"] { --stats-point-delay: 210ms; }
+  .stats-chart__observation[data-step="3"] { --stats-point-delay: 315ms; }
+  .stats-chart__observation[data-step="4"] { --stats-point-delay: 420ms; }
+  .stats-chart__observation[data-step="5"] { --stats-point-delay: 525ms; }
+  .stats-chart__observation[data-step="6"] { --stats-point-delay: 630ms; }
+  .stats-chart__observation[data-step="7"] { --stats-point-delay: 735ms; }
+  .stats-chart__observation[data-step="8"] { --stats-point-delay: 840ms; }
+}
+@media (prefers-reduced-motion: reduce), print {
+  .stats-chart__line, .stats-chart__point {
+    animation-duration: 0ms !important;
+    animation-delay: 0ms !important;
+    stroke-dasharray: none !important;
+    stroke-dashoffset: 0 !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
 .stats__body { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.75fr); gap: 32px; align-items: start; margin-top: 32px; }
 .stats__table-wrap { overflow-x: auto; border: 1px solid var(--color-gray-300); border-radius: 12px; background: var(--color-white); }
 .stats-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
