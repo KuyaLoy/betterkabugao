@@ -78,6 +78,11 @@ try {
     );
 
     await page.waitForTimeout(1200);
+    const completed = await chart.evaluate((element) => ({
+      complete: element.classList.contains("is-complete"),
+      activeAnimations: element.getAnimations({ subtree: true }).length,
+    }));
+    record("converts the finished draw into a permanent static state", completed.complete && completed.activeAnimations === 0, JSON.stringify(completed));
     await page.evaluate(() => {
       document.documentElement.style.scrollBehavior = "auto";
       window.scrollTo(0, 0);
@@ -87,9 +92,11 @@ try {
     await page.waitForTimeout(200);
     const replay = await chart.evaluate((element) => ({
       visible: element.classList.contains("is-visible"),
+      complete: element.classList.contains("is-complete"),
+      activeAnimations: element.getAnimations({ subtree: true }).length,
       lineStart: element.querySelector(".stats-chart__line")?.getAnimations()[0]?.startTime ?? null,
     }));
-    record("does not replay after scrolling away and back", replay.visible && replay.lineStart === sequence.lineStart, JSON.stringify(replay));
+    record("does not replay after scrolling away and back", replay.visible && replay.complete && replay.activeAnimations === 0 && replay.lineStart === null, JSON.stringify(replay));
     await context.close();
   }
 

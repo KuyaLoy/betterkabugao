@@ -1347,6 +1347,8 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--color-primary-5
   .stats-chart__observation[data-step="6"] { --stats-point-delay: 630ms; }
   .stats-chart__observation[data-step="7"] { --stats-point-delay: 735ms; }
   .stats-chart__observation[data-step="8"] { --stats-point-delay: 840ms; }
+  .stats-chart.is-motion-ready.is-visible.is-complete .stats-chart__line { animation: none; stroke-dasharray: none; stroke-dashoffset: 0; }
+  .stats-chart.is-motion-ready.is-visible.is-complete .stats-chart__point { animation: none; opacity: 1; transform: none; }
 }
 @media (prefers-reduced-motion: reduce), print {
   .stats-chart__line, .stats-chart__point {

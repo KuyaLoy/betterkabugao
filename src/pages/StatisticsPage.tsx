@@ -39,6 +39,9 @@ function PopulationChart() {
     }
 
     chart.classList.add("is-motion-ready");
+    const line = chart.querySelector(".stats-chart__line");
+    const markComplete = () => chart.classList.add("is-complete");
+    line?.addEventListener("animationend", markComplete, { once: true });
     const observer = new IntersectionObserver(
       (entries) => {
         const entry = entries[0];
@@ -50,7 +53,10 @@ function PopulationChart() {
     );
     observer.observe(chart);
 
-    return () => observer.disconnect();
+    return () => {
+      line?.removeEventListener("animationend", markComplete);
+      observer.disconnect();
+    };
   }, []);
 
   return (

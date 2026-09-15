@@ -176,6 +176,12 @@ describe("Kabugao statistics", () => {
 
     expect(chart).toHaveClass("is-visible");
     expect(disconnect).toHaveBeenCalledOnce();
+
+    act(() => {
+      line?.dispatchEvent(new Event("animationend", { bubbles: true }));
+    });
+
+    expect(chart).toHaveClass("is-complete");
   });
 
   it("leaves the complete static chart untouched for reduced motion", () => {

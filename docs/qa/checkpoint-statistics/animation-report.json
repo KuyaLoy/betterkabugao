@@ -2,8 +2,8 @@
   "scope": "/statistics chart animation only",
   "sourceRoot": "C:\\Users\\Robin Tapiru\\Documents\\betterkabugao\\",
   "overallPass": true,
-  "totalChecks": 9,
-  "passed": 9,
+  "totalChecks": 10,
+  "passed": 10,
   "failed": 0,
   "checks": [
     {
@@ -22,9 +22,14 @@
       "detail": "1960→1970→1980→1990→2000→2010→2015→2020→2024; last delay 0.84s"
     },
     {
+      "name": "converts the finished draw into a permanent static state",
+      "pass": true,
+      "detail": "{\"complete\":true,\"activeAnimations\":0}"
+    },
+    {
       "name": "does not replay after scrolling away and back",
       "pass": true,
-      "detail": "{\"visible\":true,\"lineStart\":290.7430000050226}"
+      "detail": "{\"visible\":true,\"complete\":true,\"activeAnimations\":0,\"lineStart\":null}"
     },
     {
       "name": "390px final chart is complete",
