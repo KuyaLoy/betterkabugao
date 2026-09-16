@@ -1,11 +1,19 @@
 import { useMemo, useState } from "react";
 import { PageHeader } from "../components/PageHeader";
-import { PROJECT_CATEGORIES, PUBLIC_WORKS_PROJECTS, filterProjects, type ProjectCategory } from "../data/projects";
+import { PROJECT_CATEGORIES, PUBLIC_WORKS_PROJECTS, filterProjects, projectSection, sortProjectsByEvidenceDate, type ProjectCategory, type ProjectStatusFilter } from "../data/projects";
 import { metaFor } from "../lib/seo";
 
 const REVIEW_NOTE = "Public Works Watch is a manually reviewed reference to published records. It does not certify completion, quality, legality, procurement compliance, or current status.";
 const locations = [...new Set(PUBLIC_WORKS_PROJECTS.map((project) => project.publishedLocation))].sort();
 const years = [...new Set(PUBLIC_WORKS_PROJECTS.map((project) => project.fundingYear).filter((year): year is number => year !== undefined))].sort((a, b) => b - a);
+const STATUS_OPTIONS: readonly { value: ProjectStatusFilter; label: string }[] = [
+  { value: "all", label: "All statuses" },
+  { value: "completed", label: "Completed" },
+  { value: "ongoing", label: "Ongoing" },
+  { value: "planned", label: "Planned" },
+  { value: "cancelled", label: "Cancelled" },
+  { value: "not stated", label: "Not stated" },
+];
 
 function money(value: number) {
   return `₱${value.toLocaleString("en-PH", { minimumFractionDigits: Number.isInteger(value) ? 0 : 2, maximumFractionDigits: 2 })}`;
@@ -17,8 +25,31 @@ export function ProjectsPage() {
   const [category, setCategory] = useState<ProjectCategory | "all">("all");
   const [year, setYear] = useState<number | "all">("all");
   const [location, setLocation] = useState("all");
-  const shown = useMemo(() => filterProjects(PUBLIC_WORKS_PROJECTS, { query, category, fundingYear: year, location }), [query, category, year, location]);
-  const clear = () => { setQuery(""); setCategory("all"); setYear("all"); setLocation("all"); };
+  const [status, setStatus] = useState<ProjectStatusFilter>("all");
+  const shown = useMemo(() => sortProjectsByEvidenceDate(filterProjects(PUBLIC_WORKS_PROJECTS, { query, category, fundingYear: year, location, status })), [query, category, year, location, status]);
+  const register = shown.filter((project) => projectSection(project) === "project-register");
+  const appropriations = shown.filter((project) => projectSection(project) === "historical-appropriations");
+  const clear = () => { setQuery(""); setCategory("all"); setYear("all"); setLocation("all"); setStatus("all"); };
+
+  const record = (project: (typeof PUBLIC_WORKS_PROJECTS)[number]) => (
+    <article className="projects__record" key={project.reviewKey}>
+      <div><p className="projects__eyebrow">{project.officialRef ?? "Official reference not published in reviewed source"}</p><h3>{project.exactTitle}</h3><p>{project.category} · {project.publishedLocation}</p></div>
+      <div className="projects__evidence">
+        <p className={`projects__status projects__status--${project.status.kind === "reported" ? project.status.value : "not-stated"}`}><span>Status</span><strong>{project.status.kind === "reported" ? `${project.status.value} (as reported ${project.status.asOf})` : "Not stated in the reviewed source"}</strong></p>
+        <div className="projects__amount">{project.amounts.length > 0 ? project.amounts.map((amount) => <p key={`${amount.type}-${amount.value}`}><strong>{money(amount.value)}</strong><span>{amount.type}</span></p>) : <p><span>Amount type unavailable in the reviewed source.</span></p>}</div>
+        <p className="projects__contractor"><span>Contractor</span><strong>{project.contractor ?? "Contractor unavailable in the reviewed source"}</strong></p>
+      </div>
+      <dl>
+        <div><dt>Office</dt><dd>{project.implementingOffice ?? "Not stated in the reviewed source"}</dd></div>
+        <div><dt>Funding year</dt><dd>{project.fundingYear ?? "Not stated in the reviewed source"}</dd></div>
+        <div><dt>Source publisher</dt><dd>{project.sourcePublisher}</dd></div>
+        <div><dt>Reviewed</dt><dd>{project.reviewedOn}</dd></div>
+      </dl>
+      <p className="projects__source-note">{project.sourceNote}</p>
+      <p className="projects__review">Source: {project.sourcePublisher}, linked official record, reviewed {project.reviewedOn}.</p>
+      <a className="projects__source" href={project.officialUrl} target="_blank" rel="noreferrer">Open official source for {project.officialRef ?? "this record"}</a>
+    </article>
+  );
 
   return (
     <>
@@ -35,24 +66,14 @@ export function ProjectsPage() {
             <label>Filter by category<select value={category} onChange={(event) => setCategory(event.target.value as ProjectCategory | "all")}><option value="all">All categories</option>{PROJECT_CATEGORIES.map((item) => <option key={item} value={item}>{item}</option>)}</select></label>
             <label>Filter by funding year<select value={year} onChange={(event) => setYear(event.target.value === "all" ? "all" : Number(event.target.value))}><option value="all">All years</option>{years.map((item) => <option key={item} value={item}>{item}</option>)}</select></label>
             <label>Filter by published location<select value={location} onChange={(event) => setLocation(event.target.value)}><option value="all">All published locations</option>{locations.map((item) => <option key={item} value={item}>{item}</option>)}</select></label>
+            <label>Filter by status<select value={status} onChange={(event) => setStatus(event.target.value as ProjectStatusFilter)}>{STATUS_OPTIONS.map((item) => <option key={item.value} value={item.value}>{item.label}</option>)}</select></label>
             <button type="button" onClick={clear}>Clear filters</button>
           </form>
           <p className="projects__count" role="status">{shown.length} of {PUBLIC_WORKS_PROJECTS.length} projects shown</p>
-          {shown.length === 0 ? <p className="projects__empty">No projects match those filters.</p> : <div className="projects__list">{shown.map((project) => (
-            <article className="projects__record" key={project.reviewKey}>
-              <div><p className="projects__eyebrow">{project.officialRef ?? "Official reference not published in reviewed source"}</p><h2>{project.exactTitle}</h2><p>{project.category} · {project.publishedLocation}</p></div>
-              <dl>
-                <div><dt>Office</dt><dd>{project.implementingOffice ?? "Not stated in the reviewed source"}</dd></div>
-                <div><dt>Contractor</dt><dd>{project.contractor ?? "Contractor unavailable in the reviewed source"}</dd></div>
-                <div><dt>Funding year</dt><dd>{project.fundingYear ?? "Not stated in the reviewed source"}</dd></div>
-                <div><dt>Status</dt><dd>{project.status.kind === "reported" ? `${project.status.value} (as reported ${project.status.asOf})` : "Not stated in the reviewed source"}</dd></div>
-              </dl>
-              {project.amounts.length > 0 ? <ul className="projects__amounts">{project.amounts.map((amount) => <li key={`${amount.type}-${amount.value}`}>{money(amount.value)} · {amount.type}</li>)}</ul> : <p className="projects__missing">Amount type unavailable in the reviewed source.</p>}
-              <p className="projects__source-note">{project.sourceNote}</p>
-              <p className="projects__review">Source: {project.sourcePublisher}, linked official record, reviewed {project.reviewedOn}.</p>
-              <a className="projects__source" href={project.officialUrl} target="_blank" rel="noreferrer">Open official source for {project.officialRef ?? "this record"}</a>
-            </article>
-          ))}</div>}
+          {shown.length === 0 ? <p className="projects__empty">No projects match those filters.</p> : <div className="projects__list">
+            {register.length > 0 && <section className="projects__section" aria-labelledby="projects-register"><div className="projects__section-head"><p>Source-linked delivery records</p><h2 id="projects-register">Project register</h2></div>{register.map(record)}</section>}
+            {appropriations.length > 0 && <section className="projects__section" aria-labelledby="projects-appropriations"><div className="projects__section-head"><p>Appropriations are not proof of award, start, or completion.</p><h2 id="projects-appropriations">Historical appropriations</h2></div>{appropriations.map(record)}</section>}
+          </div>}
           <p className="projects__cadence">Dataset review: quarterly; monthly only where an official source explicitly labels a record ongoing. Current review: 16 September 2026.</p>
         </div>
       </section>

@@ -2,8 +2,8 @@
 
 ## Phase
 
-Documentation-only design handoff. No production code, data rows, map, or QA
-artefacts were changed.
+Implementation and release completed. No new data rows, map, coordinates, or
+runtime data source were added.
 
 ## Deliverable
 
@@ -33,6 +33,27 @@ artefacts were changed.
   ledger, homepage mini-ledger, visual/contracts, and focused release QA.
   FY2015/FY2017 rows remain out of code because the committed audit still calls
   them candidates requiring manual primary-row review.
+- Delivered source-led sections for the existing 13 rows, newest-first evidence
+  ordering, the five-value status filter, prominent typed amounts and contractor
+  evidence, and an accessible three-row homepage mini-ledger. The homepage
+  category buttons render only because its current three records span categories.
+
+## Release checks
+
+- Focused red/green tests covered section/date helpers, status filtering,
+  two-section rendering, contractor availability, homepage selection, and the
+  map-free evidence hierarchy.
+- Focused browser QA: `npm run qa:projects` passed 20/20 at 390px and 1440px;
+  it covers filters, source dates, typed amounts, contractor availability,
+  sections, downloads, no map, homepage interaction, and no overflow.
+- Final gate: contracts 40/40, unit tests 65/65, typecheck, lint, and production
+  build passed. QA evidence is in `docs/qa/checkpoint-projects/`.
+
+## Changed implementation files
+
+`src/data/projects.ts`, `src/pages/ProjectsPage.tsx`, `src/pages/HomePage.tsx`,
+`src/styles.css`, `src/App.test.tsx`, `scripts/qa/projects.mjs`, and focused QA
+evidence in `docs/qa/checkpoint-projects/`.
 
 ## Limits and next approval
 

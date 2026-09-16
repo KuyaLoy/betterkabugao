@@ -1,11 +1,12 @@
 import { Link } from "react-router-dom";
+import { useMemo, useState } from "react";
 import { MapView } from "../components/MapView";
 import { SearchTrigger } from "../components/SearchOverlay";
 import { KABUGAO } from "../app/site-content";
 import { BARANGAYS, BARANGAY_CENSUS, BARANGAY_POPULATION_TOTAL } from "../data/barangays";
 import { HOTLINES } from "../data/hotlines";
 import { OFFICIALS_TERM } from "../data/officials";
-import { PUBLIC_WORKS_PROJECTS } from "../data/projects";
+import { latestProjects, projectSection, PUBLIC_WORKS_PROJECTS } from "../data/projects";
 
 /**
  * Homepage — "Kabugao in View".
@@ -21,6 +22,10 @@ import { PUBLIC_WORKS_PROJECTS } from "../data/projects";
 const HERO_WIDTHS = [480, 640, 960, 1280] as const;
 const heroSrcSet = (ext: string) =>
   HERO_WIDTHS.map((w) => `/hero/dibagat-river-${w}.${ext} ${w}w`).join(", ");
+
+const PUBLIC_WORKS_PREVIEW = latestProjects(PUBLIC_WORKS_PROJECTS.filter((project) => projectSection(project) === "project-register"), 3);
+const PREVIEW_CATEGORIES = [...new Set(PUBLIC_WORKS_PREVIEW.map((project) => project.category))];
+const formatMoney = (value: number) => `₱${value.toLocaleString("en-PH", { minimumFractionDigits: Number.isInteger(value) ? 0 : 2, maximumFractionDigits: 2 })}`;
 
 const TASKS = [
   { to: "/government/barangays", label: "Barangays", sub: `All ${BARANGAYS.length}, on the map`, icon: "pin" },
@@ -64,6 +69,9 @@ function TaskIcon({ name }: { name: string }) {
 }
 
 export function HomePage() {
+  const [previewCategory, setPreviewCategory] = useState<string>("all");
+  const preview = useMemo(() => previewCategory === "all" ? PUBLIC_WORKS_PREVIEW : PUBLIC_WORKS_PREVIEW.filter((project) => project.category === previewCategory), [previewCategory]);
+
   return (
     <>
       <section className="kv-hero" aria-labelledby="home-title">
@@ -133,14 +141,21 @@ export function HomePage() {
 
       <section className="works-preview" aria-labelledby="works-preview-title">
         <div className="shell">
-          <div className="works-preview__head"><p>Public Works Watch</p><h2 id="works-preview-title">What’s being built in Kabugao?</h2><Link to="/projects">View all projects</Link></div>
-          <p className="works-preview__note">A manually reviewed selection of published records, not a complete inventory or a live completion check.</p>
-          <div className="works-preview__grid">{PUBLIC_WORKS_PROJECTS.slice(6, 9).map((project) => (
+          <div className="works-preview__head"><p>Public Works Watch</p><h2 id="works-preview-title">Latest source-backed records</h2><Link to="/projects">View all Public Works Watch records</Link></div>
+          <p className="works-preview__note">A manually reviewed selection. A source-reported status is not a live completion check.</p>
+          {PREVIEW_CATEGORIES.length > 1 && <div className="works-preview__filters" aria-label="Filter preview by category">
+            <button type="button" aria-pressed={previewCategory === "all"} onClick={() => setPreviewCategory("all")}>All shown</button>
+            {PREVIEW_CATEGORIES.map((category) => <button type="button" key={category} aria-pressed={previewCategory === category} onClick={() => setPreviewCategory(category)}>{category}</button>)}
+          </div>}
+          <div className="works-preview__ledger">{preview.map((project) => (
             <article className="works-preview__card" key={project.reviewKey}>
-              <p>{project.category}</p><h3>{project.exactTitle}</h3><span>{project.publishedLocation}</span>
-              {project.amounts[0] && <strong>₱{project.amounts[0].value.toLocaleString("en-PH")} · {project.amounts[0].type}</strong>}
-              <small>{project.status.kind === "reported" ? `Status: ${project.status.value} (as reported ${project.status.asOf})` : "Status not stated in the reviewed source"}</small>
-              <a href={project.officialUrl} target="_blank" rel="noreferrer">Official source</a>
+              <div><p>{project.officialRef ?? "Official reference not published"}</p><h3>{project.exactTitle}</h3><span>{project.publishedLocation}</span></div>
+              <div className="works-preview__evidence">
+                <p><span>Status</span><strong>{project.status.kind === "reported" ? `${project.status.value} (as reported ${project.status.asOf})` : "Not stated in the reviewed source"}</strong></p>
+                <p><span>Amount</span><strong>{project.amounts[0] ? formatMoney(project.amounts[0].value) : "Amount type unavailable in the reviewed source"}</strong>{project.amounts[0] && <small>{project.amounts[0].type}</small>}</p>
+                <p><span>Contractor</span><strong>{project.contractor ?? "Contractor unavailable in the reviewed source"}</strong></p>
+              </div>
+              <a href={project.officialUrl} target="_blank" rel="noreferrer">Open official source</a>
             </article>
           ))}</div>
         </div>

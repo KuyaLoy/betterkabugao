@@ -17,6 +17,12 @@ try {
     const page = await context.newPage();
     await page.goto(`${base}/projects`, { waitUntil: "domcontentloaded" });
     record(`${viewport.width}px renders all 13 local records`, await page.locator(".projects__record").count() === 13);
+    record(`${viewport.width}px separates evidence sections`, await page.getByRole("heading", { name: "Project register" }).isVisible() && await page.getByRole("heading", { name: "Historical appropriations" }).isVisible());
+    record(`${viewport.width}px has no project map`, await page.locator(".projects .map").count() === 0);
+    record(`${viewport.width}px exposes typed amounts and contractor availability`, await page.getByText("ABC", { exact: true }).isVisible() && await page.getByText("Contractor unavailable in the reviewed source").count() > 0);
+    await page.getByLabel("Filter by status").selectOption("ongoing");
+    record(`${viewport.width}px filters source-reported status`, await page.locator(".projects__record").count() === 1 && await page.getByText(/ongoing \(as reported 2022-10-22\)/i).isVisible());
+    await page.getByRole("button", { name: "Clear filters" }).click();
     await page.getByLabel("Filter by category").selectOption("flood control/drainage");
     await page.getByLabel("Filter by funding year").selectOption("2023");
     await page.getByLabel("Search projects").fill("Badduat");
@@ -30,6 +36,14 @@ try {
     record(`${viewport.width}px serves local CSV and JSON`, csv.includes("23PB0017") && json.recordCount === 13);
     record(`${viewport.width}px has no horizontal page overflow`, await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth), `${await page.evaluate(() => document.documentElement.scrollWidth)}/${viewport.width}`);
     await page.screenshot({ path: `${OUT}/projects-${viewport.width}.png`, fullPage: true });
+    if (viewport.width === 1440) {
+      await page.goto(`${base}/`, { waitUntil: "domcontentloaded" });
+      const preview = page.getByRole("region", { name: /Latest source-backed records/i });
+      record("homepage renders three latest source-backed records", await preview.locator("article").count() === 3);
+      const road = preview.getByRole("button", { name: "roads/bridges" });
+      if (await road.count()) await road.click();
+      record("homepage keeps the Public Works route after preview filtering", await preview.getByRole("link", { name: "View all Public Works Watch records" }).isVisible());
+    }
     await context.close();
   }
 } finally { await browser.close(); server.close(); }

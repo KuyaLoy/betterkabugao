@@ -1,12 +1,32 @@
 {
   "scope": "/projects focused browser QA",
   "overallPass": true,
-  "totalChecks": 10,
-  "passed": 10,
+  "totalChecks": 20,
+  "passed": 20,
   "failed": 0,
   "checks": [
     {
       "name": "390px renders all 13 local records",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "390px separates evidence sections",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "390px has no project map",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "390px exposes typed amounts and contractor availability",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "390px filters source-reported status",
       "pass": true,
       "detail": ""
     },
@@ -36,6 +56,26 @@
       "detail": ""
     },
     {
+      "name": "1440px separates evidence sections",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "1440px has no project map",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "1440px exposes typed amounts and contractor availability",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "1440px filters source-reported status",
+      "pass": true,
+      "detail": ""
+    },
+    {
       "name": "1440px combines filters deterministically",
       "pass": true,
       "detail": ""
@@ -54,6 +94,16 @@
       "name": "1440px has no horizontal page overflow",
       "pass": true,
       "detail": "1440/1440"
+    },
+    {
+      "name": "homepage renders three latest source-backed records",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "homepage keeps the Public Works route after preview filtering",
+      "pass": true,
+      "detail": ""
     }
   ]
 }

@@ -4,7 +4,7 @@ import { MemoryRouter } from "react-router-dom";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { App } from "./App";
 import { BARANGAYS } from "./data/barangays";
-import { PUBLIC_WORKS_PROJECTS, filterProjects, validateProjects } from "./data/projects";
+import { PUBLIC_WORKS_PROJECTS, filterProjects, projectSection, sortProjectsByEvidenceDate, validateProjects } from "./data/projects";
 import { ALL_PATHS, RECOVERY_LINKS, SITEMAP_EXCLUDED, SITEMAP_GROUPS, auditSitemap } from "./lib/seo";
 import { QUICK_SEARCHES, searchSite } from "./lib/search";
 import { closeSearchOverlay } from "./lib/search-overlay";
@@ -88,11 +88,21 @@ describe("home page", () => {
     expect(within(statistics).getByText("2024 snapshot: 16,425 residents")).toBeInTheDocument();
   });
 
-  it("shows three source-linked public works records", () => {
+  it("shows three newest source-backed records and a route action", () => {
     renderAt("/");
-    const module = screen.getByRole("region", { name: "What’s being built in Kabugao?" });
+    const module = screen.getByRole("region", { name: /Latest source-backed records/i });
     expect(within(module).getAllByRole("article")).toHaveLength(3);
-    expect(within(module).getByRole("link", { name: "View all projects" })).toHaveAttribute("href", "/projects");
+    expect(within(module).getByRole("link", { name: "View all Public Works Watch records" })).toHaveAttribute("href", "/projects");
+    expect(within(module).getByText(/source-reported status is not a live completion check/i)).toBeInTheDocument();
+  });
+
+  it("keeps the homepage project route available after category switching", async () => {
+    const user = userEvent.setup();
+    renderAt("/");
+    const module = screen.getByRole("region", { name: /Latest source-backed records/i });
+    const road = within(module).queryByRole("button", { name: "roads/bridges" });
+    if (road) await user.click(road);
+    expect(within(module).getByRole("link", { name: "View all Public Works Watch records" })).toBeVisible();
   });
 });
 
@@ -115,9 +125,21 @@ describe("Public Works Watch data", () => {
       category: "flood control/drainage",
       fundingYear: 2023,
       location: "all",
+      status: "all",
     });
 
     expect(results.map((project) => project.officialRef)).toEqual(["23PB0002", "23PB0014"]);
+  });
+
+  it("derives source-led sections and newest-first evidence order", () => {
+    expect(projectSection(PUBLIC_WORKS_PROJECTS.find((project) => project.officialRef === "23PB0017")!)).toBe("project-register");
+    expect(projectSection(PUBLIC_WORKS_PROJECTS.find((project) => project.officialRef === "P00631689LZ")!)).toBe("historical-appropriations");
+    expect(sortProjectsByEvidenceDate(PUBLIC_WORKS_PROJECTS).slice(0, 2).map((project) => project.fundingYear)).toEqual([2026, 2026]);
+  });
+
+  it("filters source-reported statuses without inferring a live status", () => {
+    const results = filterProjects(PUBLIC_WORKS_PROJECTS, { query: "", category: "all", fundingYear: "all", location: "all", status: "ongoing" });
+    expect(results.map((project) => project.officialRef)).toEqual(["22PB0002"]);
   });
 });
 
@@ -127,6 +149,28 @@ describe("Public Works Watch", () => {
     expect(screen.getByRole("heading", { level: 1, name: "Public Works Watch" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Download CSV" })).toHaveAttribute("href", "/data/kabugao-public-works.csv");
     expect(screen.getByRole("link", { name: "Download JSON" })).toHaveAttribute("href", "/data/kabugao-public-works.json");
+  });
+
+  it("filters the ledger by source-reported status", async () => {
+    const user = userEvent.setup();
+    renderAt("/projects");
+    await user.selectOptions(screen.getByLabelText("Filter by status"), "ongoing");
+    expect(screen.getByText(/ongoing \(as reported 2022-10-22\)/i)).toBeInTheDocument();
+    expect(screen.queryByText(/Apayao River Flood Control/i)).not.toBeInTheDocument();
+  });
+
+  it("separates appropriation evidence and exposes unavailable contractor data", () => {
+    renderAt("/projects");
+    expect(screen.getByRole("heading", { name: "Historical appropriations" })).toBeInTheDocument();
+    expect(screen.getAllByText("Contractor unavailable in the reviewed source").length).toBeGreaterThan(0);
+  });
+
+  it("keeps Public Works money typed, status labelled, and map-free", () => {
+    renderAt("/projects");
+    expect(screen.getByLabelText("Filter by status")).toBeInTheDocument();
+    expect(document.querySelector(".projects__evidence")).not.toBeNull();
+    expect(document.querySelector(".projects .map")).toBeNull();
+    expect(screen.queryByText(/total project cost|total spend/i)).not.toBeInTheDocument();
   });
 });
 

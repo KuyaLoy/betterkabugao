@@ -51,7 +51,11 @@ export type ProjectFilters = {
   category: ProjectCategory | "all";
   fundingYear: number | "all";
   location: string | "all";
+  status: ProjectStatusFilter;
 };
+
+export type ProjectSection = "project-register" | "historical-appropriations";
+export type ProjectStatusFilter = "all" | "planned" | "ongoing" | "completed" | "cancelled" | "not stated";
 
 const REVIEWED = "2026-09-16";
 const DPWH_FLOOD_CONTROL = "https://services1.arcgis.com/IwZZTMxZCmAmFYvF/arcgis/rest/services/FloodControl_Data_20250802_v6_corrected_coordinates_for_uploading/FeatureServer/0";
@@ -328,6 +332,24 @@ function normalise(value: string) {
   return value.trim().toLocaleLowerCase("en-PH");
 }
 
+export function projectSection(project: PublicWorksProject): ProjectSection {
+  return project.status.kind === "not stated" ? "historical-appropriations" : "project-register";
+}
+
+export function projectEvidenceDate(project: PublicWorksProject) {
+  return project.status.kind === "reported" ? project.status.asOf : `${project.fundingYear ?? 0}-01-01`;
+}
+
+export function sortProjectsByEvidenceDate(projects: readonly PublicWorksProject[]) {
+  return [...projects].sort((left, right) => projectEvidenceDate(right).localeCompare(projectEvidenceDate(left))
+    || (left.officialRef ?? left.reviewKey).localeCompare(right.officialRef ?? right.reviewKey)
+    || left.exactTitle.localeCompare(right.exactTitle));
+}
+
+export function latestProjects(projects: readonly PublicWorksProject[], count: number) {
+  return sortProjectsByEvidenceDate(projects).slice(0, count);
+}
+
 export function filterProjects(projects: readonly PublicWorksProject[], filters: ProjectFilters) {
   const query = normalise(filters.query);
   const location = normalise(filters.location);
@@ -338,6 +360,9 @@ export function filterProjects(projects: readonly PublicWorksProject[], filters:
     return (!query || normalise(text).includes(query))
       && (filters.category === "all" || project.category === filters.category)
       && (filters.fundingYear === "all" || project.fundingYear === filters.fundingYear)
-      && (filters.location === "all" || normalise(project.publishedLocation) === location);
+      && (filters.location === "all" || normalise(project.publishedLocation) === location)
+      && (filters.status === "all"
+        || (filters.status === "not stated" && project.status.kind === "not stated")
+        || (project.status.kind === "reported" && project.status.value === filters.status));
   });
 }
