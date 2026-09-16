@@ -26,6 +26,7 @@ const SEGMENT_LABELS: Record<string, string> = {
   "/government/officials": "Elected officials",
   "/emergency": "Emergency hotlines",
   "/statistics": "Kabugao statistics",
+  "/projects": "Public works",
   "/transparency": "Transparency",
   "/explore": "Explore Kabugao",
   "/services": "Services",
@@ -64,6 +65,10 @@ const STATIC_META: Record<string, { title: string; description: string }> = {
     title: "Kabugao population observations, 1960–2024",
     description:
       "Selected official census and POPCEN observations for Kabugao, Apayao from 1960 to 2024, with the original PSA and NSO source records linked for checking.",
+  },
+  "/projects": {
+    title: "Kabugao Public Works Watch",
+    description: "A manually reviewed, source-linked register of selected Kabugao public-works records. Amounts and historical status retain the official source label and date.",
   },
   "/transparency": {
     title: "Public records for Kabugao — in preparation",
@@ -150,6 +155,7 @@ export const ALL_PATHS: readonly string[] = [
   ...BARANGAYS.map((b) => `/government/barangays/${b.slug}`),
   "/emergency",
   "/statistics",
+  "/projects",
   "/transparency",
   "/explore",
   "/services",
@@ -193,6 +199,7 @@ const SITEMAP_LABELS: Record<string, string> = {
   "/transparency": "Transparency",
   "/emergency": "Emergency hotlines",
   "/statistics": "Kabugao population observations",
+  "/projects": "Public Works Watch",
   "/explore": "Explore Kabugao",
   "/services": "Services",
   "/about": "About this project",
@@ -206,7 +213,7 @@ const GROUP_ORDER: ReadonlyArray<{
   paths?: readonly string[];
   barangays?: true;
 }> = [
-  { id: "core", title: "Core", paths: ["/", "/statistics", "/search"] },
+  { id: "core", title: "Core", paths: ["/", "/statistics", "/projects", "/search"] },
   {
     id: "government",
     title: "Government",

@@ -5,6 +5,7 @@ import { KABUGAO } from "../app/site-content";
 import { BARANGAYS, BARANGAY_CENSUS, BARANGAY_POPULATION_TOTAL } from "../data/barangays";
 import { HOTLINES } from "../data/hotlines";
 import { OFFICIALS_TERM } from "../data/officials";
+import { PUBLIC_WORKS_PROJECTS } from "../data/projects";
 
 /**
  * Homepage — "Kabugao in View".
@@ -127,6 +128,21 @@ export function HomePage() {
               ))}
             </div>
           </nav>
+        </div>
+      </section>
+
+      <section className="works-preview" aria-labelledby="works-preview-title">
+        <div className="shell">
+          <div className="works-preview__head"><p>Public Works Watch</p><h2 id="works-preview-title">What’s being built in Kabugao?</h2><Link to="/projects">View all projects</Link></div>
+          <p className="works-preview__note">A manually reviewed selection of published records, not a complete inventory or a live completion check.</p>
+          <div className="works-preview__grid">{PUBLIC_WORKS_PROJECTS.slice(6, 9).map((project) => (
+            <article className="works-preview__card" key={project.reviewKey}>
+              <p>{project.category}</p><h3>{project.exactTitle}</h3><span>{project.publishedLocation}</span>
+              {project.amounts[0] && <strong>₱{project.amounts[0].value.toLocaleString("en-PH")} · {project.amounts[0].type}</strong>}
+              <small>{project.status.kind === "reported" ? `Status: ${project.status.value} (as reported ${project.status.asOf})` : "Status not stated in the reviewed source"}</small>
+              <a href={project.officialUrl} target="_blank" rel="noreferrer">Official source</a>
+            </article>
+          ))}</div>
         </div>
       </section>
 

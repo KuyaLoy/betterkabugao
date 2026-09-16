@@ -1,0 +1,20 @@
+{
+  "reviewedOn": "2026-09-16",
+  "recordCount": 13,
+  "sourceNote": "Local export of the manually reviewed Public Works Watch register. The linked official record controls.",
+  "records": [
+    { "reviewKey": "22PB0018|2022|Apayao River|82+292-82+592", "officialRef": "22PB0018", "category": "flood control/drainage", "location": "Barangay Nagbabalayan, Kabugao, Apayao", "year": 2022 },
+    { "reviewKey": "22PB0023|2022|Sicapo River|88+632-88+932", "officialRef": "22PB0023", "category": "flood control/drainage", "location": "Kabugao, Apayao", "year": 2022 },
+    { "reviewKey": "22PB0024|2022|Madduang River|84+680-84+835", "officialRef": "22PB0024", "category": "flood control/drainage", "location": "Madduang, Kabugao, Apayao", "year": 2022 },
+    { "reviewKey": "23PB0002|2023|Badduat River|83+292-83+532", "officialRef": "23PB0002", "category": "flood control/drainage", "location": "Badduat, Kabugao, Apayao", "year": 2023 },
+    { "reviewKey": "23PB0014|2023|Badduat River upstream|83+232-83+292", "officialRef": "23PB0014", "category": "flood control/drainage", "location": "Badduat, Kabugao, Apayao", "year": 2023 },
+    { "reviewKey": "23PB0017|2023|Madduang River|88+535-89+633", "officialRef": "23PB0017", "category": "flood control/drainage", "location": "Madduang, Kabugao, Apayao", "year": 2023 },
+    { "reviewKey": "23PB0015|2023|Madduang-Dagara-Maragat-Abra Boundary", "officialRef": "23PB0015", "category": "roads/bridges", "location": "Kabugao, Apayao", "year": 2023 },
+    { "reviewKey": "21PB0002|2021|Apayao-Ilocos Norte Road|K0634-K0635", "officialRef": "21PB0002", "category": "roads/bridges", "location": "Kabugao, Apayao", "year": 2021 },
+    { "reviewKey": "22PB0002|2022|Apayao-Ilocos Norte Road|K0621+290-K0621+390", "officialRef": "22PB0002", "category": "roads/bridges", "location": "Kabugao, Apayao", "year": 2022 },
+    { "reviewKey": "P00631689LZ|2022|Badduat Livelihood Building", "officialRef": "P00631689LZ", "category": "public buildings", "location": "Kabugao, Apayao", "year": 2022 },
+    { "reviewKey": "P00633404LZ|2022|Multi-Purpose Building|Bulu", "officialRef": "P00633404LZ", "category": "public buildings", "location": "Barangay Bulu, Kabugao, Apayao", "year": 2022 },
+    { "reviewKey": "FY2026|bridge phase II|Sta. 0+600-0+850", "officialRef": null, "category": "roads/bridges", "location": "Kabugao, Apayao", "year": 2026 },
+    { "reviewKey": "FY2026|concrete road|Sta. 2+800-6+861.15|Laco", "officialRef": null, "category": "roads/bridges", "location": "Barangay Laco, Kabugao, Apayao", "year": 2026 }
+  ]
+}

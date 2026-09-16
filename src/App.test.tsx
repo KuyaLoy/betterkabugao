@@ -4,6 +4,7 @@ import { MemoryRouter } from "react-router-dom";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { App } from "./App";
 import { BARANGAYS } from "./data/barangays";
+import { PUBLIC_WORKS_PROJECTS, filterProjects, validateProjects } from "./data/projects";
 import { ALL_PATHS, RECOVERY_LINKS, SITEMAP_EXCLUDED, SITEMAP_GROUPS, auditSitemap } from "./lib/seo";
 import { QUICK_SEARCHES, searchSite } from "./lib/search";
 import { closeSearchOverlay } from "./lib/search-overlay";
@@ -85,6 +86,47 @@ describe("home page", () => {
     const statistics = screen.getByRole("link", { name: /Statistics/i });
     expect(statistics).toHaveAttribute("href", "/statistics");
     expect(within(statistics).getByText("2024 snapshot: 16,425 residents")).toBeInTheDocument();
+  });
+
+  it("shows three source-linked public works records", () => {
+    renderAt("/");
+    const module = screen.getByRole("region", { name: "What’s being built in Kabugao?" });
+    expect(within(module).getAllByRole("article")).toHaveLength(3);
+    expect(within(module).getByRole("link", { name: "View all projects" })).toHaveAttribute("href", "/projects");
+  });
+});
+
+describe("Public Works Watch data", () => {
+  it("contains exactly 13 source-valid records without inventing unavailable source fields", () => {
+    expect(validateProjects(PUBLIC_WORKS_PROJECTS)).toEqual({ valid: true });
+    expect(PUBLIC_WORKS_PROJECTS).toHaveLength(13);
+    expect(new Set(PUBLIC_WORKS_PROJECTS.map((project) => project.reviewKey)).size).toBe(13);
+    expect(PUBLIC_WORKS_PROJECTS.find((project) => project.officialRef === "23PB0017")?.amounts[0]).toMatchObject({
+      type: "ABC",
+      value: 49_000_000,
+    });
+    expect(PUBLIC_WORKS_PROJECTS.filter((project) => project.officialRef === undefined)).toHaveLength(2);
+    expect(PUBLIC_WORKS_PROJECTS.filter((project) => project.status.kind === "not stated")).toHaveLength(4);
+  });
+
+  it("filters category, funding year, published location, and text conjunctively", () => {
+    const results = filterProjects(PUBLIC_WORKS_PROJECTS, {
+      query: "Badduat",
+      category: "flood control/drainage",
+      fundingYear: 2023,
+      location: "all",
+    });
+
+    expect(results.map((project) => project.officialRef)).toEqual(["23PB0002", "23PB0014"]);
+  });
+});
+
+describe("Public Works Watch", () => {
+  it("exposes a source-linked projects route with local downloads", () => {
+    renderAt("/projects");
+    expect(screen.getByRole("heading", { level: 1, name: "Public Works Watch" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Download CSV" })).toHaveAttribute("href", "/data/kabugao-public-works.csv");
+    expect(screen.getByRole("link", { name: "Download JSON" })).toHaveAttribute("href", "/data/kabugao-public-works.json");
   });
 });
 

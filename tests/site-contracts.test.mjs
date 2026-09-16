@@ -278,21 +278,23 @@ test("prerendered pages carry a real OpenStreetMap attribution link (JS-off)", (
   }
 });
 
-test("no capital-claim or unpublished-spending wording ships on any route", async () => {
-  // The site must only claim what it actually publishes. The unqualified capital
-  // claim and public-works/procurement/contractor/flood-control wording must be
-  // absent from every prerendered page, and the shared <noscript> fallback must
-  // carry no peso figures (those live on /about's own body only). Measured
-  // against the built output on every route.
+test("no capital claim ships and public-works wording stays confined to its verified surfaces", async () => {
+  // The unqualified capital claim must stay absent everywhere. Public-works
+  // language is allowed only on its sourced directory page and the small,
+  // source-linked homepage preview; it must never leak into unrelated routes.
   if (!existsSync(new URL("dist/index.html", root))) return;
   const { ALL_PATHS } = await import(new URL("dist-ssr/routes.js", root).href);
-  const banned = [/capital of Apayao/i, /flood[- ]control/i, /procurement/i, /\bcontractor\b/i, /public works/i];
+  const publicWorksRoutes = new Set(["/", "/projects", "/sitemap"]);
+  const restrictedPublicWorksTerms = [/flood[- ]control/i, /procurement/i, /\bcontractor\b/i, /public works/i];
   for (const path of ALL_PATHS) {
     const file = path === "/" ? new URL("dist/index.html", root) : new URL(`dist${path}/index.html`, root);
     if (!existsSync(file)) continue;
     const html = readFileSync(file, "utf8");
-    for (const re of banned) {
-      assert.doesNotMatch(html, re, `${path}: built HTML must not contain ${re}`);
+    assert.doesNotMatch(html, /capital of Apayao/i, `${path}: built HTML must not contain the capital claim`);
+    if (!publicWorksRoutes.has(path)) {
+      for (const re of restrictedPublicWorksTerms) {
+        assert.doesNotMatch(html, re, `${path}: built HTML must not contain ${re}`);
+      }
     }
     const noscript = (html.match(/<noscript>[\s\S]*?<\/noscript>/) || [""])[0];
     assert.doesNotMatch(noscript, /₱/, `${path}: the global <noscript> must not carry peso figures`);

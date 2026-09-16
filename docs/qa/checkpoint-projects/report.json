@@ -1,0 +1,59 @@
+{
+  "scope": "/projects focused browser QA",
+  "overallPass": true,
+  "totalChecks": 10,
+  "passed": 10,
+  "failed": 0,
+  "checks": [
+    {
+      "name": "390px renders all 13 local records",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "390px combines filters deterministically",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "390px exposes the empty state",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "390px serves local CSV and JSON",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "390px has no horizontal page overflow",
+      "pass": true,
+      "detail": "390/390"
+    },
+    {
+      "name": "1440px renders all 13 local records",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "1440px combines filters deterministically",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "1440px exposes the empty state",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "1440px serves local CSV and JSON",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "1440px has no horizontal page overflow",
+      "pass": true,
+      "detail": "1440/1440"
+    }
+  ]
+}
