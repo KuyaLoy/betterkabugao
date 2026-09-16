@@ -21,19 +21,21 @@ The likely design cause is additive delivery: a chart, snapshot, provenance pane
 
 ## Two directions
 
-**A. Source margin register — recommended.** Give every page one primary assertion and a slim source margin. Statistics opens with **16,425 people · 2024 POPCEN**; the four supporting measures become a definition row, followed by a readable chart and the unchanged nine-row source table. Projects opens with a concise status caveat, one search control, a compact filter disclosure, and the first record. Each record puts reference/place/title, source-dated status, typed amount, and its official link in one reading path. Contractor, office, and review detail stay in the existing explicit disclosure. On mobile the source margin folds directly below the primary claim. The homepage Statistics item becomes a more legible source-dated entry within the existing task area; Public Works retains three records with a single-column heading at 390px. This is a single cross-feature visual grammar grounded in source records.
+**A. Source margin register — first proposal.** Give every page one primary assertion and a slim source margin. Statistics opens with **16,425 people · 2024 POPCEN**; the four supporting measures become a definition row, followed by a readable chart and the unchanged nine-row source table. Projects opens with a concise status caveat, one search control, a compact filter disclosure, and the first record. Each record puts reference/place/title, source-dated status, typed amount, and its official link in one reading path. Contractor, office, and review detail stay in the existing explicit disclosure. On mobile the source margin folds directly below the primary claim. The homepage Statistics item becomes a more legible source-dated entry within the existing task area; Public Works retains three records with a single-column heading at 390px. This is a single cross-feature visual grammar grounded in source records.
 
-**B. Guided civic story.** Statistics presents one observation at a time in a chronological sequence; Projects presents one dossier at a time with large next/previous controls. It offers more room for a friendly interaction and strong individual focus. The tradeoff is slower comparison, more page state, and a risk of hiding citations or dates. It is a poor fit for residents who need to scan several records or verify a source quickly.
+**B. Observation line and focused works index — revised recommendation.** The real nine-point population series becomes the main Statistics visual. One selected point reveals its year, value, and linked official source while the complete line and data table remain readable. Public Works becomes a compact reference/place index beside one focused record on desktop; on mobile, each index row keeps its source-dated status, typed amount, and official link in view, while its exact full official title opens through an explicit one-tap control. The homepage becomes two concise doorways: a census invitation and a Public Works register invitation, each with a checkable source example. The tradeoff is a small amount of selection state on both pages and less record detail on the homepage. It keeps scanning fast and avoids hiding primary evidence.
 
-Direction A earns the aesthetic risk through an **evidence margin**: a narrow gold rule beside publisher/date/link, positioned like a document citation. The rule conveys provenance, not location or progress. It replaces decorative gold edges and repeated cards.
+Direction A uses an **evidence margin**: a narrow gold rule beside publisher/date/link, positioned like a document citation. Direction B makes a bolder, more useful signature from the actual observation sequence and reference numbers. Neither rule nor line represents geography, construction progress, or an uncited source.
 
 ## Compact visual system
+
+The shared palette and accessibility rules apply to both directions. The source-margin layout, full-title record layout, and chart reveal below describe A; B's focused index and point-selection behavior are specified in its section at the end.
 
 - **Palette:** existing navy #00142f for titles and structural rules; deep link blue #003d8d; gold #ffb900 only at a source margin or key observation; sand #f3efe8 for homepage feature fields; white #ffffff for reading surfaces; gray #495057 for secondary text. Alert red remains only in the global emergency control. Status always includes words and date, never color alone.
 - **Type:** retain local Inter for network continuity. Desktop page title 38/41px, mobile 28/32px; lead number 76px desktop and 56px mobile; section title 18–20px; body 15/23px; labels and evidence notes 11–12px. Use tabular numerals for counts, dates, and currency. Long official project titles wrap in full; never silently shorten them.
 - **Rhythm:** page padding 36px desktop/18px mobile; 28–32px between meaningfully different sections; 12–20px within a record. One hairline between records. No stacked card shadows or pill systems. Inputs retain the network's small-radius convention.
 - **Components:** one lead statistic, supporting definition list, chart with caption and full table; one search line, filter disclosure with active count, and ruled project record. Official source links remain directly visible beside each primary claim/record. Downloads and copy citation are secondary text actions.
-- **Motion:** keep at most one chart reveal, shortened to approximately 450–600ms, with the full data and labels available from first paint; no animated counters. Details/filter open-close may use a 120–160ms state transition without moving surrounding text unpredictably. Reduced-motion users see all static content immediately.
+- **Motion (A only):** keep at most one chart reveal, shortened to approximately 450–600ms, with the full data and labels available from first paint; no animated counters. Details/filter open-close may use a 120–160ms state transition without moving surrounding text unpredictably. Reduced-motion users see all static content immediately. B has no chart reveal; only point-selection feedback.
 - **Responsive:** source margin becomes a two-line source block immediately below the main figure or each project record; the homepage Works heading and View all link become one column. No horizontal scrolling at 390px; touch targets at least 44px.
 
 ## Source and data guardrails
@@ -51,15 +53,15 @@ BetterCainta inspired the pattern of a readable headline before a chart and a si
 3. Recompose statistics source links and chart/table as one evidence sequence; keep direct source access visible.
 4. Tune interaction only after the static view reads correctly.
 
-Using the anti-slop rubric, **current Statistics: 5/10 slop, 5/10 distinctiveness; current Projects: 5/10 slop, 5/10 distinctiveness.** The proposed compositions target **2/10 slop and 8/10 distinctiveness**. These proposed scores are design judgments; implementation requires screenshot signoff. The proposal's implementation readiness is **8/10** because the rules and content are specific, while final CSS sizing and interaction behavior still need production validation.
+Using the anti-slop rubric, **current Statistics: 5/10 slop, 5/10 distinctiveness; current Projects: 5/10 slop, 5/10 distinctiveness.** Proposal A targets **2/10 slop and 7/10 distinctiveness** after visual review; proposal B targets **2/10 slop and 8/10 distinctiveness**. These are design judgments; implementation requires screenshot signoff. B's implementation readiness is **8/10** because the rules and content are specific, while final interaction sizing and behavior need production validation.
 
 ## Design QA acceptance before any release
 
 - At **390px**, a source-dated 2024 population value is visible in the initial Statistics screen; at **1440px**, it is the clearest object on the page. Both retain the four supporting measures, chart, complete source table, PSA links, dates, and actions.
 - At **390px**, the Public Works title and link do not squeeze each other, and the first record title begins in the first screen after search. At **1440px**, Search and Filters share one coherent line; the sort note never touches a selector.
-- In every Works record, title/reference, category/place, source-dated status, typed amount or explicit unavailability, and official source link remain readable without opening details. The details control names its contents and stays keyboard reachable.
+- In every Works record, reference, category/place, source-dated status, typed amount or explicit unavailability, and official source link remain readable without opening details. A shows the full title at rest; B places the exact full title one explicit, keyboard-reachable action away on mobile.
 - Long titles wrap without clipping at both widths. The 23PB0015 title is the deliberate stress case. No horizontal overflow or tiny labels.
-- Statistics chart is understandable at rest, during its one reveal, with reduced motion, and without JavaScript. Nine exact values and their source links remain available as text.
+- Statistics chart is understandable at rest, with reduced motion, and without JavaScript. For A, also check during its one reveal. B's full nine-point plot is visible on first paint, with selected-point information progressively enhanced. Nine exact values and their source links remain available as text.
 - Both pages use visible focus, 44px touch targets, readable secondary contrast, accurate heading order, and status text that does not rely on color.
 - Capture **one 390px and one 1440px screenshot** for each changed route and homepage feature area after implementation; compare hierarchy against the paired compositions here. Sign off only when the first primary fact/record, source access, caveat, and expected interaction are observable in both captures.
 
@@ -70,4 +72,21 @@ Using the anti-slop rubric, **current Statistics: 5/10 slop, 5/10 distinctivenes
 - [Homepage Statistics entry composition](./statistics-teaser.png)
 - [Homepage Public Works preview composition](./works-teaser.png)
 
-All four PNGs show the proposed desktop and mobile states side by side. The HTML is a static presentation source; links within it are illustrative. Production routes and behavior require a separate approved implementation brief.
+These four A PNGs show the proposed desktop and mobile states side by side. The HTML is a static presentation source; links within it are illustrative. Production routes and behavior require a separate approved implementation brief.
+
+## Focused second visual direction for Robin's review
+
+Command Center's critique of A was sound: its chart stayed too small, long official titles still dominated mobile, and the homepage modules felt like condensed data pages. **B is the recommended direction to review now.** It is shown in three paired static compositions:
+
+- [B · Statistics observation line](./b-statistics.png)
+- [B · Public Works index and focused record](./b-projects.png)
+- [B · homepage doorways](./b-home.png)
+- [Editable static presentation source](./alternative-b.html)
+
+The nine chart labels use the existing observations: 1960 5,961; 1970 7,358; 1980 9,600; 1990 11,198; 2000 13,985; 2010 16,170; 2015 15,537; 2020 16,215; 2024 16,425. The line is an abstract data plot, not a river or terrain map. It shows the dip at 2015. The 2024 chart row links to the existing PSA Kabugao PSGC record; the separate five-metric 2024 snapshot names PSA OpenSTAT as canonical. The mockup distinguishes those two source roles. The point labels and full table remain necessary because the chart alone is not a data substitute.
+
+**B's point interaction:** all nine marks are visible at rest. Hover, tap, or keyboard focus selects a point and updates one pinned year/value/source panel. Each point has an accessible year-and-count name, a visible focus ring, and a keyboard path through all nine points; the full table immediately follows and remains the complete source reference. Selection changes only the dot emphasis and panel text with a 120–160ms state transition. With reduced motion, the update is instantaneous. No count-up, redraw, replay, or movement of the line.
+
+**B's works interaction:** the desktop index keeps the reference, sourced place/category, dated status, typed amount, and direct official source on each row while selection changes the adjacent focused record. On mobile, the index becomes a vertical list; an explicit “Read full official title and details” control expands the exact unabridged title inline. It is a native button or summary with open/closed state and visible focus. Opening it must not hide the amount, status, or official source. All existing filter and evidence-date sort functions remain available; filters collapse at mobile width and the sort meaning remains explained. Historical appropriations retain their own section and their “not proof of award/start/completion” caveat.
+
+**Why B improves on A:** the first viewport now gives Statistics a visual made from Kabugao's actual nine observations, while Projects shows more references with less repeated title mass. The homepage presents two purposeful routes with one checkable example each. This means fewer simultaneous paragraphs, yet the direct source actions stay in sight. The cost is the need to implement and test selection/focus behavior carefully; B should be approved only if that interaction can meet the acceptance criteria above.
