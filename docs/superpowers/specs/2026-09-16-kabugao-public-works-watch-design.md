@@ -1,8 +1,8 @@
 # Kabugao Public Works Watch — implementation specification
 
-**Status:** approved design specification; implementation not started  
-**Owner:** Development  
-**MVP routes:** homepage module and `/projects`  
+**Status:** approved design specification; implementation not started
+**Owner:** Development
+**MVP routes:** homepage module and `/projects`
 **Data posture:** manually reviewed, local, source-linked records
 
 ## Product promise
