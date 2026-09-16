@@ -13,6 +13,7 @@ artefacts were changed.
 - Research basis: `docs/research/kabugao-public-works-historical-coverage.md`
   (historical audit commit `c156c9ef`) and the existing Public Works source
   packet/implementation specification.
+- Implementation plan: `docs/superpowers/plans/2026-09-16-kabugao-public-works-transparency-upgrade.md`.
 
 ## Decisions recorded
 
@@ -28,6 +29,10 @@ artefacts were changed.
 - The proposed homepage interaction is a three-row, source-backed mini-ledger;
   any category switcher is optional, native-button accessible, and only appears
   when the three records span categories. No carousel, autoplay, or aggregate.
+- The approved plan has five bounded TDD tasks: data/filter helpers, project
+  ledger, homepage mini-ledger, visual/contracts, and focused release QA.
+  FY2015/FY2017 rows remain out of code because the committed audit still calls
+  them candidates requiring manual primary-row review.
 
 ## Limits and next approval
 
