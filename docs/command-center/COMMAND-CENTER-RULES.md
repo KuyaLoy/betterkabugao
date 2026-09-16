@@ -97,3 +97,43 @@ Command Center brief.
 - A targeted fix must not trigger repeated exhaustive full-site visual runs by
   habit. Expand QA only when shared infrastructure changed, a focused check
   fails outside the expected surface, or the Command Center explicitly asks.
+
+## SUPER MANDATORY — Development-First Credit Budget
+
+These rules are binding for every approved implementation phase:
+
+- Optimize for completed features per credit, not maximum process.
+- Use the lowest-capable model and reasoning by default: Luna low/medium for
+  clerical work, reporting, small docs and bounded fixes; Terra low/medium for
+  normal development; high only when concrete complexity or a failed lower-
+  effort attempt justifies it; Sol/Astra only for an explicitly documented
+  escalation.
+- Use one permanent owner department per task. Add department handoffs only
+  for a concrete dependency or risk, never by routine habit.
+- For ordinary bounded features, Development owns implementation and
+  proportional verification. Do not automatically invoke independent QA.
+- Reserve independent QA for high-risk shared infrastructure,
+  security/auth/payment/privacy, accessibility release gates, a failed
+  automated or focused check, or a confirmed defect.
+- Run focused tests during development, then exactly one final automated gate
+  (tests, typecheck, lint, build). Do not rerun passing gates; rerun only a
+  failed gate after its fix.
+- For UI changes, use at most one focused browser pass and normally no more
+  than mobile plus desktop. Use reduced-motion or accessibility checks only
+  where the changed behavior requires them; reuse the recent full-site
+  baseline.
+- Do not run full-site visual QA, regenerate unrelated screenshots, repeat
+  external research, or reopen settled decisions without evidence of wider
+  regression. Use existing source research and evidence before browsing again.
+- Use concise, outcome-first briefs with success criteria and a stopping
+  condition; department reports must be concise.
+- The default execution window for a bounded feature phase is 15–30 minutes.
+  If scope cannot fit, split it into a shippable MVP and backlog instead of
+  consuming credits on process.
+- Stop when the approved outcome is committed/pushed and minimum verification
+  passes. Do not add polishing or review cycles unless Robin requested them.
+- Command Center monitoring uses one long wait and avoids repeated polling or
+  status narration unless the task reports a blocker or Robin asks.
+- Treat the Cloudflare DDoS inline CSP warning as an accepted non-user-facing
+  platform exception: keep DDoS protection and strict CSP, and do not reopen
+  it unless functionality or security evidence changes.

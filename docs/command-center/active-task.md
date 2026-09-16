@@ -23,6 +23,18 @@ official DILG roster)._
 > **Services Navigator**, and **Budget & Disaster Fund Explorer**) remain
 > unapproved. See `docs/sessions/2026-09-13-homepage-statistics.md`.
 
+> **LATEST OVERRIDE — 2026-09-13:** The homepage/statistics release and its
+> release-prep corrections are on `main` through `6f955c7`. The approved
+> population-chart animation has passed full automated gates plus focused
+> browser QA at 390px/1440px, reduced motion and JavaScript-off. It is approved
+> for direct push with its tests, evidence and session handoff; no Social-owned
+> files are in scope.
+
+> **LATEST STATUS — 2026-09-16:** Statistics release `ecddf83` is complete.
+> The Cloudflare DDoS inline CSP warning is accepted as a non-user-facing
+> platform exception: keep DDoS protection and strict CSP. No further
+> Statistics QA is pending unless functionality or security evidence changes.
+
 ## Current operating model — 2026-09-13
 
 Permanent rule: `docs/command-center/COMMAND-CENTER-RULES.md`.
