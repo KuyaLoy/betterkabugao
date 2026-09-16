@@ -67,7 +67,7 @@ it("contains exactly 13 source-valid projects and preserves typed money/status",
 
 - [ ] **Step 2: Run the focused test and verify the intentional failure.**
 
-Run: `npm.cmd run test:unit -- -t "contains exactly 13 source-valid projects"`  
+Run: `npm.cmd run test:unit -- -t "contains exactly 13 source-valid projects"`
 Expected: FAIL because `src/data/projects.ts` and `validateProjects` do not exist yet.
 
 - [ ] **Step 3: Implement the typed register and validator.** Copy all 13 approved rows from the reviewed research register. Store the six documented flood-control rows with their exact DPWH references/titles and do not invent the seven non-flood-control rows. Implement validator checks for count 13, unique refs, controlled category/status/money values, required non-empty fields, HTTPS primary URLs, ISO dates, PHP currency, numeric amounts, no coordinates, and no duplicate composite identity.
@@ -78,7 +78,7 @@ Expected: FAIL because `src/data/projects.ts` and `validateProjects` do not exis
 
 - [ ] **Step 6: Run the focused test and verify the pass.**
 
-Run: `npm.cmd run test:unit -- -t "contains exactly 13 source-valid projects"`  
+Run: `npm.cmd run test:unit -- -t "contains exactly 13 source-valid projects"`
 Expected: PASS; the test reports one passing test.
 
 - [ ] **Step 7: Commit the self-contained data foundation.**
@@ -113,7 +113,7 @@ it("exposes a prerenderable Public Works Watch route", () => {
 
 - [ ] **Step 2: Run the focused test and verify it fails.**
 
-Run: `npm.cmd run test:unit -- -t "prerenderable Public Works Watch route"`  
+Run: `npm.cmd run test:unit -- -t "prerenderable Public Works Watch route"`
 Expected: FAIL because the route and metadata entry are absent.
 
 - [ ] **Step 3: Register the route and metadata.** Add the import and `<Route path="/projects" element={<ProjectsPage />} />` before the catch-all. Add `SEGMENT_LABELS`, `STATIC_META`, `ALL_PATHS`, sitemap label/group, and an indexable description that says the records are selected, source-linked public records rather than live status.
@@ -122,7 +122,7 @@ Expected: FAIL because the route and metadata entry are absent.
 
 - [ ] **Step 5: Run the focused test and verify the pass.**
 
-Run: `npm.cmd run test:unit -- -t "prerenderable Public Works Watch route"`  
+Run: `npm.cmd run test:unit -- -t "prerenderable Public Works Watch route"`
 Expected: PASS.
 
 - [ ] **Step 6: Commit routing and metadata.**
@@ -167,7 +167,7 @@ it("shows explicit empty and unavailable-source states", async () => {
 
 - [ ] **Step 2: Run the focused tests and verify failure.**
 
-Run: `npm.cmd run test:unit -- -t "filters projects by category|shows explicit empty"`  
+Run: `npm.cmd run test:unit -- -t "filters projects by category|shows explicit empty"`
 Expected: FAIL because `ProjectsPage` and its controls do not exist.
 
 - [ ] **Step 3: Implement the page shell.** Use `PageHeader` and existing `main`/footer shell. Add the exact route clarification: “Public Works Watch is a manually reviewed reference to published records. It does not certify completion, quality, legality, procurement compliance, or current status.” Keep the site-wide disclaimer through `SiteFooter`; do not duplicate or weaken it.
@@ -180,7 +180,7 @@ Expected: FAIL because `ProjectsPage` and its controls do not exist.
 
 - [ ] **Step 7: Run the focused tests and verify the pass.**
 
-Run: `npm.cmd run test:unit -- -t "filters projects by category|shows explicit empty"`  
+Run: `npm.cmd run test:unit -- -t "filters projects by category|shows explicit empty"`
 Expected: PASS.
 
 - [ ] **Step 8: Commit the page behavior.**
@@ -214,14 +214,14 @@ it("shows exactly three source-linked public works previews", () => {
 
 - [ ] **Step 2: Run it and verify failure.**
 
-Run: `npm.cmd run test:unit -- -t "three source-linked public works previews"`  
+Run: `npm.cmd run test:unit -- -t "three source-linked public works previews"`
 Expected: FAIL because the homepage module is absent.
 
 - [ ] **Step 3: Implement the module.** Select three deterministic records from the approved array; do not calculate a total or use a status badge implying currency. Use `<section aria-labelledby>`, `<article>`, exact source-reported wording, and descriptive external links with `target="_blank"` + `rel="noreferrer"`.
 
 - [ ] **Step 4: Run the test and verify pass.**
 
-Run: `npm.cmd run test:unit -- -t "three source-linked public works previews"`  
+Run: `npm.cmd run test:unit -- -t "three source-linked public works previews"`
 Expected: PASS.
 
 - [ ] **Step 5: Commit the homepage module.**
@@ -246,7 +246,7 @@ git commit -m "feat: preview public works on homepage"
 
 - [ ] **Step 2: Run the focused test and verify the failure.**
 
-Run: `npm.cmd run test:unit -- -t "projects accessibility"`  
+Run: `npm.cmd run test:unit -- -t "projects accessibility"`
 Expected: FAIL until the page classes and required labels are present.
 
 - [ ] **Step 3: Add scoped CSS.** Use existing navy/gold/sand/gray variables; desktop may use a table and mobile must stack records or allow only an internal, accessible table scroll without page overflow. Keep focus outlines, source links visibly distinct, and no motion requirement for filtering.
@@ -255,7 +255,7 @@ Expected: FAIL until the page classes and required labels are present.
 
 - [ ] **Step 5: Run the focused test and verify pass.**
 
-Run: `npm.cmd run test:unit -- -t "projects accessibility"`  
+Run: `npm.cmd run test:unit -- -t "projects accessibility"`
 Expected: PASS.
 
 - [ ] **Step 6: Commit styling/contracts.**
@@ -281,7 +281,7 @@ git commit -m "feat: make public works watch responsive and verifiable"
 
 - [ ] **Step 2: Run the not-yet-implemented script and verify the intentional failure.**
 
-Run: `npm.cmd run build; npm.cmd run qa:projects`  
+Run: `npm.cmd run build; npm.cmd run qa:projects`
 Expected: FAIL with the package script or `scripts/qa/projects.mjs` missing.
 
 - [ ] **Step 3: Implement one bounded Playwright pass.** Start the existing static server, create one context per viewport, record named checks, save only project-specific screenshots/report, and close the browser/server in `finally`. Do not inspect Cloudflare or rerun unrelated route QA.
@@ -290,7 +290,7 @@ Expected: FAIL with the package script or `scripts/qa/projects.mjs` missing.
 
 - [ ] **Step 5: Run the focused browser pass and verify pass.**
 
-Run: `npm.cmd run build; npm.cmd run qa:projects`  
+Run: `npm.cmd run build; npm.cmd run qa:projects`
 Expected: all named checks PASS at 390px and 1440px; no horizontal overflow; report exits 0.
 
 - [ ] **Step 6: Commit QA and handover.**
@@ -313,12 +313,12 @@ git commit -m "test: verify public works watch surface"
 
 - [ ] **Step 2: Run exactly one final automated gate.**
 
-Run: `npm.cmd test; npm.cmd run typecheck; npm.cmd run lint; npm.cmd run build`  
+Run: `npm.cmd test; npm.cmd run typecheck; npm.cmd run lint; npm.cmd run build`
 Expected: contracts and unit tests pass, TypeScript exits 0, ESLint exits 0, production build/prerender exits 0.
 
 - [ ] **Step 3: Check the final diff and stage only approved implementation files.**
 
-Run: `git diff --check`  
+Run: `git diff --check`
 Expected: no whitespace errors. Preserve unrelated dirty/untracked files.
 
 - [ ] **Step 4: Commit the release if the task commits were intentionally squashed.** Use `feat: add Kabugao Public Works Watch` and include only the files listed in this plan; otherwise retain the scoped task commits.
