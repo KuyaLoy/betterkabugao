@@ -96,12 +96,10 @@ describe("home page", () => {
     expect(within(module).getByText(/source-reported status is not a live completion check/i)).toBeInTheDocument();
   });
 
-  it("keeps the homepage project route available after category switching", async () => {
-    const user = userEvent.setup();
+  it("keeps the homepage preview focused on three records instead of category controls", () => {
     renderAt("/");
     const module = screen.getByRole("region", { name: /Latest source-backed records/i });
-    const road = within(module).queryByRole("button", { name: "roads/bridges" });
-    if (road) await user.click(road);
+    expect(within(module).queryByRole("button", { name: "roads/bridges" })).not.toBeInTheDocument();
     expect(within(module).getByRole("link", { name: "View all Public Works Watch records" })).toBeVisible();
   });
 });
@@ -171,6 +169,12 @@ describe("Public Works Watch", () => {
     expect(document.querySelector(".projects__evidence")).not.toBeNull();
     expect(document.querySelector(".projects .map")).toBeNull();
     expect(screen.queryByText(/total project cost|total spend/i)).not.toBeInTheDocument();
+  });
+
+  it("groups secondary filters and record evidence into labelled disclosures", () => {
+    renderAt("/projects");
+    expect(screen.getByText(/Filter records \(0 active\)/)).toBeInTheDocument();
+    expect(screen.getAllByText("Record details and source").length).toBe(PUBLIC_WORKS_PROJECTS.length);
   });
 });
 

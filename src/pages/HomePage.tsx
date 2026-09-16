@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import { useMemo, useState } from "react";
 import { MapView } from "../components/MapView";
 import { SearchTrigger } from "../components/SearchOverlay";
 import { KABUGAO } from "../app/site-content";
@@ -24,7 +23,6 @@ const heroSrcSet = (ext: string) =>
   HERO_WIDTHS.map((w) => `/hero/dibagat-river-${w}.${ext} ${w}w`).join(", ");
 
 const PUBLIC_WORKS_PREVIEW = latestProjects(PUBLIC_WORKS_PROJECTS.filter((project) => projectSection(project) === "project-register"), 3);
-const PREVIEW_CATEGORIES = [...new Set(PUBLIC_WORKS_PREVIEW.map((project) => project.category))];
 const formatMoney = (value: number) => `₱${value.toLocaleString("en-PH", { minimumFractionDigits: Number.isInteger(value) ? 0 : 2, maximumFractionDigits: 2 })}`;
 
 const TASKS = [
@@ -69,9 +67,6 @@ function TaskIcon({ name }: { name: string }) {
 }
 
 export function HomePage() {
-  const [previewCategory, setPreviewCategory] = useState<string>("all");
-  const preview = useMemo(() => previewCategory === "all" ? PUBLIC_WORKS_PREVIEW : PUBLIC_WORKS_PREVIEW.filter((project) => project.category === previewCategory), [previewCategory]);
-
   return (
     <>
       <section className="kv-hero" aria-labelledby="home-title">
@@ -143,17 +138,12 @@ export function HomePage() {
         <div className="shell">
           <div className="works-preview__head"><p>Public Works Watch</p><h2 id="works-preview-title">Latest source-backed records</h2><Link to="/projects">View all Public Works Watch records</Link></div>
           <p className="works-preview__note">A manually reviewed selection. A source-reported status is not a live completion check.</p>
-          {PREVIEW_CATEGORIES.length > 1 && <div className="works-preview__filters" aria-label="Filter preview by category">
-            <button type="button" aria-pressed={previewCategory === "all"} onClick={() => setPreviewCategory("all")}>All shown</button>
-            {PREVIEW_CATEGORIES.map((category) => <button type="button" key={category} aria-pressed={previewCategory === category} onClick={() => setPreviewCategory(category)}>{category}</button>)}
-          </div>}
-          <div className="works-preview__ledger">{preview.map((project) => (
-            <article className="works-preview__card" key={project.reviewKey}>
-              <div><p>{project.officialRef ?? "Official reference not published"}</p><h3>{project.exactTitle}</h3><span>{project.publishedLocation}</span></div>
+          <div className="works-preview__ledger">{PUBLIC_WORKS_PREVIEW.map((project) => (
+            <article className="works-preview__row" key={project.reviewKey}>
+              <div className="works-preview__record"><p>{project.officialRef ?? "Official reference not published"}</p><h3>{project.exactTitle}</h3><span>{project.category} · {project.publishedLocation}</span></div>
               <div className="works-preview__evidence">
-                <p><span>Status</span><strong>{project.status.kind === "reported" ? `${project.status.value} (as reported ${project.status.asOf})` : "Not stated in the reviewed source"}</strong></p>
-                <p><span>Amount</span><strong>{project.amounts[0] ? formatMoney(project.amounts[0].value) : "Amount type unavailable in the reviewed source"}</strong>{project.amounts[0] && <small>{project.amounts[0].type}</small>}</p>
-                <p><span>Contractor</span><strong>{project.contractor ?? "Contractor unavailable in the reviewed source"}</strong></p>
+                <p><span>Amount</span><strong>{project.amounts[0] ? formatMoney(project.amounts[0].value) : "Amount unavailable"}</strong>{project.amounts[0] && <small>{project.amounts[0].type}</small>}</p>
+                <p><span>Status</span><strong>{project.status.kind === "reported" ? `${project.status.value} · ${project.status.asOf}` : "Not stated"}</strong></p>
               </div>
               <a href={project.officialUrl} target="_blank" rel="noreferrer">Open official source</a>
             </article>

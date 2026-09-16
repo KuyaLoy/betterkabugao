@@ -37,6 +37,13 @@ runtime data source were added.
   ordering, the five-value status filter, prominent typed amounts and contractor
   evidence, and an accessible three-row homepage mini-ledger. The homepage
   category buttons render only because its current three records span categories.
+- Corrective UX release: replace repeated white cards and homepage category
+  controls with a restrained ruled ledger. The homepage is now always three
+  compact source-backed rows; `/projects` shows title, category/location,
+  typed amount, and source-dated status first, then an official-source link and
+  an expandable contractor/office/review record. On phones, Search stays
+  visible while the secondary controls live under `Filter records (N active)`
+  with Clear filters. The source-reported-not-live caveat remains visible.
 
 ## Release checks
 
@@ -53,7 +60,9 @@ runtime data source were added.
 
 `src/data/projects.ts`, `src/pages/ProjectsPage.tsx`, `src/pages/HomePage.tsx`,
 `src/styles.css`, `src/App.test.tsx`, `scripts/qa/projects.mjs`, and focused QA
-evidence in `docs/qa/checkpoint-projects/`.
+evidence in `docs/qa/checkpoint-projects/`. The corrective UX release changes
+only `src/pages/ProjectsPage.tsx`, `src/pages/HomePage.tsx`, `src/styles.css`,
+`src/App.test.tsx`, and this continuity note.
 
 ## Limits and next approval
 
