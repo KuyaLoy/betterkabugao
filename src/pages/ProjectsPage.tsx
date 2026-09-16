@@ -1,6 +1,6 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { PageHeader } from "../components/PageHeader";
-import { PROJECT_CATEGORIES, PUBLIC_WORKS_PROJECTS, filterProjects, projectSection, sortProjectsByEvidenceDate, type ProjectCategory, type ProjectStatusFilter } from "../data/projects";
+import { PROJECT_CATEGORIES, PUBLIC_WORKS_PROJECTS, filterProjects, projectSection, sortProjectsByEvidenceDate, type EvidenceSortOrder, type ProjectCategory, type ProjectStatusFilter } from "../data/projects";
 import { metaFor } from "../lib/seo";
 
 const REVIEW_NOTE = "Public Works Watch is a manually reviewed reference to published records. It does not certify completion, quality, legality, procurement compliance, or current status.";
@@ -26,8 +26,19 @@ export function ProjectsPage() {
   const [year, setYear] = useState<number | "all">("all");
   const [location, setLocation] = useState("all");
   const [status, setStatus] = useState<ProjectStatusFilter>("all");
-  const [filtersOpen, setFiltersOpen] = useState(() => typeof window !== "undefined" && typeof window.matchMedia === "function" && window.matchMedia("(min-width: 761px)").matches);
-  const shown = useMemo(() => sortProjectsByEvidenceDate(filterProjects(PUBLIC_WORKS_PROJECTS, { query, category, fundingYear: year, location, status })), [query, category, year, location, status]);
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const [sortOrder, setSortOrder] = useState<EvidenceSortOrder>("newest");
+
+  useEffect(() => {
+    if (typeof window.matchMedia !== "function") return;
+    const desktop = window.matchMedia("(min-width: 761px)");
+    const syncDisclosure = () => setFiltersOpen(desktop.matches);
+    syncDisclosure();
+    desktop.addEventListener("change", syncDisclosure);
+    return () => desktop.removeEventListener("change", syncDisclosure);
+  }, []);
+
+  const shown = useMemo(() => sortProjectsByEvidenceDate(filterProjects(PUBLIC_WORKS_PROJECTS, { query, category, fundingYear: year, location, status }), sortOrder), [query, category, year, location, status, sortOrder]);
   const register = shown.filter((project) => projectSection(project) === "project-register");
   const appropriations = shown.filter((project) => projectSection(project) === "historical-appropriations");
   const clear = () => { setQuery(""); setCategory("all"); setYear("all"); setLocation("all"); setStatus("all"); };
@@ -77,11 +88,13 @@ export function ProjectsPage() {
                 <label>Filter by funding year<select value={year} onChange={(event) => setYear(event.target.value === "all" ? "all" : Number(event.target.value))}><option value="all">All years</option>{years.map((item) => <option key={item} value={item}>{item}</option>)}</select></label>
                 <label>Filter by published location<select value={location} onChange={(event) => setLocation(event.target.value)}><option value="all">All published locations</option>{locations.map((item) => <option key={item} value={item}>{item}</option>)}</select></label>
                 <label>Filter by status<select value={status} onChange={(event) => setStatus(event.target.value as ProjectStatusFilter)}>{STATUS_OPTIONS.map((item) => <option key={item.value} value={item.value}>{item.label}</option>)}</select></label>
+                <label>Sort records by evidence date<select value={sortOrder} onChange={(event) => setSortOrder(event.target.value as EvidenceSortOrder)}><option value="newest">Newest evidence first</option><option value="oldest">Oldest evidence first</option></select></label>
                 <button type="button" onClick={clear}>Clear filters</button>
               </div>
+              <p className="projects__sort-note">Evidence date uses the published status date, or funding year where no status was published. It is not a current completion date.</p>
             </details>
           </form>
-          <p className="projects__count" role="status">{shown.length} of {PUBLIC_WORKS_PROJECTS.length} projects shown</p>
+          <p className="projects__count" role="status">{shown.length} of {PUBLIC_WORKS_PROJECTS.length} selected, source-reviewed records shown</p>
           {shown.length === 0 ? <p className="projects__empty">No projects match those filters.</p> : <div className="projects__list">
             {register.length > 0 && <section className="projects__section" aria-labelledby="projects-register"><div className="projects__section-head"><p>Source-linked delivery records</p><h2 id="projects-register">Project register</h2></div>{register.map(record)}</section>}
             {appropriations.length > 0 && <section className="projects__section" aria-labelledby="projects-appropriations"><div className="projects__section-head"><p>Appropriations are not proof of award, start, or completion.</p><h2 id="projects-appropriations">Historical appropriations</h2></div>{appropriations.map(record)}</section>}

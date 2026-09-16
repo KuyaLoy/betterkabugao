@@ -1,8 +1,8 @@
 {
   "scope": "/projects focused browser QA",
   "overallPass": true,
-  "totalChecks": 20,
-  "passed": 20,
+  "totalChecks": 30,
+  "passed": 30,
   "failed": 0,
   "checks": [
     {
@@ -26,7 +26,32 @@
       "detail": ""
     },
     {
+      "name": "390px keeps secondary filters visible and operable",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "390px exposes evidence-date sorting",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "390px keeps desktop controls in a compact toolbar",
+      "pass": true,
+      "detail": ""
+    },
+    {
       "name": "390px filters source-reported status",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "390px defaults to newest evidence",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "390px can order the register by oldest evidence",
       "pass": true,
       "detail": ""
     },
@@ -71,7 +96,32 @@
       "detail": ""
     },
     {
+      "name": "1440px keeps secondary filters visible and operable",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "1440px exposes evidence-date sorting",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "1440px keeps desktop controls in a compact toolbar",
+      "pass": true,
+      "detail": ""
+    },
+    {
       "name": "1440px filters source-reported status",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "1440px defaults to newest evidence",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "1440px can order the register by oldest evidence",
       "pass": true,
       "detail": ""
     },

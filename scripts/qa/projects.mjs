@@ -20,9 +20,23 @@ try {
     record(`${viewport.width}px separates evidence sections`, await page.getByRole("heading", { name: "Project register" }).isVisible() && await page.getByRole("heading", { name: "Historical appropriations" }).isVisible());
     record(`${viewport.width}px has no project map`, await page.locator(".projects .map").count() === 0);
     record(`${viewport.width}px exposes typed amounts and contractor availability`, await page.getByText("ABC", { exact: true }).isVisible() && await page.getByText("Contractor unavailable in the reviewed source").count() > 0);
-    await page.getByLabel("Filter by status").selectOption("ongoing");
+    if (viewport.width < 761) await page.getByText(/Filter records \(0 active\)/).click();
+    const statusFilter = page.getByLabel("Filter by status");
+    const evidenceSort = page.getByLabel("Sort records by evidence date");
+    record(`${viewport.width}px keeps secondary filters visible and operable`, await statusFilter.isVisible());
+    record(`${viewport.width}px exposes evidence-date sorting`, await evidenceSort.isVisible());
+    record(`${viewport.width}px keeps desktop controls in a compact toolbar`, viewport.width < 761 || await page.locator(".projects__filter-fields").evaluate((element) => getComputedStyle(element).display === "grid"));
+    if (!await statusFilter.isVisible() || !await evidenceSort.isVisible()) {
+      await context.close();
+      continue;
+    }
+    await statusFilter.selectOption("ongoing");
     record(`${viewport.width}px filters source-reported status`, await page.locator(".projects__record").count() === 1 && await page.getByText(/ongoing \(as reported 2022-10-22\)/i).isVisible());
     await page.getByRole("button", { name: "Clear filters" }).click();
+    record(`${viewport.width}px defaults to newest evidence`, (await page.locator(".projects__section").first().locator(".projects__record").first().innerText()).includes("23PB0014"));
+    await evidenceSort.selectOption("oldest");
+    record(`${viewport.width}px can order the register by oldest evidence`, (await page.locator(".projects__section").first().locator(".projects__record").first().innerText()).includes("21PB0002"));
+    await evidenceSort.selectOption("newest");
     await page.getByLabel("Filter by category").selectOption("flood control/drainage");
     await page.getByLabel("Filter by funding year").selectOption("2023");
     await page.getByLabel("Search projects").fill("Badduat");

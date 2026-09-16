@@ -135,6 +135,10 @@ describe("Public Works Watch data", () => {
     expect(sortProjectsByEvidenceDate(PUBLIC_WORKS_PROJECTS).slice(0, 2).map((project) => project.fundingYear)).toEqual([2026, 2026]);
   });
 
+  it("can order the same source evidence from oldest to newest", () => {
+    expect(sortProjectsByEvidenceDate(PUBLIC_WORKS_PROJECTS, "oldest")[0].officialRef).toBe("P00631689LZ");
+  });
+
   it("filters source-reported statuses without inferring a live status", () => {
     const results = filterProjects(PUBLIC_WORKS_PROJECTS, { query: "", category: "all", fundingYear: "all", location: "all", status: "ongoing" });
     expect(results.map((project) => project.officialRef)).toEqual(["22PB0002"]);

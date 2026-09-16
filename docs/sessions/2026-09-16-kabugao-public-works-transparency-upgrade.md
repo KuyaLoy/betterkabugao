@@ -44,6 +44,11 @@ runtime data source were added.
   an expandable contractor/office/review record. On phones, Search stays
   visible while the secondary controls live under `Filter records (N active)`
   with Clear filters. The source-reported-not-live caveat remains visible.
+- Controls correction: desktop filters are always visible in a compact toolbar;
+  mobile keeps the compact disclosure. Records can now be ordered by newest or
+  oldest evidence date. The evidence-date label explicitly distinguishes source
+  dates from a live completion claim, and the count identifies the 13 rows as a
+  selected, source-reviewed set rather than a complete project universe.
 
 ## Release checks
 
@@ -55,6 +60,10 @@ runtime data source were added.
   sections, downloads, no map, homepage interaction, and no overflow.
 - Final gate: contracts 40/40, unit tests 65/65, typecheck, lint, and production
   build passed. QA evidence is in `docs/qa/checkpoint-projects/`.
+- Controls correction regression: the prior desktop-only hidden-filter failure
+  was reproduced in Playwright, then `npm run qa:projects` passed 30/30 at
+  390px and 1440px. It includes visibility/operability, sort direction,
+  filtering, empty state, downloads, no overflow, and the homepage preview.
 
 ## Changed implementation files
 
@@ -62,7 +71,9 @@ runtime data source were added.
 `src/styles.css`, `src/App.test.tsx`, `scripts/qa/projects.mjs`, and focused QA
 evidence in `docs/qa/checkpoint-projects/`. The corrective UX release changes
 only `src/pages/ProjectsPage.tsx`, `src/pages/HomePage.tsx`, `src/styles.css`,
-`src/App.test.tsx`, and this continuity note.
+`src/App.test.tsx`, and this continuity note. The controls correction additionally
+updates `src/data/projects.ts`, `scripts/qa/projects.mjs`, and the focused
+browser-QA evidence.
 
 ## Limits and next approval
 

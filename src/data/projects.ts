@@ -56,6 +56,7 @@ export type ProjectFilters = {
 
 export type ProjectSection = "project-register" | "historical-appropriations";
 export type ProjectStatusFilter = "all" | "planned" | "ongoing" | "completed" | "cancelled" | "not stated";
+export type EvidenceSortOrder = "newest" | "oldest";
 
 const REVIEWED = "2026-09-16";
 const DPWH_FLOOD_CONTROL = "https://services1.arcgis.com/IwZZTMxZCmAmFYvF/arcgis/rest/services/FloodControl_Data_20250802_v6_corrected_coordinates_for_uploading/FeatureServer/0";
@@ -340,8 +341,8 @@ export function projectEvidenceDate(project: PublicWorksProject) {
   return project.status.kind === "reported" ? project.status.asOf : `${project.fundingYear ?? 0}-01-01`;
 }
 
-export function sortProjectsByEvidenceDate(projects: readonly PublicWorksProject[]) {
-  return [...projects].sort((left, right) => projectEvidenceDate(right).localeCompare(projectEvidenceDate(left))
+export function sortProjectsByEvidenceDate(projects: readonly PublicWorksProject[], order: EvidenceSortOrder = "newest") {
+  return [...projects].sort((left, right) => (order === "newest" ? projectEvidenceDate(right).localeCompare(projectEvidenceDate(left)) : projectEvidenceDate(left).localeCompare(projectEvidenceDate(right)))
     || (left.officialRef ?? left.reviewKey).localeCompare(right.officialRef ?? right.reviewKey)
     || left.exactTitle.localeCompare(right.exactTitle));
 }
