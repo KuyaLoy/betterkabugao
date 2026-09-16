@@ -82,6 +82,15 @@ describe("home page", () => {
 });
 
 describe("Kabugao statistics", () => {
+  it("puts the latest verified count and its source boundary before the detailed record", () => {
+    renderAt("/statistics");
+
+    expect(screen.getByText("Latest verified count")).toBeInTheDocument();
+    expect(screen.getByText("16,425", { selector: "dd" })).toBeInTheDocument();
+    expect(screen.getByText("2024 official observation")).toBeInTheDocument();
+    expect(screen.getByText(/No estimates are inserted between published observations/i)).toBeInTheDocument();
+  });
+
   it("publishes selected official population observations as both a chart and a table", () => {
     renderAt("/statistics");
 
